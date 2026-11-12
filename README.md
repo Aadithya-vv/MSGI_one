@@ -1,6 +1,6 @@
-# MSGI Nexus
+# MSGI One
 
-**Where Generations Connect.** Android-first alumni networking for MSGI.
+**One Community. Infinite Connections.** Android-first alumni networking for MSGI.
 
 Task 02 is a branded, offline foundation: a responsive dashboard, eleven screens,
 Riverpod-managed sample content and GoRouter navigation. Authentication,
@@ -8,6 +8,12 @@ verification, database access and live maps are not implemented. Every profile
 and opportunity is explicitly a sample.
 
 ## Development
+
+Current repository: `D:\MSGI_nexus`; Dart package: `msgi_one`. The requested move
+to `D:\MSGI_One` is pending: Windows rejected the verified repository rename
+because a process has an open handle. The original repository/history are intact.
+Close applications or terminals using the folder before retrying relocation.
+Android application ID remains `com.msgi.nexus.msgi_nexus` intentionally.
 
 Verified setup: Flutter **3.50.0 stable**, Dart **3.14.0**, Android API **36**,
 Build-Tools **36.0.0**, NDK **28.2.13676358**, Android Studio Java **25.0.4**.
@@ -87,6 +93,7 @@ Unknown routes provide safe recovery. Sample directory search matches fields/cit
 - [Engineering decisions](docs/decisions.md)
 - [Agent conventions](AGENTS.md)
 - [Task 02 verification results](docs/verification.md)
+- [Task 02B rebranding results and relocation blocker](docs/rebranding.md)
 
 Next: approve verification requirements, final application ID, schema and RLS
 before implementing authentication. Never embed service-role keys. Build-supplied

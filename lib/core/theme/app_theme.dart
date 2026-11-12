@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-abstract final class NexusColors {
+abstract final class OneColors {
   static const navy = Color(0xFF09285B);
   static const blue = Color(0xFF1557A0);
   static const gold = Color(0xFFF5BF30);
@@ -8,7 +8,7 @@ abstract final class NexusColors {
   static const muted = Color(0xFF526079);
 }
 
-abstract final class NexusSpace {
+abstract final class OneSpace {
   static const small = 8.0;
   static const medium = 16.0;
   static const large = 24.0;
@@ -20,22 +20,22 @@ abstract final class NexusSpace {
 abstract final class AppTheme {
   static ThemeData get light {
     final scheme = ColorScheme.fromSeed(
-      seedColor: NexusColors.navy,
-      primary: NexusColors.navy,
-      secondary: NexusColors.blue,
-      tertiary: NexusColors.gold,
+      seedColor: OneColors.navy,
+      primary: OneColors.navy,
+      secondary: OneColors.blue,
+      tertiary: OneColors.gold,
       surface: Colors.white,
     );
     final base = ThemeData(useMaterial3: true, colorScheme: scheme);
     return base.copyWith(
-      scaffoldBackgroundColor: NexusColors.background,
+      scaffoldBackgroundColor: OneColors.background,
       textTheme: base.textTheme.apply(
-        bodyColor: NexusColors.navy,
-        displayColor: NexusColors.navy,
+        bodyColor: OneColors.navy,
+        displayColor: OneColors.navy,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: NexusColors.background,
-        foregroundColor: NexusColors.navy,
+        backgroundColor: OneColors.background,
+        foregroundColor: OneColors.navy,
         centerTitle: false,
         scrolledUnderElevation: 0,
       ),
@@ -44,7 +44,7 @@ abstract final class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(NexusSpace.radius),
+          borderRadius: BorderRadius.circular(OneSpace.radius),
           side: const BorderSide(color: Color(0xFFE2E7F0)),
         ),
       ),
@@ -68,7 +68,7 @@ abstract final class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: Colors.white,
-        indicatorColor: NexusColors.gold.withValues(alpha: .24),
+        indicatorColor: OneColors.gold.withValues(alpha: .24),
       ),
     );
   }

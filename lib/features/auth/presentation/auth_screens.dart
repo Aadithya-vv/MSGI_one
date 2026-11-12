@@ -4,13 +4,13 @@ import 'package:go_router/go_router.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/nexus_widgets.dart';
+import '../../../core/widgets/one_widgets.dart';
 
 class StartupScreen extends StatelessWidget {
   const StartupScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: NexusColors.navy,
+    backgroundColor: OneColors.navy,
     body: SafeArea(
       child: Center(
         child: SingleChildScrollView(
@@ -20,11 +20,7 @@ class StartupScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.hub_outlined,
-                  size: 88,
-                  color: NexusColors.gold,
-                ),
+                const Icon(Icons.hub_outlined, size: 88, color: OneColors.gold),
                 const SizedBox(height: 32),
                 const Text(
                   AppConfig.name,
@@ -37,13 +33,14 @@ class StartupScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 const Text(
                   AppConfig.tagline,
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Color(0xFFDEE7F6), fontSize: 16),
                 ),
                 const SizedBox(height: 40),
                 FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: NexusColors.gold,
-                    foregroundColor: NexusColors.navy,
+                    backgroundColor: OneColors.gold,
+                    foregroundColor: OneColors.navy,
                   ),
                   onPressed: () => context.go(AppRoutes.welcome),
                   child: const Text('Get started'),
@@ -71,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
           const Icon(
             Icons.diversity_2_outlined,
             size: 120,
-            color: NexusColors.blue,
+            color: OneColors.blue,
           ),
           const SizedBox(height: 32),
           const FeatureHeader(
@@ -97,7 +94,7 @@ class WelcomeScreen extends StatelessWidget {
           const Text(
             'Foundation preview · Registration and authentication are not available yet.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: NexusColors.muted, height: 1.5),
+            style: TextStyle(color: OneColors.muted, height: 1.5),
           ),
         ],
       ),
@@ -119,7 +116,7 @@ class AuthScreen extends StatelessWidget {
         children: [
           FeatureHeader(
             eyebrow: 'Where generations connect',
-            title: signup ? 'Join MSGI Nexus' : 'Welcome back',
+            title: signup ? 'Join ${AppConfig.name}' : 'Welcome back',
             description:
                 'This is a preview of the future ${signup ? 'registration' : 'login'} experience. No credentials are collected or sent.',
           ),

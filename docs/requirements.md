@@ -1,6 +1,6 @@
 # MVP requirements
 
-**MSGI Nexus — Where Generations Connect.** Android-first alumni networking for
+**MSGI One — One Community. Infinite Connections.** Android-first alumni networking for
 MSGI. Target submission: **November 30, 2026**. Solo student developer, faculty
 mentor and AI-assisted implementation/review.
 

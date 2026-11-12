@@ -2,10 +2,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../routing/app_routes.dart';
-import 'nexus_widgets.dart';
+import 'one_widgets.dart';
 
-class NexusShell extends StatelessWidget {
-  const NexusShell({required this.location, required this.child, super.key});
+class OneShell extends StatelessWidget {
+  const OneShell({required this.location, required this.child, super.key});
   final String location;
   final Widget child;
   static const destinations = [

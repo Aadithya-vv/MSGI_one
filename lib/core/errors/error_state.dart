@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../widgets/nexus_widgets.dart';
+import '../widgets/one_widgets.dart';
 
 /// Render safe messages, never raw backend errors or credentials.
 class ErrorState extends StatelessWidget {

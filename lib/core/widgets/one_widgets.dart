@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../theme/app_theme.dart';
+import '../config/app_config.dart';
 
 class BrandMark extends StatelessWidget {
   const BrandMark({super.key, this.light = false});
@@ -12,24 +13,20 @@ class BrandMark extends StatelessWidget {
       Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: NexusColors.gold,
+          color: OneColors.gold,
           borderRadius: BorderRadius.circular(13),
         ),
-        child: const Icon(
-          Icons.hub_outlined,
-          color: NexusColors.navy,
-          size: 26,
-        ),
+        child: const Icon(Icons.hub_outlined, color: OneColors.navy, size: 26),
       ),
       const SizedBox(width: 12),
       Flexible(
         child: Text(
-          'MSGI Nexus',
+          AppConfig.name,
           style: TextStyle(
             fontSize: 21,
             fontWeight: FontWeight.w800,
             letterSpacing: -.6,
-            color: light ? Colors.white : NexusColors.navy,
+            color: light ? Colors.white : OneColors.navy,
           ),
         ),
       ),
@@ -64,9 +61,9 @@ class PageBody extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
     child: Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: NexusSpace.maxWidth),
+        constraints: const BoxConstraints(maxWidth: OneSpace.maxWidth),
         child: Padding(
-          padding: const EdgeInsets.all(NexusSpace.large),
+          padding: const EdgeInsets.all(OneSpace.large),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: children,
@@ -118,7 +115,7 @@ class FeatureHeader extends StatelessWidget {
       Text(
         eyebrow.toUpperCase(),
         style: const TextStyle(
-          color: NexusColors.blue,
+          color: OneColors.blue,
           fontWeight: FontWeight.w800,
           letterSpacing: 2,
           fontSize: 11,
@@ -133,7 +130,7 @@ class FeatureHeader extends StatelessWidget {
       const SizedBox(height: 12),
       Text(
         description,
-        style: const TextStyle(color: NexusColors.muted, height: 1.6),
+        style: const TextStyle(color: OneColors.muted, height: 1.6),
       ),
       const SizedBox(height: 24),
     ],
@@ -162,10 +159,10 @@ class InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: NexusColors.background,
+              color: OneColors.background,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(icon, color: NexusColors.blue),
+            child: Icon(icon, color: OneColors.blue),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -182,7 +179,7 @@ class InfoCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   description,
-                  style: const TextStyle(color: NexusColors.muted, height: 1.5),
+                  style: const TextStyle(color: OneColors.muted, height: 1.5),
                 ),
                 if (trailing != null)
                   Padding(
@@ -216,7 +213,7 @@ class EmptyState extends StatelessWidget {
       padding: const EdgeInsets.all(28),
       child: Column(
         children: [
-          Icon(icon, size: 44, color: NexusColors.blue),
+          Icon(icon, size: 44, color: OneColors.blue),
           const SizedBox(height: 16),
           Text(
             title,
@@ -227,7 +224,7 @@ class EmptyState extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: NexusColors.muted, height: 1.5),
+            style: const TextStyle(color: OneColors.muted, height: 1.5),
           ),
           if (action != null)
             Padding(padding: const EdgeInsets.only(top: 20), child: action!),

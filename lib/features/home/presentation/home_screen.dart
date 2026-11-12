@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/nexus_widgets.dart';
+import '../../../core/widgets/one_widgets.dart';
 import '../../mentorship/data/sample_mentors.dart';
 import '../../mentorship/presentation/mentorship_screen.dart';
 import '../../opportunities/data/sample_opportunities.dart';
@@ -19,7 +19,7 @@ class HomeScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(26),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [NexusColors.navy, NexusColors.blue],
+            colors: [OneColors.navy, OneColors.blue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.waving_hand_outlined,
-                  color: NexusColors.gold,
+                  color: OneColors.gold,
                   size: 18,
                 ),
                 SizedBox(width: 8),
@@ -67,8 +67,8 @@ class HomeScreen extends ConsumerWidget {
             FilledButton(
               onPressed: () => context.go(AppRoutes.discover),
               style: FilledButton.styleFrom(
-                backgroundColor: NexusColors.gold,
-                foregroundColor: NexusColors.navy,
+                backgroundColor: OneColors.gold,
+                foregroundColor: OneColors.navy,
               ),
               child: const Wrap(
                 alignment: WrapAlignment.center,
@@ -96,12 +96,12 @@ class HomeScreen extends ConsumerWidget {
               padding: EdgeInsets.all(18),
               child: Row(
                 children: [
-                  Icon(Icons.search, color: NexusColors.blue),
+                  Icon(Icons.search, color: OneColors.blue),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Find alumni, careers, or shared interests',
-                      style: TextStyle(color: NexusColors.muted),
+                      style: TextStyle(color: OneColors.muted),
                     ),
                   ),
                   Icon(Icons.arrow_forward, size: 20),
@@ -180,7 +180,7 @@ class HomeScreen extends ConsumerWidget {
       const SizedBox(height: 24),
       const Text(
         'Illustrative content only. No real profiles, recommendations, or vacancies are shown.',
-        style: TextStyle(color: NexusColors.muted, fontSize: 12, height: 1.6),
+        style: TextStyle(color: OneColors.muted, fontSize: 12, height: 1.6),
       ),
       const SizedBox(height: 12),
     ],
@@ -208,7 +208,7 @@ class _QuickCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: NexusColors.blue, size: 28),
+            Icon(icon, color: OneColors.blue, size: 28),
             const SizedBox(height: 18),
             Text(
               title,
@@ -218,7 +218,7 @@ class _QuickCard extends StatelessWidget {
             Text(
               subtitle,
               style: const TextStyle(
-                color: NexusColors.muted,
+                color: OneColors.muted,
                 fontSize: 12,
                 height: 1.5,
               ),

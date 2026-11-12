@@ -1,6 +1,6 @@
 # Architecture
 
-MSGI Nexus is an Android-first Flutter application. Task 02 is an offline,
+MSGI One is an Android-first Flutter application. Task 02 is an offline,
 public UI preview, not an authenticated application.
 
 `main.dart` mounts Riverpod's `ProviderScope`; `app.dart` composes Material 3 and
@@ -8,7 +8,7 @@ the provider-owned GoRouter. `core/routing` owns paths, route construction and
 future access guards. The router is disposed with its provider. Startup has an
 explicit Get started action, avoiding artificial startup delays.
 
-Welcome/login/signup sit outside `NexusShell`. The shell supplies branding, a
+Welcome/login/signup sit outside `OneShell`. The shell supplies branding, a
 permanent SAMPLE PREVIEW label, and Home, Discover, Map, Network, Profile bottom
 destinations. Dashboard cards reach mentorship and opportunities within the same
 shell. Destination changes use `go`; per-tab history/state persistence is deferred.

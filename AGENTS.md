@@ -1,4 +1,4 @@
-# MSGI Nexus engineering conventions
+# MSGI One engineering conventions
 
 1. Follow Flutter and Dart best practices and the installed SDK's APIs.
 2. Use feature-first architecture under `lib/features/`.

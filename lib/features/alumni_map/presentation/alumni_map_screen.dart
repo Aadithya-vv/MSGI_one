@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/nexus_widgets.dart';
+import '../../../core/widgets/one_widgets.dart';
 
 class AlumniMapScreen extends StatelessWidget {
   const AlumniMapScreen({super.key});
@@ -18,7 +18,7 @@ class AlumniMapScreen extends StatelessWidget {
           padding: const EdgeInsets.all(32),
           child: Column(
             children: [
-              const Icon(Icons.public, size: 140, color: NexusColors.blue),
+              const Icon(Icons.public, size: 140, color: OneColors.blue),
               const SizedBox(height: 24),
               const Text(
                 'Across cities. Across generations.',

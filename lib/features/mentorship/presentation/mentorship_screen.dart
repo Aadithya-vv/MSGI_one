@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/widgets/nexus_widgets.dart';
+import '../../../core/widgets/one_widgets.dart';
 import '../data/sample_mentors.dart';
 import '../domain/mentor_preview.dart';
 

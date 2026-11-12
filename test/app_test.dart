@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:msgi_nexus/app.dart';
-import 'package:msgi_nexus/core/routing/app_router.dart';
-import 'package:msgi_nexus/core/routing/app_routes.dart';
+import 'package:msgi_one/app.dart';
+import 'package:msgi_one/core/routing/app_router.dart';
+import 'package:msgi_one/core/routing/app_routes.dart';
 
 Future<void> pumpRoute(
   WidgetTester tester,
@@ -21,7 +21,7 @@ Future<void> pumpRoute(
       overrides: [appRouterProvider.overrideWithValue(router)],
       child: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-        child: const NexusApp(),
+        child: const OneApp(),
       ),
     ),
   );
@@ -30,11 +30,25 @@ Future<void> pumpRoute(
 }
 
 void main() {
+  testWidgets('current branding appears on startup and the application shell', (
+    tester,
+  ) async {
+    await pumpRoute(tester, AppRoutes.startup);
+    expect(find.text('MSGI One'), findsOneWidget);
+    expect(find.text('One Community. Infinite Connections.'), findsOneWidget);
+    expect(
+      tester.widget<MaterialApp>(find.byType(MaterialApp)).title,
+      'MSGI One',
+    );
+    await pumpRoute(tester, AppRoutes.home);
+    expect(find.text('MSGI One'), findsOneWidget);
+  });
+
   const screens = {
     AppRoutes.startup: 'Get started',
     AppRoutes.welcome: 'Your next chapter\nstarts with a connection.',
     AppRoutes.login: 'Welcome back',
-    AppRoutes.signup: 'Join MSGI Nexus',
+    AppRoutes.signup: 'Join MSGI One',
     AppRoutes.home: 'Welcome to your\nMSGI community.',
     AppRoutes.discover: 'Discover alumni',
     AppRoutes.map: 'Global alumni map',
@@ -125,7 +139,7 @@ void main() {
     await tester.ensureVisible(find.text('View signup preview'));
     await tester.tap(find.text('View signup preview'));
     await tester.pumpAndSettle();
-    expect(find.text('Join MSGI Nexus'), findsOneWidget);
+    expect(find.text('Join MSGI One'), findsOneWidget);
   });
 
   testWidgets('unknown routes show a recoverable safe error', (tester) async {

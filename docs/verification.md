@@ -1,5 +1,9 @@
 # Task 02 verification — November 12, 2026
 
+Historical record of the initial foundation before Task 02B rebranding.
+The original name/path and original build results below are retained accurately.
+Current branding is MSGI One; current setup instructions are in README.
+
 Project: `D:\MSGI_nexus`. Flutter 3.50.0 stable / Dart 3.14.0.
 
 | Check | Actual result |
@@ -39,3 +43,10 @@ Widget layout tests are not device visual tests or a full accessibility audit.
 The map is a placeholder; auth, verification, recommendations and listings remain
 explicit previews. Supabase is not initialized. No remote repository was created
 or configured, and no code was pushed or deployed.
+
+## Task 02B — rebranding verification
+
+See `rebranding.md` for current MSGI One results: unchanged dependency lockfile,
+clean analyzer, all 25 tests passing, and a successful Android debug APK with the
+new display label and original application ID. Directory relocation is blocked
+by a Windows file lock; the repository remains at its original location.

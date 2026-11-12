@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/app_routes.dart';
-import '../../../core/widgets/nexus_widgets.dart';
+import '../../../core/widgets/one_widgets.dart';
 
 class NetworkScreen extends StatelessWidget {
   const NetworkScreen({super.key});

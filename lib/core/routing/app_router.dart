@@ -11,7 +11,7 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/mentorship/presentation/mentorship_screen.dart';
 import '../../features/opportunities/presentation/opportunities_screen.dart';
 import '../errors/error_state.dart';
-import '../widgets/nexus_shell.dart';
+import '../widgets/one_shell.dart';
 import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -46,7 +46,7 @@ GoRouter createAppRouter({
     ),
     ShellRoute(
       builder: (context, state, child) =>
-          NexusShell(location: state.uri.path, child: child),
+          OneShell(location: state.uri.path, child: child),
       routes: [
         GoRoute(path: AppRoutes.home, builder: (_, _) => const HomeScreen()),
         GoRoute(

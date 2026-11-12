@@ -1,5 +1,10 @@
 # Engineering decisions — 2026-11-12
 
+## Task 02 — historical foundation decisions
+
+The following entries record the original project name and location at creation.
+They are historical records; current branding and rebranding decisions follow.
+
 1. **One project at `D:\MSGI_nexus`.** The workspace contained only `debug.log`;
    it is preserved and ignored. Package name: `msgi_nexus`; Android-only generation.
 2. **Temporary Android identity:** `com.msgi.nexus.msgi_nexus`, generated from
@@ -42,3 +47,24 @@
 Package references: [Riverpod](https://pub.dev/packages/flutter_riverpod),
 [GoRouter](https://pub.dev/packages/go_router),
 [Supabase Flutter](https://pub.dev/packages/supabase_flutter).
+
+## Task 02B — controlled rebranding to MSGI One
+
+- College-suggested competition name: **MSGI One**. Tagline:
+  **One Community. Infinite Connections.** Dart package becomes `msgi_one`.
+- Preferred final repository location: `D:\MSGI_One`, moved only after code,
+  analysis, tests and Android build verification in the original location.
+  Verification passed, but Windows rejected the move with a file-in-use error.
+  The repository remains at `D:\MSGI_nexus`; the destination does not exist.
+  Retry relocation after the open handle is released; no force or copy was used.
+- Preserve the existing Git history and Android application ID/namespace
+  `com.msgi.nexus.msgi_nexus`, including its Kotlin activity package and directory.
+  These technical identity references intentionally keep the original name.
+- Update Material app title, startup, branding components, signup preview,
+  Android display label, imports, tests and current project documentation.
+  Shared visible branding uses `AppConfig` to avoid inconsistent future labels.
+- Rename only branding-related Dart identifiers and widget filenames. Routes,
+  feature behavior, theme values, dependencies and Gradle settings are unchanged.
+- Historical Task 02 entries, verification evidence and Git commit messages
+  retain their original names/paths for traceability; they are not current setup
+  instructions. No remote is created and no history is rewritten.

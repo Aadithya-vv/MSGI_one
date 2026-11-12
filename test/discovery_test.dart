@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:msgi_nexus/features/discovery/data/sample_alumni.dart';
+import 'package:msgi_one/features/discovery/data/sample_alumni.dart';
 
 void main() {
   test('sample directory search trims input and matches case-insensitive careers and cities', () {
