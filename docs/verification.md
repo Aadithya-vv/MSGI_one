@@ -171,3 +171,30 @@ printing encoded configuration arguments. The APK now contains the supplied
 public build configuration; no real-device launch or signed-in hosted flow was
 performed. Public build configuration is extractable by design; no privileged
 credentials were used. Dependency lockfile remains unchanged.
+
+## Task 03D - real Android authentication checkpoint (November 13, 2026)
+
+- Flutter/ADB detected authorized SM-M215G, Android 13/API 33. Configured app
+  built, installed and launched successfully on the physical device.
+- User reported initially no visible signup feedback. Added visible validation
+  notice, dismissed keyboard on submit and displayed the 12-128 character
+  password requirement. Added regression assertion; the original cause was not
+  conclusively established. After update, user confirmed signup notice/email.
+- User verified hosted login, restored session after reopening, logout and
+  remaining signed out after reopening. Incomplete-profile screen correctly
+  reports missing institutional catalogs; community access is not granted.
+- Confirmation link initially ended at localhost. Android package resolution
+  correctly resolves the exact configured callback to MSGI One. Owner reported
+  dashboard redirect changes. Successful email-to-app callback remains unverified.
+- Recovery attempt failed with hosted POST /auth/v1/recover HTTP 429; dashboard
+  screenshot shows project email limit 2/hour. No email delivery or password
+  reset success claimed. Stop repeated requests; retry once after quota permits.
+  No rate limit, hosted structure, RLS or administrator permission was changed.
+- Final code checks: dart format lib test passed; flutter analyze no issues;
+  flutter test 63 passed; configured flutter build apk --debug --no-pub passed.
+  Updated APK installed and relaunched successfully. Interactive results above
+  are user reports, distinct from automated tests and ADB launch evidence.
+- Remaining: approved institution/department/skill catalogs, pending submission,
+  recovery delivery/password update, successful cold/warm email callbacks and
+  complete signed-in hosted API authorization acceptance checks. No personal
+  account data, passwords, keys, tokens or callback links are recorded here.

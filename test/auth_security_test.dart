@@ -368,6 +368,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(repository.signUpCalls, 0);
     expect(find.text('Passwords must match.'), findsOneWidget);
+    expect(
+      find.text('Check the highlighted fields before continuing.'),
+      findsOneWidget,
+    );
     await tester.enterText(
       find.byKey(const Key('auth-confirm')),
       'test-only-password',

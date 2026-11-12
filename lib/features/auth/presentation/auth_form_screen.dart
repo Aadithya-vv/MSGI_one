@@ -38,7 +38,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _submit() async {
-    if (!_form.currentState!.validate()) return;
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (!_form.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Check the highlighted fields before continuing.'),
+        ),
+      );
+      return;
+    }
     final repository = ref.read(authRepositoryProvider);
     if (repository == null) return;
     setState(() {
@@ -139,6 +147,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       validator: AuthValidation.password,
                       decoration: const InputDecoration(
                         labelText: 'Password',
+                        helperText: 'Use 12–128 characters.',
                         prefixIcon: Icon(Icons.lock_outline),
                       ),
                     ),
