@@ -113,3 +113,12 @@ Package references: [Riverpod](https://pub.dev/packages/flutter_riverpod),
 12. Database pgTAP tests are written against actual roles/SQL, not Flutter fakes.
     No local CLI/Docker/PostgreSQL was detected on PATH; do not call SQL tests
     passed without executing them. No large tools are installed for this task.
+
+## Task 03D - development callback ownership
+
+Reuse Supabase Flutter's existing app_links/PKCE integration; disable Flutter's
+competing activity deep-link handler, while retaining GoRouter for internal app
+routes. Use one exact project-specific development callback for confirmation and
+recovery, shared by the auth adapter and Android manifest. No new dependencies,
+Android ID changes or authorization shortcuts. Real cold/warm-start device tests
+remain required; local SDK request tests do not establish callback delivery.

@@ -51,3 +51,15 @@ flutter run --dart-define-from-file=config/backend.local.json -d <android-device
 This future integration command was not executed in preparation. No Flutter,
 dependency, SDK or Android application ID changes were necessary. Mobile callback
 implementation remains a separate prerequisite described in the deployment plan.
+
+## Task 03D integration status
+
+Hosted deployment is reported by the project owner as complete. Use the existing
+build-time mechanism above, with the owner-supplied development HTTPS origin and
+publishable key in ignored config/backend.local.json. No real configuration value
+is added to tracked files. If that file or environment values are unavailable,
+configuration remains blocked and a default build correctly shows setup.
+
+For dashboard callback settings and remaining real-device/account tests, follow
+the Task 03D section in authentication-flow.md. Do not claim hosted authentication
+works solely from local regression tests or a successful Android build.

@@ -39,3 +39,38 @@ are handled; raw backend exceptions are not surfaced to the UI.
 Tests inject repositories under test/ only. There is no production demo bypass.
 All eleven original screens remain covered with appropriate signed-out or
 verified fixtures. The former anonymous sample-dashboard shortcut is removed.
+
+## Task 03D - Android authentication callback integration
+
+Signup confirmation and recovery now request the exact development callback
+`com.msgi.one.dev://auth-callback/`. Add that exact URI (including trailing slash)
+to Authentication > URL Configuration > Redirect URLs in the DEVELOPMENT project.
+Keep email/password enabled, email confirmation enabled, and minimum password 12;
+review SMTP and templates. No dashboard changes were performed by this task.
+Use templates that preserve the requested redirect, not a hardcoded localhost URL.
+
+The Android VIEW/DEFAULT/BROWSABLE filter matches that scheme, host and path.
+Flutter deep linking is disabled for this activity so Supabase's existing
+app_links integration owns auth callbacks instead of GoRouter. Application ID
+remains `com.msgi.nexus.msgi_nexus`. A custom scheme can be claimed by another
+installed app; the SDK's PKCE flow is retained. An owned verified HTTPS App Link
+is a later hardening option. No callback URL alone authorizes community access.
+
+Initialization, email/password login, persisted-session restoration, logout,
+error handling and protected navigation reuse the existing implementation.
+Membership still comes from my_membership(), never signup metadata. Confirmation
+may establish identity; incomplete users go to onboarding and pending users stay
+outside the community until independently approved. Recovery events open password
+update, then reload membership. No client grants verification or administrator.
+
+Manual Android acceptance (not yet verified): with the approved public build
+configuration, register ONE consented developer/student account, follow its
+confirmation email on cold and warm starts, confirm incomplete-profile handling,
+submit approved catalog selections, observe pending state, test logout/login and
+restart/restoration. Request recovery once and verify password update, expired
+and reused links, and continued membership restrictions. Do not approve yourself
+or bypass confirmation; administrator approval belongs to a separately authorized
+trusted operation. Do not paste passwords, tokens or email links into logs/chat.
+
+References: [Supabase native callbacks](https://supabase.com/docs/guides/auth/native-mobile-deep-linking?platform=flutter),
+[Flutter plugin deep-link handling](https://docs.flutter.dev/ui/navigation/deep-linking).

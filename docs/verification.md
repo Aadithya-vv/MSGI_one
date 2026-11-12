@@ -119,3 +119,34 @@ This supersedes historical entries marking local SQL verification unexecuted.
   independent admin bootstrap approval, SMTP/Auth policy, callback implementation,
   and hosted API plus Android email/recovery acceptance tests. See the deployment
   plan for exact future steps. Preparation does not prove hosted readiness.
+
+## Task 03D - Flutter authentication integration (November 13, 2026)
+
+- Started from a clean working tree. Owner reports hosted/local migration history
+  matches; no hosted schema/admin operation was performed or independently tested.
+- Reused build-time initialization, authentication adapter, Riverpod state machine
+  and membership-aware GoRouter guards. Signup/recovery now send the exact mobile
+  callback com.msgi.one.dev://auth-callback/. Android delegates links to Supabase
+  app_links; application ID remains com.msgi.nexus.msgi_nexus.
+- dart format lib test passed (38 files); flutter analyze: no issues.
+- Full flutter test: 63 passed, including existing configuration, restoration,
+  session/error/logout, route, incomplete/pending/suspended and recovery behavior.
+  Two new SDK adapter tests verify signup/recovery callback requests against a
+  loopback HTTP fixture with test-only PKCE storage and no hosted accounts.
+- flutter build apk --debug --no-pub passed (Gradle 40.1 seconds). APK manifest
+  inspection confirmed original application ID, callback scheme/host and Flutter
+  deep-link handler setting. APK: build/app/outputs/flutter-apk/app-debug.apk.
+- No public configuration was found in process/User/Machine Supabase environment
+  variables or config/backend.local.json. The owner was asked to supply only the
+  public configuration through the ignored file. Build therefore used no hosted
+  values and correctly retains setup behavior. No real keys/URLs were committed.
+- Actual hosted API/authentication tests: NONE. No account credentials available,
+  no account created, and no verification/recovery email sent. Local SDK fixtures
+  are not hosted authentication evidence. No Android target connected (only
+  Windows, Chrome and Edge), so actual callback delivery remains UNVERIFIED.
+- Required next steps: ignored public configuration, dashboard exact callback
+  allowlist plus confirmed-email/password/SMTP policy review, approved catalogs,
+  one consented registration on Android, confirmation, incomplete/onboarding/
+  pending handling, login/restoration/logout/recovery checks. No self-verification
+  or administrator provisioning belongs to this task.
+- No dependency versions, SQL migrations, RLS, SDKs or global configuration changed.

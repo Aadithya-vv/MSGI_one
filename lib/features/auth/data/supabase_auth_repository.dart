@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
+import '../../../core/config/auth_callback.dart';
 import '../domain/auth_repository.dart';
 import '../domain/onboarding.dart';
 
@@ -47,11 +48,19 @@ class SupabaseAuthRepository implements AuthRepository {
   });
   @override
   Future<void> signUp(String email, String password) => _safe(() async {
-    await _client.auth.signUp(email: email.trim(), password: password);
+    await _client.auth.signUp(
+      email: email.trim(),
+      password: password,
+      emailRedirectTo: authCallbackUri,
+    );
   });
   @override
-  Future<void> requestPasswordReset(String email) =>
-      _safe(() => _client.auth.resetPasswordForEmail(email.trim()));
+  Future<void> requestPasswordReset(String email) => _safe(
+    () => _client.auth.resetPasswordForEmail(
+      email.trim(),
+      redirectTo: authCallbackUri,
+    ),
+  );
   @override
   Future<void> updatePassword(String password) => _safe(() async {
     await _client.auth.updateUser(sb.UserAttributes(password: password));

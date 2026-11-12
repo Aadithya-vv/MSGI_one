@@ -102,3 +102,12 @@ References: [CLI workflow](https://supabase.com/docs/guides/local-development/cl
 [local/hosted targets](https://supabase.com/docs/guides/local-development/local-and-hosted-projects),
 [Flutter deep links](https://supabase.com/docs/guides/getting-started/tutorials/with-flutter).
 Command flags were additionally verified against installed CLI help.
+
+## Task 03D update
+
+The user reports all three migrations deployed to hosted development and matching
+local history. This task does not reapply or modify hosted schema/permissions.
+Android callback wiring is now implemented; see authentication-flow.md for the
+exact redirect allowlist and real-device acceptance procedure. The earlier
+callback implementation prerequisite above is superseded by this update, but
+actual dashboard configuration and device verification remain outstanding.
