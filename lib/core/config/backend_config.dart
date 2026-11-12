@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class BackendConfig {
   const BackendConfig({this.url = '', this.publishableKey = ''});
   factory BackendConfig.fromEnvironment() => const BackendConfig(
@@ -12,7 +14,11 @@ class BackendConfig {
     }
     final uri = Uri.tryParse(url);
     if (uri == null ||
-        uri.scheme != 'https' ||
+        (uri.scheme != 'https' &&
+            !(kDebugMode &&
+                const bool.fromEnvironment('LOCAL_AUTH_TESTING') &&
+                uri.scheme == 'http' &&
+                uri.host == '127.0.0.1')) ||
         uri.host.isEmpty ||
         uri.userInfo.isNotEmpty ||
         uri.hasQuery ||

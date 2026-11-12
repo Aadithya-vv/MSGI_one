@@ -209,6 +209,28 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(container.read(authControllerProvider).phase, AccessPhase.error);
   });
+  test('requested recovery after logout accepts only recovery and reloads membership', () async {
+    final repository = FakeAuthRepository(
+      session: const AuthSession('fixture'),
+      membership: MembershipState.pending,
+    );
+    final container = await start(repository);
+    final controller = container.read(authControllerProvider.notifier);
+    await controller.signOut();
+    repository.emit(const AuthSession('fixture', passwordRecovery: true));
+    expect(container.read(authControllerProvider).phase, AccessPhase.signedOut);
+    await controller.requestPasswordReset('fixture@example.invalid');
+    repository.emit(const AuthSession('fixture'));
+    expect(container.read(authControllerProvider).phase, AccessPhase.signedOut);
+    repository.emit(const AuthSession('fixture', passwordRecovery: true));
+    expect(
+      container.read(authControllerProvider).phase,
+      AccessPhase.passwordRecovery,
+    );
+    await controller.updatePassword('test-only-new-password');
+    expect(container.read(authControllerProvider).phase, AccessPhase.pending);
+    expect(repository.passwordUpdates, 1);
+  });
   test('failed logout is not undone by stale refresh events', () async {
     final repository = FakeAuthRepository(
       session: const AuthSession('fixture'),

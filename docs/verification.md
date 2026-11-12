@@ -198,3 +198,69 @@ credentials were used. Dependency lockfile remains unchanged.
   recovery delivery/password update, successful cold/warm email callbacks and
   complete signed-in hosted API authorization acceptance checks. No personal
   account data, passwords, keys, tokens or callback links are recorded here.
+
+## Task 03D follow-up - isolated local recovery (November 13, 2026)
+
+Reused disposable msgi_one_clean_9a7b7923 database/volume/network. Started only
+Auth, gateway, REST and Mailpit alongside it (API 55321, DB 55322, mail 55324).
+Confirmation enabled and exact callback allowlist verified in running isolated
+Auth. No hosted request, schema/policy/limit change or database reset performed.
+Original port-54322 cluster/migration/row-count baseline remains identical.
+
+Automated local API checks: 11 passed. Unconfirmed login denied; confirmation
+redirect accepted; confirmed login succeeds; recovery email accepted; verification
+issues a recovery session; that session permits password update; new password
+logs in; consumed link rejected; invalid token rejected; second local email
+accepted; expired token rejected. Expiry used only an aged recovery_sent_at on
+the isolated synthetic fixture. These tests do not establish phone UI behavior.
+Passwords were generated privately and not printed; temporary credential state
+was removed. Local synthetic account/mail remain only in the isolated environment.
+
+Code checks: formatted 39 Dart files, analyzer no issues, full suite 64 passed,
+opt-in local configuration test passed separately, local debug APK build passed.
+Installed/relaunched local-only APK on actual RZ8RA1DN4YA; process remains running
+with no fatal markers. Default and opt-in tests reject LAN/arbitrary HTTP origins.
+SDK diagnostic printing disabled; sampled Flutter output had no JWT/access-token/
+refresh-token/password-field patterns. This is a scoped observation, not a claim
+about every OS/service log. Raw CLI startup capture was replaced with a sanitized
+outcome record because CLI status/start output can contain local keys.
+
+Interactive local confirmation/recovery/password-update and cold/warm-start plus
+invalid/reused/expired link handling are PENDING owner testing via Mailpit.
+No commit yet: finish interactive verification before checkpointing this task.
+Hosted recovery remains unverified and subject to its 2-emails/hour quota.
+Approved reference catalogs still block actual alumni profile onboarding.
+
+### Local recovery-after-logout defect
+
+Interactive local confirmation returned to the app. On recovery after logout,
+first click stayed on email-entry and repeat click showed access-check failure.
+Code inspection found the logout barrier ignored every later non-null session,
+while recovery requests bypassed AuthController. Recovery now goes through the
+controller; only an explicitly requested SDK-validated passwordRecovery event
+can cross that barrier. Late normal sessions remain blocked, including after
+failed logout. Request generation checks prevent stale requests rearming recovery.
+Regression test covers unsolicited recovery denial after logout, normal stale
+session denial after a request, accepted recovery and pending membership after
+password update. Invalid/consumed links still fail closed. Interactive retry of a
+fresh local recovery link is required; never reuse the consumed link.
+
+### Final local recovery verification
+
+Owner confirmed the updated physical-phone flow works: newest local recovery link
+opens password reset, password update succeeds, and login with the new password
+succeeds. Local confirmation-to-app was also reported successful earlier.
+The earlier interactive-pending entries are superseded for those successful
+flows. Reused-link access-check failure was observed before the fix; invalid and
+expired links were verified automatically at the local API, not interactively
+on Android. Separate cold-start/warm-start coverage was not recorded.
+
+Final verified code checks: analyzer clean, 65 Flutter tests passed, local debug
+APK built and installed/relaunched. Post-test sampled Flutter logcat contained no
+JWT/access-token/refresh-token or password-field patterns. Both hosted/local
+config files remain ignored and separate. Hosted recovery is still unverified
+under its 2-emails/hour limit; no hosted emails or settings changes were used.
+The phone currently retains the LOCAL-only test build. Rebuild/reinstall using
+hosted public configuration without LOCAL_AUTH_TESTING before hosted testing.
+Alumni onboarding remains blocked by approved institution/department/skill data;
+this task does not provision catalogs, verified membership or administrators.

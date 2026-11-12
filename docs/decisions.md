@@ -122,3 +122,13 @@ routes. Use one exact project-specific development callback for confirmation and
 recovery, shared by the auth adapter and Android manifest. No new dependencies,
 Android ID changes or authorization shortcuts. Real cold/warm-start device tests
 remain required; local SDK request tests do not establish callback delivery.
+
+## Task 03D follow-up - isolated local Auth support
+
+Debug builds can explicitly opt in to 127.0.0.1 HTTP using LOCAL_AUTH_TESTING and
+a separate ignored public config; Android cleartext access is limited to loopback
+in the debug source set. Release/profile builds still require HTTPS. This supports
+USB reverse forwarding without changing SDKs, hosted limits or global trust.
+Supabase debug printing is disabled explicitly because SDK diagnostics can include
+callback URLs or raw server errors. Mailpit links are sensitive mailbox contents,
+not diagnostic logs. See local-auth-testing.md for isolation and restoration.

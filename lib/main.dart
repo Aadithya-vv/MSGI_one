@@ -15,6 +15,8 @@ Future<void> main() async {
   if (config.problem == null) {
     try {
       await Supabase.initialize(
+        // Auth SDK diagnostics may include callback URLs and server details.
+        debug: false,
         url: config.url,
         publishableKey: config.publishableKey,
       ).timeout(const Duration(seconds: 20));

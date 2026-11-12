@@ -56,7 +56,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       final controller = ref.read(authControllerProvider.notifier);
       if (widget.recovery) {
-        await repository.requestPasswordReset(_email.text);
+        await controller.requestPasswordReset(_email.text);
         if (mounted) {
           setState(
             () => _notice = 'If an account exists for this email, recovery instructions will be sent.',

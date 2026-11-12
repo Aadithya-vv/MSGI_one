@@ -38,6 +38,7 @@ class AuthController extends Notifier<AccessState> {
   int _generation = 0;
   bool _disposed = false;
   bool _logoutBlocked = false;
+  bool _recoveryRequested = false;
   @override
   AccessState build() {
     _disposed = false;
@@ -77,7 +78,13 @@ class AuthController extends Notifier<AccessState> {
   }
 
   Future<void> _onSession(AuthSession? session) async {
-    if (_disposed || (_logoutBlocked && session != null)) return;
+    if (_disposed) return;
+    if (_logoutBlocked && session != null) {
+      // Only an explicitly requested, SDK-validated recovery may cross logout.
+      // Normal late sign-in/token events must still remain blocked.
+      if (!_recoveryRequested || !session.passwordRecovery) return;
+      _logoutBlocked = false;
+    }
     final generation = ++_generation;
     _session = session;
     if (session == null) {
@@ -85,6 +92,7 @@ class AuthController extends Notifier<AccessState> {
       return;
     }
     if (session.passwordRecovery) {
+      _recoveryRequested = false;
       state = AccessState(AccessPhase.passwordRecovery, userId: session.userId);
       return;
     }
@@ -122,18 +130,21 @@ class AuthController extends Notifier<AccessState> {
   }
 
   Future<void> signIn(String email, String password) async {
+    _recoveryRequested = false;
     _logoutBlocked = false;
     await _repository!.signIn(email, password);
     await refresh();
   }
 
   Future<void> signUp(String email, String password) async {
+    _recoveryRequested = false;
     _logoutBlocked = false;
     await _repository!.signUp(email, password);
     await refresh();
   }
 
   Future<void> signOut() async {
+    _recoveryRequested = false;
     _logoutBlocked = true;
     _generation++;
     _session = null;
@@ -149,6 +160,12 @@ class AuthController extends Notifier<AccessState> {
   Future<void> submitOnboarding(OnboardingInput input) async {
     await _repository!.submitOnboarding(input);
     await refresh();
+  }
+
+  Future<void> requestPasswordReset(String email) async {
+    final generation = _generation;
+    await _repository!.requestPasswordReset(email);
+    if (!_disposed && generation == _generation) _recoveryRequested = true;
   }
 
   Future<void> updatePassword(String password) async {
