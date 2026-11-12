@@ -84,3 +84,38 @@ development integration task, NOT for deployment or a live-security sign-off.
 First execute the SQL migrations/tests, then follow `docs/supabase-setup.md` for
 approved catalogs/admin bootstrap, public config, email/recovery settings and
 actual API/device tests. No production key or fake working backend is included.
+
+## Task 03C.1 - clean migration verification
+
+At baseline `5b0c72c5f38d18a1a97ee69ba82bc72c7e324cd8`, a fresh disposable
+PostgreSQL instance used port 55322, project `msgi_one_clean_9a7b7923` and a
+separate Docker network/volume. All three migrations applied in order, 69/69
+pgTAP assertions passed, and all 13 RLS tables and 17 application functions
+existed. Fixtures rolled back. Original port-54322 container identity, migration
+history and row counts matched the baseline. Disposable container stopped with
+storage retained. No repository modifications or commit were made by that task.
+This supersedes historical entries marking local SQL verification unexecuted.
+
+## Task 03C.2A - hosted preparation (November 12, 2026)
+
+- Starting branch was clean at the verified checkpoint above.
+- Reviewed SQL/configuration, authorization documentation, Flutter initialization,
+  recovery adapter and Android manifest; no approved official catalogs found.
+- Added an empty repeatable seed template: executed twice through local psql with
+  ON_ERROR_STOP against the existing local database; both runs committed with
+  INSERT 0 0 for both statements. Institution and department counts remain zero.
+  This verifies SQL/schema compatibility and empty reruns, not populated catalog
+  mapping/conflict behavior. Approved records still require separate validation.
+- Existing Flutter configuration test passed (1 test): defaults close access and
+  malformed/non-public keys are rejected. Build-time definitions already work.
+- Git confirms config/backend.local.json is ignored. Reviewed preparation files
+  contain no embedded credentials or privileged keys; public key prefixes and
+  environment-variable names are explanatory only.
+- Installed CLI help checked for link, migration list and db push. Documentation
+  uses explicit remote ref, dry-run and skip-vault; no hosted command executed.
+- git diff --check passed. No Flutter code/platform/dependency changes, builds,
+  database resets, hosted connections or full test-suite reruns were performed.
+- Remaining gates: approved catalogs, development project ownership/reference,
+  independent admin bootstrap approval, SMTP/Auth policy, callback implementation,
+  and hosted API plus Android email/recovery acceptance tests. See the deployment
+  plan for exact future steps. Preparation does not prove hosted readiness.

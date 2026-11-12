@@ -1,62 +1,53 @@
-# Supabase setup — next task, not performed by Task 03A
+﻿# Supabase development setup
 
-No hosted Supabase project was created, connected or modified. No real endpoint
-or credential has been supplied. No Docker, CLI or database software was installed.
-Default builds show setup rather than silently connecting to a demonstration backend.
+Workspace: `D:\MSGI_nexus`. No hosted project is connected by Task 03C.2A.
+Follow [hosted-deployment-plan.md](hosted-deployment-plan.md) only after separate
+explicit authorization. Never reset the existing local database on port 54322.
 
-## Required order for Task 03B
+## Verified local foundation
 
-1. Approve the institution verification policy, MVP publishing rules, current
-   Android identifier, real institution/department/skill/city catalogs, audit and
-   deletion/retention policies, and trusted administrator ownership.
-2. Obtain explicit authorization for an isolated local testing environment. If
-   Supabase CLI/Docker are unavailable, arrange them deliberately; do not use
-   production as a substitute. This task detected neither CLI, Docker nor psql
-   on PATH. Do not interpret that as a successful database test run.
-3. Initialize the local Supabase CLI configuration without overwriting existing
-   migrations (`supabase init`), start the isolated local stack, and apply the
-   two migrations in timestamp order. Use a disposable test database only.
-4. Run `supabase test db`. The pgTAP file seeds synthetic .invalid identities in
-   a rollback transaction and checks actual roles/RLS/RPCs. Fix all failures;
-   inspect grants/function ownership/search paths and Data API exposure. No
-   local or hosted database reset is authorized by Task 03A.
-5. Only after those checks and separate Task 03B authorization, create/use an
-   isolated hosted DEVELOPMENT project, review exposed schemas (public only),
-   and apply reviewed migrations. Keep production separate.
-6. Seed actual approved catalogs through trusted server/owner operations. Create
-   an ordinary account, confirm its email and submit onboarding. After independent
-   verification, use an owner/server transaction to set its verified membership,
-   provision `private.account_roles`, and append an auditable bootstrap reason.
-   The app and signup metadata must never provision the first administrator.
-7. Configure Auth email confirmation, password minimum 12, SMTP, site URL, exact
-   redirect allowlist, rate limits/CAPTCHA and token policy. Approve an Android
-   app-link/callback origin and manifest handling for confirmation/recovery.
-   Test cold-start and already-running recovery/confirmation before claiming them.
-8. Supply ONLY the actual project HTTPS origin and current public publishable
-   key through build configuration fields `SUPABASE_URL` and
-   `SUPABASE_PUBLISHABLE_KEY`. Legacy JWT-format and privileged keys are rejected.
-   Runtime rejection does not remove values already compiled into an artifact;
-   never pass a secret to the build at all.
-   Never pass credentials in chat or commit local configuration.
-9. Put those two real public values in an ignored `config/backend.local.json`
-   file on the developer machine. Verify Git ignores it, then run:
+Task 03C.1 applied all three migrations from scratch in isolation: 69/69 pgTAP
+assertions, 13 RLS tables and 17 application functions passed verification.
+The original local stack was preserved. See the latest entries in
+[verification.md](verification.md); earlier entries are historical.
+
+`supabase/config.toml` is local configuration, not hosted Auth configuration.
+Its project_id is a Docker namespace, not a hosted project reference. It uses
+PostgreSQL 17, API port 54321 and database port 54322. Local email confirmation
+is disabled and redirects use localhost. Do not copy those defaults to hosted
+Auth. Seeds are enabled and reference `supabase/seed.sql`.
+
+## Catalog approval
+
+The seed is an executable, empty, repeatable template: no official institution
+or department catalog exists in approved project documents. Obtain approved
+names, department mappings, authoritative source, approval date and faculty
+owner before filling it. UUIDs are database-generated; no institution-code
+column exists. Institution conflicts use lower(name); department conflicts use
+(institution_id, name), with exact department-name spelling. Reruns preserve
+existing records and active flags. Renaming/deactivation requires separate review.
+Validate every department mapping before execution because the join omits
+unmatched institutions. Skills and cities need separate approved catalogs.
+No synthetic users, demonstration profiles or administrator roles belong here.
+Empty institution/department catalogs prevent useful real onboarding.
+
+## Flutter build configuration
+
+`BackendConfig.fromEnvironment()` reads `SUPABASE_URL` and
+`SUPABASE_PUBLISHABLE_KEY`. `main.dart` initializes Supabase only after validation;
+missing/invalid configuration shows setup. Only HTTPS origins and public
+`sb_publishable_` keys are accepted. Secret/service-role and legacy JWT keys are
+rejected. Never pass a privileged value to the compiler: runtime validation
+cannot remove it from an artifact. Client configuration is extractable.
+
+After hosted authorization, place ONLY the two reviewed public values in ignored
+`config/backend.local.json` on the developer machine. No values are supplied here.
 
 ```powershell
+git check-ignore config/backend.local.json
 flutter run --dart-define-from-file=config/backend.local.json -d <android-device-id>
 ```
 
-No fake JSON values or working credentials are included in the repository.
-Client configuration is extractable and is not an authorization boundary.
-
-10. Test separate incomplete, pending, verified student/alumni, rejected,
-    suspended and admin accounts. Confirm sign-out/restoration, failed refresh,
-    changed membership under an existing JWT, own-only profile access, denied
-    table/column writes, safe directory/map payloads, connection ownership,
-    authorship and report moderation against the actual API.
-11. Replace sample feature data explicitly in a subsequent reviewed change.
-    Complete device-at-rest, backup, recovery, deletion/retention and accessibility
-    review before production. Keep all privileged operations server-side.
-
-Until database tests execute and hosted/device flows are tested, this is an
-implementation foundation ready for controlled integration, not a verified live
-authentication system or a production security sign-off.
+This future integration command was not executed in preparation. No Flutter,
+dependency, SDK or Android application ID changes were necessary. Mobile callback
+implementation remains a separate prerequisite described in the deployment plan.
