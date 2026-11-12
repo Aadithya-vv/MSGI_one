@@ -150,3 +150,24 @@ This supersedes historical entries marking local SQL verification unexecuted.
   pending handling, login/restoration/logout/recovery checks. No self-verification
   or administrator provisioning belongs to this task.
 - No dependency versions, SQL migrations, RLS, SDKs or global configuration changed.
+
+### Task 03D - owner-supplied public configuration follow-up
+
+The owner subsequently supplied the ignored backend.local.json. Validation
+confirmed exactly the two expected public fields, the authorized development
+origin and a publishable-format key without printing values. Git ignores the file.
+Hosted GET /auth/v1/settings returned HTTP 200: email enabled, mailer_autoconfirm
+false (confirmation required). Anonymous public-key POST requests to
+my_membership, directory_profiles and pending_memberships each returned HTTP 401.
+No privileged key, login password, account creation or email request was used.
+These checks verify public API connectivity and anonymous denial only; signed-in
+membership/REST privileges, session restoration and callbacks remain unverified
+on the hosted project. The initial missing-configuration blocker above is resolved.
+
+Configured Android build also passed:
+`flutter build apk --debug --no-pub --dart-define-from-file=config/backend.local.json`
+returned exit 0. Gradle output was captured only in ignored build output to avoid
+printing encoded configuration arguments. The APK now contains the supplied
+public build configuration; no real-device launch or signed-in hosted flow was
+performed. Public build configuration is extractable by design; no privileged
+credentials were used. Dependency lockfile remains unchanged.

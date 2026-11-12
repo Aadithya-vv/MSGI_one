@@ -63,3 +63,7 @@ configuration remains blocked and a default build correctly shows setup.
 For dashboard callback settings and remaining real-device/account tests, follow
 the Task 03D section in authentication-flow.md. Do not claim hosted authentication
 works solely from local regression tests or a successful Android build.
+
+The owner subsequently supplied and validated the ignored public configuration.
+Hosted Auth settings and anonymous RPC-denial probes succeeded; see verification.md
+for actual results. No configured values are stored in tracked documentation.
