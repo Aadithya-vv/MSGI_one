@@ -1,71 +1,80 @@
-# Architecture
+# Architecture — Task 03A
 
-MSGI One is an Android-first Flutter application. Task 02 is an offline,
-public UI preview, not an authenticated application.
+MSGI One is an Android-first, feature-first Flutter application with a prepared
+Supabase authentication adapter and unapplied SQL migrations. No hosted backend
+has been connected. Missing configuration shows setup, never a demo login bypass.
+Professional community screens still show clearly labelled sample content.
 
-`main.dart` mounts Riverpod's `ProviderScope`; `app.dart` composes Material 3 and
-the provider-owned GoRouter. `core/routing` owns paths, route construction and
-future access guards. The router is disposed with its provider. Startup has an
-explicit Get started action, avoiding artificial startup delays.
+## Composition and ownership
 
-Welcome/login/signup sit outside `OneShell`. The shell supplies branding, a
-permanent SAMPLE PREVIEW label, and Home, Discover, Map, Network, Profile bottom
-destinations. Dashboard cards reach mentorship and opportunities within the same
-shell. Destination changes use `go`; per-tab history/state persistence is deferred.
+`main.dart` validates public build configuration, initializes Supabase only when
+valid values are deliberately supplied, and injects bootstrap results into
+Riverpod. `app.dart` composes the existing Material 3 theme, auth lifecycle
+observer and provider-owned GoRouter. No privileged key is accepted or logged.
 
-| Module | Ownership |
+| Module | Responsibility |
 | --- | --- |
-| `core/config` | Public constants, no credentials |
-| `core/routing` | Paths, router lifecycle, future auth/verification redirects |
-| `core/theme` | Light theme, navy/blue/gold colors, typography and spacing |
-| `core/widgets` | Page container, shell, branding, cards, loading/empty UI |
-| `core/errors` | Safe error messages and optional recovery |
-| `features/auth` | Startup, welcome, nonfunctional credential previews |
-| `features/home` | Dashboard composition and feature entry points |
-| `features/discovery` | Sample alumni domain model, provider filtering, search UI |
-| `features/alumni_map` | Clearly illustrative globe placeholder |
-| `features/connections` | Network empty state, no mutations |
-| `features/profile` | Profile overview, no assumed user identity |
-| `features/mentorship` | Sample mentor model, provider data and presentation |
-| `features/opportunities` | Sample opportunity model, provider data and presentation |
+| core/config | Branding and validated HTTPS/public-key build configuration |
+| core/routing | Paths, provider-owned router, pure access redirect rules |
+| core/theme | Existing navy/blue/gold Material 3 theme and spacing |
+| core/widgets / core/errors | Existing shell, cards, loading/empty/safe errors |
+| features/auth/domain | Repository contract, identity/membership/access states, onboarding data and validation |
+| features/auth/data | Supabase adapter, safe error mapping, own membership RPC and catalog/onboarding calls |
+| features/auth/application | Riverpod injection and race-safe session/membership state machine |
+| features/auth/presentation | Startup/welcome, login/signup/recovery, onboarding, setup and membership states |
+| features/home | Original dashboard and feature entry points |
+| features/discovery | Labelled sample directory and provider filtering |
+| features/alumni_map | Illustrative map placeholder, no real geolocation |
+| features/connections | Sample network UI; live mutations deferred |
+| features/profile | Profile placeholder, account refresh and logout |
+| features/mentorship / opportunities | Sample domain models/providers/cards |
+| supabase/migrations | Schema, constraints, grants/RLS and checked server workflows |
+| supabase/tests/database | Unexecuted pgTAP role/RLS/RPC tests for an isolated local stack |
 
-Domain models have no widget imports. Data providers own immutable sample lists;
-presentation consumes providers. Discovery search filtering lives in a Riverpod
-family while its transient input remains local UI state. Home composes public
-cards/data owned by mentorship and opportunities. Placeholder features do not
-need empty repositories or use-case layers.
+Domain models do not import Flutter widgets. The Supabase adapter implements an
+injectable interface; test fakes exist only under test/. No code-generation or
+new runtime dependencies were added, and pubspec.lock is retained.
+
+## Navigation and access
+
+Startup/welcome/auth forms are public only when backend setup is valid. Setup,
+loading and error states fail closed. Authenticated incomplete users onboard,
+pending users wait for institutional review, rejected/suspended users receive
+restricted state handling, and verified students/alumni enter OneShell.
+Recovery sessions go to password update without bypassing membership review.
+
+OneShell preserves five bottom destinations and the original mentor/opportunity
+entry points. All eleven original screens are tested using appropriate fake
+sessions. The anonymous sample-dashboard button was removed; no runtime preview
+flag bypasses guards. GoRouter refreshes from auth state changes rather than
+being recreated per event. Safe internal destinations survive loading.
+
+AuthController separates identity from membership. Generation counters prevent
+late restoration/membership responses from undoing newer session changes/logout.
+Unknown data, failed membership checks and auth stream errors close access.
+Membership refreshes on resume, every sixty seconds and manually. Database
+checks, not that polling interval, authorize every privileged operation.
+
+## Database and integration boundary
+
+Professional profiles contain no email or privileged membership/role fields.
+Private membership/role/audit records have no client table grants. Base profiles
+are self-only. Reviewed SECURITY DEFINER directory/map RPCs return explicitly
+limited columns after caller/target checks; no exposed views are created.
+Onboarding and verification share per-user locking and transactional invariants.
+Admin roles are provisioned only through trusted server/owner operations.
+
+See database-schema.md, security-model.md and authentication-flow.md for exact
+relationships, privileges, states and workflows. See supabase-setup.md for the
+required local SQL test and hosted-development integration sequence. Migrations,
+RLS tests and actual Auth/email/deep-link flows are not claimed as verified live.
 
 ## Design and accessibility
 
-Navy `#09285B`, blue `#1557A0`, gold `#F5BF30`, background `#F5F7FC`, white surfaces.
-Gold is paired with navy text. System typography and built-in icons avoid asset
-downloads. Pages scroll and cap width at 960 logical pixels. Cards wrap into one,
-two or four columns by available width. Primary actions target at least 48 logical
-pixels. Text scaling is preserved; no artificial scale clamp is applied.
-
-Tests exercise all routes at 320, 390 and 840 logical pixels and 100%/200% text
-scaling. Widget/layout checks do not substitute for device visual testing or a
-screen-reader accessibility audit. Shared loading/empty/error UI is ready for
-future asynchronous features.
-
-## Future Supabase integration
-
-The SDK is installed but never initialized or called. No endpoint, key, backend
-account, schema or session is fabricated. The next integration must:
-
-1. Approve identity/verification requirements; design migrations, RLS and
-   least-privilege grants before protected data access.
-2. Validate a build-supplied project URL and public publishable key, initialize
-   Supabase once before startup, and expose the client through a provider.
-   Client build configuration is extractable and cannot protect secrets.
-   Add Android internet permission and approved authentication deep-link/callback
-   configuration during integration, after approving the final application ID.
-3. Introduce feature-owned repositories; replace sample providers explicitly.
-4. Add session and verification providers and centralized GoRouter redirects for
-   loading, signed-out, pending-verification and verified states.
-5. Enforce authorization independently using Supabase RLS. Never embed a
-   service-role key or administrative operations in the mobile client.
-6. Test denied/allowed access, session changes, failures and recovery.
-
-Location sharing must be opt-in and revocable. Public preview routes grant no
-authenticated access and must not become an authorization shortcut.
+Existing Material 3 colors and typography are preserved: navy #09285B, blue
+#1557A0, gold #F5BF30, background #F5F7FC and white surfaces. Gold uses navy text.
+System fonts/icons avoid external assets. Pages scroll and cap width at 960;
+cards wrap into one, two or four columns. Form fields/buttons use the established
+components, readable text and large tap targets. Original layout tests cover
+320/390/840 logical pixels with 100%/200% text. New account states are also tested
+with enlarged text. These are widget checks, not device or screen-reader sign-off.

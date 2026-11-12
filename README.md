@@ -2,17 +2,18 @@
 
 **One Community. Infinite Connections.** Android-first alumni networking for MSGI.
 
-Task 02 is a branded, offline foundation: a responsive dashboard, eleven screens,
-Riverpod-managed sample content and GoRouter navigation. Authentication,
-verification, database access and live maps are not implemented. Every profile
-and opportunity is explicitly a sample.
+Task 03A adds a Supabase authentication adapter, membership-aware navigation,
+validated onboarding and unapplied SQL migrations with grants/RLS and security
+tests. No hosted backend is connected. Default builds show development setup.
+Community feature content remains explicitly labelled samples; login alone does
+not grant community access.
 
 ## Development
 
 Current repository: `D:\MSGI_nexus`; Dart package: `msgi_one`. The requested move
 to `D:\MSGI_One` is pending: Windows rejected the verified repository rename
 because a process has an open handle. The original repository/history are intact.
-Close applications or terminals using the folder before retrying relocation.
+Task 03A deliberately works in this existing directory and does not retry relocation.
 Android application ID remains `com.msgi.nexus.msgi_nexus` intentionally.
 
 Verified setup: Flutter **3.50.0 stable**, Dart **3.14.0**, Android API **36**,
@@ -61,7 +62,7 @@ disable TLS or change system settings. Try ordinary builds first.
 | --- | --- | --- |
 | flutter_riverpod | 3.5.0 | Shared state and dependency injection |
 | go_router | 18.1.4 | Centralized navigation and shell |
-| supabase_flutter | 2.18.3 | Future integration; not initialized |
+| supabase_flutter | 2.18.3 | Authentication adapter; initialized only with reviewed public configuration |
 | material_ui | 1.11.0 | Material widgets from installed Flutter template |
 
 `pubspec.lock` pins the transitive resolution. No dependency upgrades without a
@@ -73,7 +74,7 @@ demonstrated reason. No external images, fonts or branding assets are downloaded
 | --- | --- |
 | Startup | `/` |
 | Welcome | `/welcome` |
-| Login / signup previews | `/login`, `/signup` |
+| Login / signup forms | `/login`, `/signup` |
 | Dashboard | `/home` |
 | Discover alumni | `/discover` |
 | Global alumni map placeholder | `/map` |
@@ -82,9 +83,12 @@ demonstrated reason. No external images, fonts or branding assets are downloaded
 | Mentor recommendations preview | `/mentors` |
 | Career opportunities preview | `/opportunities` |
 
-Get started → Explore sample dashboard. Bottom navigation reaches Home, Discover,
-Map, Network, Profile. Dashboard cards reach mentorship and opportunities.
-Unknown routes provide safe recovery. Sample directory search matches fields/cities.
+Without backend configuration, `/setup` explains the development integration
+requirements. With a reviewed backend, users sign up, confirm email, complete
+`/onboarding`, and wait at `/verification-pending` for trusted approval. Rejected
+or suspended accounts go to `/membership-status`. Loading/error/recovery routes
+fail closed. Only verified members reach the five bottom destinations and
+mentor/opportunity screens. Existing feature data remains samples.
 
 ## Engineering documentation
 
@@ -94,8 +98,15 @@ Unknown routes provide safe recovery. Sample directory search matches fields/cit
 - [Agent conventions](AGENTS.md)
 - [Task 02 verification results](docs/verification.md)
 - [Task 02B rebranding results and relocation blocker](docs/rebranding.md)
+- [Database schema and RPCs](docs/database-schema.md)
+- [Security model and unexecuted database-test gates](docs/security-model.md)
+- [Authentication flow](docs/authentication-flow.md)
+- [Exact next Supabase setup steps](docs/supabase-setup.md)
 
-Next: approve verification requirements, final application ID, schema and RLS
-before implementing authentication. Never embed service-role keys. Build-supplied
-public keys/endpoints are extractable and do not replace backend authorization.
-No external accounts, Supabase projects or remote repositories are created here.
+Next: approve policies/catalogs and run the migrations plus pgTAP tests on an
+isolated local stack before any authorized hosted-development integration. The
+SQL tests are unexecuted while local CLI/Docker/PostgreSQL are unavailable. Do
+not treat Flutter fakes as RLS evidence. Follow `docs/supabase-setup.md` to supply
+actual public build configuration only after review. Never bundle privileged
+keys; client configuration does not replace authorization. No external accounts,
+hosted Supabase projects or remote repositories are created here.

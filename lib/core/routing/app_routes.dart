@@ -1,4 +1,12 @@
 abstract final class AppRoutes {
+  static const setup = '/setup';
+  static const authLoading = '/auth-loading';
+  static const authError = '/auth-error';
+  static const onboarding = '/onboarding';
+  static const pending = '/verification-pending';
+  static const membershipStatus = '/membership-status';
+  static const recover = '/recover';
+  static const resetPassword = '/reset-password';
   static const startup = '/';
   static const welcome = '/welcome';
   static const login = '/login';

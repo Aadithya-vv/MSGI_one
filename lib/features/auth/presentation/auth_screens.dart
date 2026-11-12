@@ -86,71 +86,11 @@ class WelcomeScreen extends StatelessWidget {
             child: const Text('Join the community'),
           ),
           const SizedBox(height: 12),
-          TextButton(
-            onPressed: () => context.go(AppRoutes.home),
-            child: const Text('Explore sample dashboard'),
-          ),
           const SizedBox(height: 24),
           const Text(
-            'Foundation preview · Registration and authentication are not available yet.',
+            'Secure sign-in and institutional review protect our community. Feature content remains clearly labelled samples.',
             textAlign: TextAlign.center,
             style: TextStyle(color: OneColors.muted, height: 1.5),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-class AuthScreen extends StatelessWidget {
-  const AuthScreen({super.key, this.signup = false});
-  final bool signup;
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      leading: BackButton(onPressed: () => context.go(AppRoutes.welcome)),
-      title: Text(signup ? 'Sign up' : 'Log in'),
-    ),
-    body: SafeArea(
-      child: PageBody(
-        children: [
-          FeatureHeader(
-            eyebrow: 'Where generations connect',
-            title: signup ? 'Join ${AppConfig.name}' : 'Welcome back',
-            description:
-                'This is a preview of the future ${signup ? 'registration' : 'login'} experience. No credentials are collected or sent.',
-          ),
-          const TextField(
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Email address',
-              prefixIcon: Icon(Icons.mail_outline),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const TextField(
-            enabled: false,
-            obscureText: true,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              prefixIcon: Icon(Icons.lock_outline),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const EmptyState(
-            title: 'Secure access is coming next',
-            message: 'Account verification and secure sign-in will be added in the authentication phase.',
-            icon: Icons.verified_user_outlined,
-          ),
-          const SizedBox(height: 24),
-          OutlinedButton(
-            onPressed: () => context.go(AppRoutes.home),
-            child: const Text('Explore sample dashboard'),
-          ),
-          TextButton(
-            onPressed: () =>
-                context.go(signup ? AppRoutes.login : AppRoutes.signup),
-            child: Text(signup ? 'View login preview' : 'View signup preview'),
           ),
         ],
       ),

@@ -17,11 +17,16 @@
 15. Do not silently introduce major new dependencies. Prefer the existing stack.
 16. Protect existing functionality during refactoring; update meaningful tests.
 
-The current app is a public, offline foundation preview. It has no authenticated
-session, backend initialization, network-backed directory, or real user data.
-Supabase integration must introduce session/verification guards and database
-policies before exposing any protected feature. Public preview routes are not
-an authentication mechanism and must not be reused as one.
+Task 03A includes authentication adapters, membership-aware guards and unapplied
+SQL migrations. No hosted Supabase project is connected. Without reviewed public
+build configuration, show setup; never allow anonymous sample-dashboard access.
+Feature content remains explicitly labelled samples. Test fakes belong only in
+test/. Never substitute client route checks for database grants/RLS/RPC checks.
+Membership and administrator roles come only from protected server records,
+never from self-declared profile type or user-editable Auth metadata.
+Run database security tests on an isolated local stack before hosted integration;
+report unavailable/unexecuted checks accurately. Do not move the locked workspace
+or connect to a hosted project without the next task's explicit authorization.
 
 Flutter 3.50 generated `material_ui`; use its Material widgets consistently.
 Preserve generated Android Gradle configuration unless a concrete error requires a change.

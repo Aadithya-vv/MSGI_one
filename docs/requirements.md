@@ -33,8 +33,30 @@ client keys, ignored local credentials, loading/empty/error/retry behavior,
 scalable readable text, accessible tap targets, and tests for important access
 rules. Never present samples as real data or live recommendations.
 
-Task 02 excludes live auth/databases, verification approvals, map SDKs, real
+Historical Task 02 excluded live auth/databases, verification approvals, map SDKs, real
 connections, ranking, applications, uploads, notifications, analytics, deployment
 and production signing. Prioritize secure identity and profiles next, then the
 directory/networking. Confirm the final submission scope with the faculty mentor
 before expanding it.
+
+## Task 03A implementation scope
+
+Versioned PostgreSQL/Supabase migrations define thirteen tables, private
+membership/role records, transactional onboarding, grants/RLS, checked community
+RPCs and audited institutional review. They are NOT applied to any hosted project.
+Flutter supplies a repository boundary, Supabase adapter, session restoration,
+membership-aware guards, validated login/signup/recovery/onboarding forms,
+pending/rejected/suspended/error/setup screens, refresh and logout.
+
+All new accounts remain incomplete or pending until trusted approval. Verified
+students and alumni may browse the community; opportunity publishing is limited
+to verified alumni and verified administrators for this MVP. Both directory and
+map visibility default off. Map participation additionally requires a city and
+directory visibility. No email, phone, exact address or precise GPS is placed in
+discoverable profiles. Administrator roles cannot be assigned by clients.
+
+Task 03A does not claim live authentication, applied migrations, real directory
+data, email delivery, recovery deep links, database test success, or production
+readiness. Database tests must run locally before Task 03B connects a reviewed
+development backend. Existing eleven screens remain exercised with test-only
+repositories; their professional content is still labelled samples.

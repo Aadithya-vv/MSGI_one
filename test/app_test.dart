@@ -4,6 +4,10 @@ import 'package:material_ui/material_ui.dart';
 import 'package:msgi_one/app.dart';
 import 'package:msgi_one/core/routing/app_router.dart';
 import 'package:msgi_one/core/routing/app_routes.dart';
+import 'package:msgi_one/features/auth/application/auth_providers.dart';
+import 'package:msgi_one/features/auth/domain/auth_repository.dart';
+
+import 'helpers/fake_auth_repository.dart';
 
 Future<void> pumpRoute(
   WidgetTester tester,
@@ -15,10 +19,26 @@ Future<void> pumpRoute(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  final router = createAppRouter(initialLocation: path);
+  final repository = FakeAuthRepository(
+    session:
+        {
+          AppRoutes.startup,
+          AppRoutes.welcome,
+          AppRoutes.login,
+          AppRoutes.signup,
+          AppRoutes.recover,
+        }.contains(path)
+        ? null
+        : const AuthSession('fixture-user'),
+  );
+  addTearDown(repository.dispose);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [appRouterProvider.overrideWithValue(router)],
+      key: UniqueKey(),
+      overrides: [
+        authRepositoryProvider.overrideWithValue(repository),
+        initialLocationProvider.overrideWithValue(path),
+      ],
       child: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(scale)),
         child: const OneApp(),
@@ -26,7 +46,6 @@ Future<void> pumpRoute(
     ),
   );
   await tester.pumpAndSettle();
-  addTearDown(router.dispose);
 }
 
 void main() {
@@ -66,14 +85,25 @@ void main() {
     });
   }
 
-  testWidgets('startup reaches welcome and explicitly opens sample dashboard', (
+  testWidgets('startup reaches welcome and authenticates before dashboard', (
     tester,
   ) async {
     await pumpRoute(tester, AppRoutes.startup);
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Explore sample dashboard'));
-    await tester.tap(find.text('Explore sample dashboard'));
+    await tester.ensureVisible(find.text('Log in'));
+    await tester.tap(find.text('Log in'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('auth-email')),
+      'fixture@example.invalid',
+    );
+    await tester.enterText(
+      find.byKey(const Key('auth-password')),
+      'test-only-password',
+    );
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Log in'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Log in'));
     await tester.pumpAndSettle();
     expect(find.text('SAMPLE PREVIEW'), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
@@ -127,17 +157,14 @@ void main() {
     }
   });
 
-  testWidgets('auth previews collect no credentials', (tester) async {
+  testWidgets('auth forms validate and offer registration', (tester) async {
     await pumpRoute(tester, AppRoutes.login);
-    for (final field in tester.widgetList<TextField>(find.byType(TextField))) {
-      expect(field.enabled, isFalse);
-    }
-    expect(
-      find.textContaining('No credentials are collected or sent.'),
-      findsOneWidget,
-    );
-    await tester.ensureVisible(find.text('View signup preview'));
-    await tester.tap(find.text('View signup preview'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Log in'));
+    await tester.pumpAndSettle();
+    expect(find.text('Enter a valid email address.'), findsOneWidget);
+    expect(find.text('Use a password of 12–128 characters.'), findsOneWidget);
+    await tester.ensureVisible(find.text('Create an account'));
+    await tester.tap(find.text('Create an account'));
     await tester.pumpAndSettle();
     expect(find.text('Join MSGI One'), findsOneWidget);
   });

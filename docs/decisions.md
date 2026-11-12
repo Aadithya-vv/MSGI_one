@@ -68,3 +68,48 @@ Package references: [Riverpod](https://pub.dev/packages/flutter_riverpod),
 - Historical Task 02 entries, verification evidence and Git commit messages
   retain their original names/paths for traceability; they are not current setup
   instructions. No remote is created and no history is rewritten.
+
+## Task 03A — authentication and database security foundation
+
+1. Work in the existing locked directory; do not retry relocation. No hosted
+   project, schema, key or external account is created/connected by this task.
+2. No auth.users creation trigger. `submit_onboarding` is one database transaction
+   with a per-user advisory lock, constraints, skills, pending membership and an
+   initial audit record. Failure leaves no partial profile. Review takes the
+   same lock so verified institutional claims cannot race a profile resubmission.
+3. Professional profiles, private memberships and private administrator roles
+   are separate. User metadata and claimed category never confer authority.
+   Initial catalogs and the first administrator require trusted server operations.
+4. Base profiles are self-readable only. Narrow SECURITY DEFINER directory/map
+   RPCs enforce current membership and return explicit safe columns. There are
+   no exposed views. All definers have empty search paths, schema-qualified
+   references, revoked PUBLIC/anon execution, and runtime checks. Private tables
+   have RLS and no client grants. Self-only RLS/grants remain separate from RPCs.
+5. Connection creation derives sender from auth.uid(). Canonical unordered UUID
+   pairs reject duplicates/reversals. Row-locked transitions enforce pending-state
+   and recipient/sender action ownership. No direct client insert/update grant.
+6. MVP opportunity publishers are verified alumni or verified administrators.
+   Students can browse published listings; scope can change only with explicit
+   requirements/policy tests. Already published content is not automatically
+   deleted by author suspension; moderators must review it separately.
+7. Build configuration accepts HTTPS origins and current publishable keys only.
+   Legacy JWT-format anon/service keys are rejected deliberately. Missing/invalid
+   values or initialization failure show setup. No demonstration backend or key
+   is bundled. Configuration values and raw backend errors are never displayed.
+8. Auth repository injection is test-only; no production preview bypass flag.
+   Session identity and current database membership are separate states. Async
+   results are generation-checked so stale reads cannot undo sign-out/session
+   changes. Read/restore failures close routes; failed logout stays closed until
+   retry. Membership refreshes on resume, manually and every sixty seconds.
+9. Route guards are UX only. Database state is checked on every privileged SQL
+   statement/RPC; UI refresh timing does not authorize database operations.
+10. Password policy is 12–128 characters in forms; hosted Auth must enforce the
+    corresponding minimum and email confirmation. Recovery uses generic responses.
+    Mobile email/recovery callbacks and cold-start links remain Task 03B work.
+11. Android gains internet permission, disallows cleartext and disables app backup
+    to reduce session-backup exposure. SDK default app-private session storage is
+    retained without adding a storage dependency; device-at-rest hardening still
+    requires review before production. Android ID and Gradle settings are unchanged.
+12. Database pgTAP tests are written against actual roles/SQL, not Flutter fakes.
+    No local CLI/Docker/PostgreSQL was detected on PATH; do not call SQL tests
+    passed without executing them. No large tools are installed for this task.

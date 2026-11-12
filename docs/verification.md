@@ -50,3 +50,37 @@ See `rebranding.md` for current MSGI One results: unchanged dependency lockfile,
 clean analyzer, all 25 tests passing, and a successful Android debug APK with the
 new display label and original application ID. Directory relocation is blocked
 by a Windows file lock; the repository remains at its original location.
+
+## Task 03A — implemented authentication/database foundation
+
+No hosted Supabase project was created, connected or modified. Work remained in
+`D:\MSGI_nexus` without another relocation attempt. Android ID remains
+`com.msgi.nexus.msgi_nexus`; APK label remains MSGI One. Dependencies and lockfile
+are unchanged from the baseline.
+
+| Check | Actual result |
+| --- | --- |
+| `flutter pub get` | Passed; pubspec/lockfile unchanged |
+| `dart format lib test` | Passed, 36 Dart files |
+| `flutter analyze` | No issues found |
+| `flutter test` | All 61 tests passed |
+| Original eleven screens | Preserved and tested with appropriate injected sessions |
+| Original 25 tests | Retained; auth interactions updated for guards/validation |
+| New auth behavior | Restoration, stale reads, errors/logout, guard loops, privacy defaults, onboarding pending, recovery, suspension, missing configuration |
+| `flutter build apk --debug` | Passed, 18.0 seconds |
+| APK identity inspection | Original Android ID; MSGI One label |
+| APK artifact | `build/app/outputs/flutter-apk/app-debug.apk`, 197,658,589 bytes |
+| SQL migrations and 69 pgTAP assertions | UNEXECUTED; local Supabase CLI, Docker and psql unavailable on PATH |
+| Hosted auth/email/API/deep links | UNEXECUTED; no project/configuration supplied |
+| Android launch/visual testing | UNEXECUTED; only Windows/Chrome/Edge targets detected |
+
+Database test fixtures exercise actual grants/RLS/RPCs in a rollback transaction;
+Flutter fakes do not prove database authorization. Static SQL review is not a
+successful migration or RLS test run. See `supabase/tests/database/authorization.test.sql`
+and `docs/security-model.md` for coverage and remaining gates.
+
+Task 03B readiness: ready for an approved isolated-local validation and controlled
+development integration task, NOT for deployment or a live-security sign-off.
+First execute the SQL migrations/tests, then follow `docs/supabase-setup.md` for
+approved catalogs/admin bootstrap, public config, email/recovery settings and
+actual API/device tests. No production key or fake working backend is included.
