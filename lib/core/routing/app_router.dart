@@ -14,6 +14,7 @@ import '../../features/discovery/presentation/discovery_screen.dart';
 import '../../features/alumni_map/presentation/alumni_map_screen.dart';
 import '../../features/connections/presentation/network_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/administration/presentation/administration_screen.dart';
 import '../../features/mentorship/presentation/mentorship_screen.dart';
 import '../../features/opportunities/presentation/opportunities_screen.dart';
 import '../errors/error_state.dart';
@@ -73,6 +74,10 @@ GoRouter createAppRouter({
       ),
     ),
     routes: [
+      GoRoute(
+        path: AppRoutes.administration,
+        builder: (_, _) => const AdministrationScreen(),
+      ),
       GoRoute(
         path: AppRoutes.profileEdit,
         builder: (_, _) => const OnboardingScreen(),

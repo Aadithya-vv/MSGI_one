@@ -39,7 +39,9 @@ config/backend.auth-test.local.json containing ONLY its local public configurati
 It generates two synthetic @example.test accounts and random passwords in memory,
 confirms through local Mailpit, and prints only named PASS results. It separately
 runs supabase/dev/synthetic_catalogs.sql twice with explicit local opt-in; the
-official supabase/seed.sql stays empty and unchanged. It creates NO administrator.
+official supabase/seed.sql stays empty and unchanged. Task 04B.2 extends this
+script with a temporary isolated synthetic reviewer using the guarded owner
+operation; its role is removed in finally. No hosted administrator is created.
 Synthetic accounts/mail remain in that disposable environment for inspection.
 SQL security tests instead roll back all their fixtures. Neither workflow resets
 or deletes existing user data. Never pass hosted configuration to this script.

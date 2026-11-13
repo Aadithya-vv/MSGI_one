@@ -7,6 +7,7 @@ const config = JSON.parse(fs.readFileSync('config/backend.auth-test.local.json',
 const base='http://127.0.0.1:55321', callback='com.msgi.one.dev://auth-callback/';
 if(config.SUPABASE_URL !== base) throw Error('Only isolated port 55321 is permitted');
 let count=0;
+let fixtureAdministratorId=null;
 function check(value,label){ if(!value) throw Error(label); count++; console.log('PASS: '+label); }
 function sql(query){ return cp.execFileSync('docker',['exec','-i','supabase_db_msgi_one_clean_9a7b7923','psql','-X','-qAt','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1'],{input:query,encoding:'utf8',stdio:['pipe','pipe','pipe']}); }
 async function request(path,{method='GET',body,token}={}){
@@ -45,11 +46,15 @@ async function rpc(name,body,token){return request('/rest/v1/rpc/'+name,{method:
  r=await rpc('my_membership',{},student.token);check(r.status===200&&r.body[0].status==='pending','Student remains pending');
  r=await rpc('save_member_profile',{p_input:input('alumni')},alumni.token);check(r.status===204||r.status===200,'Alumni professional submission');
  r=await rpc('discover_alumni',{},alumni.token);check(r.status===403,'Pending alumni discovery denied');
- // Explicit server-owned, isolated fixture authorization. No administrator roles.
- for(const [a,kind] of [[student,'student'],[alumni,'alumni']]){
-  if(!/^[a-f0-9-]{36}$/.test(a.id))throw Error('Invalid fixture ID');
-  sql(`begin; update private.memberships set status='verified',verified_kind='${kind}' where user_id='${a.id}'; insert into private.verification_audit(subject_id,actor_id,previous_status,new_status,verified_kind,reason) values('${a.id}','${a.id}','pending','verified','${kind}','Isolated synthetic API authorization fixture'); commit;`);
- }
+ r=await rpc('pending_memberships',{},alumni.token);check(r.status===403,'Nonadministrator review queue denied');
+ if(!/^[a-f0-9-]{36}$/.test(student.id))throw Error('Invalid fixture ID');
+ fixtureAdministratorId=student.id;
+ // The actual owner bootstrap runs only against the named disposable database.
+ sql(`begin; select set_config('msgi.bootstrap_approved','yes',true); select set_config('msgi.bootstrap_user','${student.id}',true); select set_config('msgi.bootstrap_kind','student',true); select set_config('msgi.bootstrap_approver','Synthetic independent verifier',true); select set_config('msgi.bootstrap_reason','Isolated API authorization fixture',true);\n`+fs.readFileSync('supabase/operations/bootstrap_initial_admin.sql','utf8').replace(/^\uFEFF/,'')+'\ncommit;');
+ r=await rpc('pending_memberships',{},student.token);check(r.status===200&&r.body.some(x=>x.user_id===alumni.id),'Server-provisioned reviewer sees pending queue');
+ r=await rpc('review_membership',{p_user_id:student.id,p_status:'verified',p_verified_kind:'student',p_reason:'Synthetic self-review attempt'},student.token);check(r.status===403,'Administrator self-review denied');
+ r=await rpc('review_membership',{p_user_id:alumni.id,p_status:'verified',p_verified_kind:'alumni',p_reason:'Synthetic independently checked API approval'},student.token);check(r.status===200||r.status===204,'Administrator approval through checked API');
+ r=await rpc('verification_history',{p_user_id:alumni.id},student.token);check(r.status===200&&r.body.some(x=>x.reason==='Synthetic independently checked API approval'),'Approval recorded in private audit API');
  r=await rpc('discover_alumni',{p_profession:'Synthetic organization',p_institution:input('alumni').institution_id,p_department:input('alumni').department_id,p_year:2024,p_skill:input('alumni').skill_ids[0],p_limit:21},student.token);
  check(r.status===200&&r.body.some(x=>x.user_id===alumni.id),'Verified API filtering uses server membership');
  const visible=r.body.find(x=>x.user_id===alumni.id);
@@ -62,7 +67,14 @@ async function rpc(name,body,token){return request('/rest/v1/rpc/'+name,{method:
  r=await rpc('save_member_profile',{p_input:{...input('alumni'),company:'Updated synthetic organization',directory_visible:false}},alumni.token);check(r.status===200||r.status===204,'Own professional/privacy editing');
  r=await rpc('discover_alumni',{p_user:alumni.id},student.token);check(r.status===200&&r.body.length===0,'Hidden profile removed from discovery');
  r=await rpc('discover_alumni',{});check(r.status===401,'Anonymous directory API denied');
+ r=await rpc('review_membership',{p_user_id:alumni.id,p_status:'rejected',p_verified_kind:null,p_reason:'Synthetic rejection acceptance'},student.token);check(r.status===200||r.status===204,'Administrator rejection accepted');
+ r=await rpc('discover_alumni',{},alumni.token);check(r.status===403,'Rejected member denied with existing JWT');
+ r=await rpc('review_membership',{p_user_id:alumni.id,p_status:'verified',p_verified_kind:'alumni',p_reason:'Synthetic independently reviewed restoration'},student.token);check(r.status===200||r.status===204,'Administrator can restore reviewed membership');
+ r=await rpc('review_membership',{p_user_id:alumni.id,p_status:'suspended',p_verified_kind:null,p_reason:'Synthetic suspension acceptance'},student.token);check(r.status===200||r.status===204,'Administrator suspension accepted');
+ r=await rpc('discover_alumni',{},alumni.token);check(r.status===403,'Suspended member denied with existing JWT');
  sql(`update private.memberships set status='suspended',verified_kind=null where user_id='${student.id}';`);
  r=await rpc('discover_alumni',{},student.token);check(r.status===403,'Existing JWT loses directory after suspension');
  console.log('LOCAL_PROFILE_API_CHECKS='+count);
-})().catch(()=>{console.error('LOCAL_PROFILE_API_CHECK_FAILED (sensitive response suppressed)');process.exitCode=1;});
+})().catch(()=>{console.error('LOCAL_PROFILE_API_CHECK_FAILED (sensitive response suppressed)');process.exitCode=1;}).finally(()=>{
+ if(fixtureAdministratorId){try{sql(`delete from private.account_roles r using auth.users u where r.user_id=u.id and r.user_id='${fixtureAdministratorId}' and u.email like 'task04a-student-%@example.test';`);}catch{console.error('Isolated fixture role cleanup failed');process.exitCode=1;}}
+});

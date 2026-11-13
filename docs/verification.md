@@ -328,3 +328,56 @@ Final Task 04A commands/results:
 - Unsaved in-memory progress survives membership-refresh route transitions and
   clears on logout; explicit private save is still required for process restart.
 - No dependency upgrade, hosted deployment, database reset, emulator or push.
+
+## Task 04B.2 - hosted preparation and reviewer workflow (November 13, 2026)
+
+Read-only hosted migration history confirms all four versions deployed to
+sbgshejyvkptmrffiwvd. Owner explicitly designated the project development-only
+despite the CLI main-environment production label. Hosted counts before/after:
+institutions=0, departments=0, skills=0, cities=0, profiles=0, administrator roles=0.
+The proposed consented developer UUID exists and has confirmed email, but no
+profile/membership or administrator role. No email/address/token was retrieved.
+Owner deferred institutional/city population; no invented official records used.
+
+Prepared a render-only, validated, idempotent import manifest and SQL generator,
+with a proposed 20-skill list awaiting approval. Execution refuses unapproved
+manifests/opt-ins and missing/inactive parents; no IDs/names/active flags change.
+Official seed.sql is unchanged. Prepared an atomic owner-only administrator
+operation with approval, confirmed-user, complete pending profile, matching
+reviewed kind, active-catalog, audit and existing-administrator guards. Exact
+account-specific disabled review SQL exists only in the user's Temp folder;
+real UUID/reason are not committed as operational parameters. No hosted data or
+administrator privilege mutation occurred. Canonical provisioning is not an RPC.
+
+Added /admin/reviews using existing pending_memberships/review_membership RPCs:
+server-authorized entry, bounded queue, explicit kind/evidence acknowledgment/
+audit reason, safe retry, self-review prevention. Existing pending/verified/
+rejected/suspended route behavior is preserved. No new migration/schema/grant.
+
+Actual checks:
+- dart format lib test: 52 files, final unchanged; flutter analyze: no issues.
+- flutter test --no-pub: 83 passed (all previous 77 plus review workflow tests).
+- Existing isolated pgTAP: 103/103 passed.
+- Owner bootstrap operation: 12 transactional pgTAP checks passed, rolled back.
+- Generated import SQL: 9 transactional pgTAP checks passed, rolled back.
+- Renderer node:test: 4 passed (including quote/dollar-body injection safety).
+- Extended local REST/Auth tests: 35 passed, including real reviewer queue,
+  self-review denial, approval/audit, rejection/restoration/suspension and existing
+  JWT denial. Two synthetic local accounts confirmed through Mailpit only. Actual
+  guarded owner operation provisioned a LOCAL fixture reviewer, with its role
+  removed in finally; direct query confirmed zero remaining local admin roles.
+- Hosted-configured flutter build apk --debug --no-pub passed. No emails sent.
+- Existing emulator restarted after it went offline. Hosted-configured app
+  launched successfully on emulator-5554. Login/signup/recovery navigation and
+  forms rendered; no credentials entered or forms submitted. Hosted Auth settings
+  GET returned 200 using only public configuration. This is NOT hosted onboarding,
+  profile-edit, admin-approval or authenticated directory acceptance.
+- Secret-value scan and git diff --check passed; both public config files ignored.
+  Generated Kotlin session markers ignored; Android configuration/dependencies
+  and all four migrations unchanged. Existing user AGENTS.md edit preserved.
+
+Remaining hosted acceptance: approved institution/department/skill catalogs,
+consented developer pending onboarding and reviewed kind/independent authorizer,
+explicit owner approval of concrete bootstrap operation, then controlled hosted
+student/alumni/reviewer flows. City data optional if map visibility remains off.
+No push, hosted seed, role assignment, schema operation or registration rollout.

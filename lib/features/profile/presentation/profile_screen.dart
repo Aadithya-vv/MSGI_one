@@ -7,6 +7,7 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../../../core/errors/error_state.dart';
 import '../data/profile_providers.dart';
+import '../../administration/data/administration_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -68,6 +69,16 @@ class ProfileScreen extends ConsumerWidget {
         onPressed: () => context.go(AppRoutes.profileEdit),
         child: const Text('Edit profile and visibility'),
       ),
+      ref
+          .watch(pendingReviewsProvider)
+          .when(
+            data: (_) => OutlinedButton(
+              onPressed: () => context.go(AppRoutes.administration),
+              child: const Text('Review memberships'),
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
+          ),
       OutlinedButton(
         onPressed: () => ref.read(authControllerProvider.notifier).refresh(),
         child: const Text('Refresh account status'),

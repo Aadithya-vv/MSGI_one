@@ -162,3 +162,18 @@ The explicit synthetic catalog seed is separate from official seed.sql, opt-in
 and used only by an isolated-local acceptance script. Synthetic account verification
 in that script is a server-owned authorization fixture with an audit reason, not
 an administrator role or a public provisioning path. Never run it hosted.
+
+## Task 04B.2 - approval boundaries and reviewer UI
+
+Use a render-only catalog manifest/import tool with explicit approval gates;
+official institution/city data remains on hold. The guarded owner bootstrap is
+separate from migrations/seeds and refuses missing pending profiles or ambiguous
+existing administrators. No public provisioning RPC or client role assignment.
+The first-bootstrap audit records the external approver explicitly, rather than
+fabricating a second user. See task04b2-hosted-acceptance.md for prerequisites.
+
+Administrator UI reuses pending_memberships/review_membership, pins no client
+admin claim, and treats successful server queue authorization as the capability
+check for showing its entry. Route/UI checks are not a database security boundary.
+Every mutation requires the actual server-side verified administrator check,
+self-review denial and private audit. No new schema or grants are required.
