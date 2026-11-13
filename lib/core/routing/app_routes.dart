@@ -16,6 +16,8 @@ abstract final class AppRoutes {
   static const map = '/map';
   static const network = '/network';
   static const profile = '/profile';
+  static const profileEdit = '/profile/edit';
+  static const ownProfile = '/my-profile';
   static const mentors = '/mentors';
   static const opportunities = '/opportunities';
 }

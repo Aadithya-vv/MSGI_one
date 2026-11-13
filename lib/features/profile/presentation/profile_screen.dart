@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/application/auth_providers.dart';
-
 import '../../../core/routing/app_routes.dart';
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/errors/error_state.dart';
+import '../data/profile_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -15,14 +16,58 @@ class ProfileScreen extends ConsumerWidget {
       const FeatureHeader(
         eyebrow: 'Your story belongs here',
         title: 'Your profile',
-        description: 'Your account has verified community access. Professional feature content remains labelled samples until directory integration.',
+        description: 'Manage your professional story and visibility. Institutional verification is managed separately.',
       ),
-      const InfoCard(
-        icon: Icons.badge_outlined,
-        title: 'A profile with purpose',
-        description: 'Future verified profiles will bring together your institution, graduation year, profession, interests, and mentorship preferences.',
+      ref
+          .watch(ownProfileProvider)
+          .when(
+            loading: () => const LoadingState(),
+            error: (_, _) => ErrorState(
+              message: 'Profile unavailable.',
+              onRetry: () => ref.invalidate(ownProfileProvider),
+            ),
+            data: (profile) => profile == null
+                ? const EmptyState(
+                    title: 'No profile yet',
+                    message: 'Complete your institutional profile to submit it for review.',
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      InfoCard(
+                        icon: Icons.person_outline,
+                        title: profile.input.displayName,
+                        description:
+                            '${profile.institution}\n${profile.department} · ${profile.input.joiningYear}–${profile.input.graduationYear}',
+                      ),
+                      const SectionHeading('Career and education'),
+                      Text(
+                        [
+                          profile.input.degree,
+                          profile.input.designation,
+                          profile.input.company,
+                          profile.input.professionalDomain,
+                          profile.input.biography,
+                        ].where((s) => s.isNotEmpty).join('\n'),
+                      ),
+                      const SectionHeading('Skills'),
+                      Text(profile.skills.join(', ')),
+                      Text(
+                        profile.input.mentoring
+                            ? 'Available for mentoring'
+                            : 'Not currently mentoring',
+                      ),
+                      const SectionHeading('Privacy'),
+                      Text(
+                        'Directory: ${profile.input.directoryVisible ? 'visible after approval' : 'hidden'}\nMap: ${profile.input.mapOptIn ? 'opted in' : 'hidden'}',
+                      ),
+                    ],
+                  ),
+          ),
+      FilledButton(
+        onPressed: () => context.go(AppRoutes.profileEdit),
+        child: const Text('Edit profile and visibility'),
       ),
-      const SizedBox(height: 24),
       OutlinedButton(
         onPressed: () => ref.read(authControllerProvider.notifier).refresh(),
         child: const Text('Refresh account status'),
@@ -36,5 +81,71 @@ class ProfileScreen extends ConsumerWidget {
         child: const Text('Log out'),
       ),
     ],
+  );
+}
+
+class AlumniDetailScreen extends ConsumerWidget {
+  const AlumniDetailScreen({super.key, required this.userId});
+  final String userId;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
+    appBar: AppBar(
+      title: const Text('Alumni profile'),
+      leading: BackButton(onPressed: () => context.go(AppRoutes.discover)),
+    ),
+    body: SafeArea(
+      child: PageBody(
+        children: [
+          ref
+              .watch(alumniDetailProvider(userId))
+              .when(
+                loading: () => const LoadingState(),
+                error: (_, _) => ErrorState(
+                  message: 'Profile unavailable or access changed.',
+                  onRetry: () => ref.invalidate(alumniDetailProvider(userId)),
+                ),
+                data: (p) => p == null
+                    ? const EmptyState(
+                        title: 'Profile unavailable',
+                        message: 'This member may no longer be discoverable.',
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          FeatureHeader(
+                            eyebrow: 'Verified alumni',
+                            title: p.name,
+                            description:
+                                '${p.text('institution')} · ${p.text('department')} · ${p.text('graduation_year')}',
+                          ),
+                          const SectionHeading('Career and education'),
+                          Text(
+                            [
+                              p.text('degree'),
+                              p.text('designation'),
+                              p.text('company'),
+                              p.text('professional_domain'),
+                              p.text('biography'),
+                            ].where((s) => s.isNotEmpty).join('\n'),
+                          ),
+                          const SectionHeading('Skills and expertise'),
+                          Wrap(
+                            spacing: 8,
+                            children: p.skills
+                                .map((s) => Chip(label: Text(s)))
+                                .toList(),
+                          ),
+                          if (p.mentoring)
+                            const Text('Available for mentoring'),
+                          if (p.text('city').isNotEmpty)
+                            Text(
+                              '${p.text('city')}, ${p.text('country_code')}',
+                            ),
+                        ],
+                      ),
+              ),
+        ],
+      ),
+    ),
   );
 }

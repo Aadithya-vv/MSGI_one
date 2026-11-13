@@ -1,9 +1,10 @@
-# Architecture — Task 03A
+# Architecture â€” Task 04A
 
 MSGI One is an Android-first, feature-first Flutter application with a prepared
-Supabase authentication adapter and unapplied SQL migrations. No hosted backend
-has been connected. Missing configuration shows setup, never a demo login bypass.
-Professional community screens still show clearly labelled sample content.
+Supabase authentication adapter and membership guards. Profiles and discovery
+now use live repositories with a locally tested migration awaiting hosted
+approval. Missing configuration shows setup, never a demo login bypass. Other
+community features retain clearly labelled sample content.
 
 ## Composition and ownership
 
@@ -23,13 +24,14 @@ observer and provider-owned GoRouter. No privileged key is accepted or logged.
 | features/auth/application | Riverpod injection and race-safe session/membership state machine |
 | features/auth/presentation | Startup/welcome, login/signup/recovery, onboarding, setup and membership states |
 | features/home | Original dashboard and feature entry points |
-| features/discovery | Labelled sample directory and provider filtering |
+| features/discovery | Authorized server-filtered directory, cursor pagination and safe details |
 | features/alumni_map | Illustrative map placeholder, no real geolocation |
 | features/connections | Sample network UI; live mutations deferred |
-| features/profile | Profile placeholder, account refresh and logout |
+| features/profile | Own professional profile, private drafts, privacy settings and repositories |
+| features/catalog | Paginated authenticated reference catalog search |
 | features/mentorship / opportunities | Sample domain models/providers/cards |
 | supabase/migrations | Schema, constraints, grants/RLS and checked server workflows |
-| supabase/tests/database | Unexecuted pgTAP role/RLS/RPC tests for an isolated local stack |
+| supabase/tests/database | Transactional pgTAP role/RLS/RPC tests verified locally |
 
 Domain models do not import Flutter widgets. The Supabase adapter implements an
 injectable interface; test fakes exist only under test/. No code-generation or

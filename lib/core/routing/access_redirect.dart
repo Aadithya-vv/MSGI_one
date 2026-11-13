@@ -2,6 +2,10 @@ import '../../features/auth/domain/auth_repository.dart';
 import 'app_routes.dart';
 
 String? accessRedirect(AccessState access, String path) {
+  if (access.phase == AccessPhase.pending &&
+      (path == AppRoutes.profileEdit || path == AppRoutes.ownProfile)) {
+    return null;
+  }
   final requiredPath = switch (access.phase) {
     AccessPhase.configurationRequired => AppRoutes.setup,
     AccessPhase.loading => AppRoutes.authLoading,

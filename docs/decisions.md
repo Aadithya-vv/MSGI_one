@@ -132,3 +132,33 @@ USB reverse forwarding without changing SDKs, hosted limits or global trust.
 Supabase debug printing is disabled explicitly because SDK diagnostics can include
 callback URLs or raw server errors. Mailpit links are sensitive mailbox contents,
 not diagnostic logs. See local-auth-testing.md for isolation and restoration.
+
+## Task 04A - profiles and alumni discovery
+
+New forward-only migration `20261113000100_profiles_and_discovery.sql` adds bounded
+company/domain/biography/degree fields, an owner-only profile_drafts table, and
+save_member_profile(jsonb)/discover_alumni(...) RPCs. Existing RPC signatures and
+private authorization records are unchanged. Apply/review locally first; hosted
+deployment requires separate explicit approval. It has NOT been deployed hosted.
+
+Drafts are explicit server saves, scoped by authenticated user and account_allowed;
+no plaintext local profile persistence dependency is added. Partial data survives
+restart only after Save progress privately. No anonymous sample bypass exists.
+Successful submit atomically writes profile/skills/mentoring, clears draft and
+leaves new membership pending. Pending users may edit/view only their own profile.
+Verified users can edit professional content/consent but cannot change verified
+institution, department, category or batch through this RPC. Review RPC and profile
+submission share the existing advisory lock. No administrator is client-provisioned.
+
+Discovery returns verified, confirmed-email, directory-opted-in alumni only; callers
+must be verified members. It returns a fixed professional projection, never auth
+email, role, private audit, interests, draft or approval data. City/country are
+returned AND filterable only when map consent is enabled. Filtering is server-side,
+with deterministic UUID keyset pagination (20 rows + one lookahead, max server 50).
+UUID order is stable but intentionally not alphabetical; there is no exact total
+count. The original directory RPC remains available for backward compatibility.
+
+The explicit synthetic catalog seed is separate from official seed.sql, opt-in
+and used only by an isolated-local acceptance script. Synthetic account verification
+in that script is a server-owned authorization fixture with an audit reason, not
+an administrator role or a public provisioning path. Never run it hosted.

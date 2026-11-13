@@ -1,4 +1,4 @@
-﻿# Hosted development deployment plan
+# Hosted development deployment plan
 
 Status: PREPARATION ONLY. No hosted create/link/deployment/configuration commands
 were executed. Obtain explicit authorization before the future procedure below.
@@ -111,3 +111,12 @@ Android callback wiring is now implemented; see authentication-flow.md for the
 exact redirect allowlist and real-device acceptance procedure. The earlier
 callback implementation prerequisite above is superseded by this update, but
 actual dashboard configuration and device verification remain outstanding.
+
+## Task 04A review gate
+
+Task 04A introduces a fourth LOCAL-TESTED migration for extended professional
+profiles, private progress and filtered alumni discovery. Do not apply the earlier
+three-migration-only dry-run expectation to a future new deployment without
+reviewing this change. See task04a-profiles-discovery.md and the new migration;
+no hosted migration is authorized by Task 04A. Approved catalogs/admin review and
+actual hosted API/device acceptance remain prerequisites.

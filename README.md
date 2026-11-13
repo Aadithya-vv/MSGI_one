@@ -2,11 +2,13 @@
 
 **One Community. Infinite Connections.** Android-first alumni networking for MSGI.
 
-Task 03A adds a Supabase authentication adapter, membership-aware navigation,
-validated onboarding and unapplied SQL migrations with grants/RLS and security
-tests. No hosted backend is connected. Default builds show development setup.
-Community feature content remains explicitly labelled samples; login alone does
-not grant community access.
+Task 04A adds repository-backed student/alumni onboarding, private saved progress,
+professional profiles and a filtered, paginated alumni directory. Authentication
+and membership guards remain separate: login never grants verified access.
+The profile/discovery migration is tested locally and awaits explicit hosted
+deployment approval and approved catalogs. Other community features retain their
+sample labels. Default builds without public configuration show development setup.
+See [Task 04A setup and limits](docs/task04a-profiles-discovery.md).
 
 ## Development
 
@@ -88,7 +90,8 @@ requirements. With a reviewed backend, users sign up, confirm email, complete
 `/onboarding`, and wait at `/verification-pending` for trusted approval. Rejected
 or suspended accounts go to `/membership-status`. Loading/error/recovery routes
 fail closed. Only verified members reach the five bottom destinations and
-mentor/opportunity screens. Existing feature data remains samples.
+mentor/opportunity screens. Directory and profiles now use authorized repositories;
+other feature data remains labelled samples.
 
 ## Engineering documentation
 

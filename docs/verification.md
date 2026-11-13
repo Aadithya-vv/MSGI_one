@@ -264,3 +264,67 @@ The phone currently retains the LOCAL-only test build. Rebuild/reinstall using
 hosted public configuration without LOCAL_AUTH_TESTING before hosted testing.
 Alumni onboarding remains blocked by approved institution/department/skill data;
 this task does not provision catalogs, verified membership or administrators.
+
+## Task 04A - complete onboarding, profiles and discovery
+
+Started clean at 9ff4b8e12e916982dc10f2dc5b7bf252c02c4a30. Added the fourth
+forward-only migration ONLY to existing disposable msgi_one_clean_9a7b7923 on
+55322. No hosted schema/data/Auth operation or database reset was performed.
+The original 54322 cluster, migration history and row counts match the saved
+baseline. Dependencies, lockfile, Android ID and official seed.sql are unchanged.
+
+Implemented validated student/alumni professional input; numbered onboarding
+sections; owner-only explicit server draft save/resume; account-scoped in-memory
+buffer across membership refresh routes; retries retaining entries; own profile
+view/edit and consent; mentoring preference; safe alumni details; repository-backed
+catalogs with search/pagination and institution-dependent departments; server-side
+name/institution/department/graduation/profession-company-domain/skill/consented-city
+filtering and UUID keyset pages. Pending users may view/edit their own submission;
+verified education/category/batch edits are denied server-side. New submissions
+remain pending and cannot provision verification/admin privileges.
+
+Database tests: 103 pgTAP assertions passed (original 69 + new 34). Added tests
+cover draft ownership/RLS, pending/verified/suspended access, immutable verified
+education, profile and mentoring persistence, filter/page bounds and location
+consent. Original suite had one broad membership fixture insert; after real local
+API profiles existed it collided with those rows. Restricted that insert to its
+own seven synthetic IDs. Assertions/policies remain unchanged; rerun passes.
+
+Local API tests: tool/test_local_profiles.cjs passed 25 checks using two generated
+synthetic confirmed @example.test accounts, local Mailpit and explicitly local
+catalog fixtures. Verified actual REST/RPC catalog reads, drafts, student/alumni
+submission, pending denial, own-profile nested contract, cross-profile denial,
+combined discovery filters, safe projection/hidden city, detail access, verified
+education denial, professional/privacy edit and live suspension with existing JWT.
+Synthetic verification was owner-side isolated test fixture setup with audit
+reasons; no administrator role created. Synthetic records remain only in that
+isolated environment. Official seed stays empty; approved catalogs still needed.
+
+Flutter regression coverage includes existing auth/session/recovery/navigation,
+student/alumni validation, roundtrip fields/consent, bounded query parameters,
+cursor pagination and retry, private progress restore after scope restart, save
+failure retry, empty catalogs, department reset, pending-only editing routes, and
+unsaved progress preservation across membership checks with logout clearing it.
+Final analyzer/test/build command results are recorded below after completion.
+
+Android availability was checked once: no connected devices. Physical-device
+onboarding/profile/discovery tests are PENDING, not passed. No emulator started
+and work did not wait for a phone. Hosted onboarding/discovery is UNVERIFIED;
+requires explicit review/deployment of the fourth migration, faculty-approved
+catalogs, proper trusted reviewer provisioning and separate hosted/device checks.
+
+Final Task 04A commands/results:
+- dart format lib test: 48 files, final pass unchanged.
+- flutter analyze: no issues found.
+- flutter test --no-pub: all 77 tests passed, including all earlier auth tests.
+- flutter build apk --debug --no-pub --dart-define=LOCAL_AUTH_TESTING=true
+  --dart-define-from-file=config/backend.auth-test.local.json: exit 0.
+  APK: build/app/outputs/flutter-apk/app-debug.apk (local-only debug configuration).
+- npx.cmd supabase test db --workdir <isolated-root>: 103 assertions passed.
+- node tool/test_local_profiles.cjs: 25 API checks passed.
+- Local schema: 14 RLS-enabled tables and 19 application functions.
+- git diff --check passed; real local/hosted configuration values and privileged
+  key patterns were not found in intended changed files. Both config files ignored.
+- Unsaved in-memory progress survives membership-refresh route transitions and
+  clears on logout; explicit private save is still required for process restart.
+- No dependency upgrade, hosted deployment, database reset, emulator or push.

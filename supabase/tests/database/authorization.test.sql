@@ -23,7 +23,7 @@ select id,'Fixture '||right(id::text,1),'alumni','10000000-0000-4000-8000-000000
 insert into private.memberships(user_id,status,verified_kind)
 select user_id,case right(user_id::text,1) when '1' then 'pending' when '4' then 'suspended' else 'verified' end::public.membership_status,
  case when right(user_id::text,1) in ('1','4') then null when right(user_id::text,1)='7' then 'student' else 'alumni' end::public.account_kind
- from public.profiles;
+ from public.profiles where user_id in (select ('00000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid from generate_series(1,7) n);
 insert into private.account_roles(user_id,role) values('00000000-0000-4000-8000-000000000005','administrator');
 
 select ok((select count(*)=13 and bool_and(c.relrowsecurity) from pg_class c join pg_namespace n on n.oid=c.relnamespace

@@ -73,6 +73,20 @@ GoRouter createAppRouter({
       ),
     ),
     routes: [
+      GoRoute(
+        path: AppRoutes.profileEdit,
+        builder: (_, _) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.ownProfile,
+        builder: (_, _) =>
+            const Scaffold(body: SafeArea(child: ProfileScreen())),
+      ),
+      GoRoute(
+        path: '/alumni/:id',
+        builder: (_, state) =>
+            AlumniDetailScreen(userId: state.pathParameters['id']!),
+      ),
       for (final path in [
         AppRoutes.setup,
         AppRoutes.authLoading,

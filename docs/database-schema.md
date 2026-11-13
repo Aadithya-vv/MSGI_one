@@ -76,3 +76,13 @@ There are no views or arbitrary SQL/dynamic projection RPCs. Public RPC executio
 is revoked from PUBLIC and anon and granted to authenticated, with runtime checks
 for each operation. Private helper functions expose only caller checks needed by
 RLS; the arbitrary-target membership helper is not executable by clients.
+
+## Task 04A schema extension (local only until approved)
+
+Migration 20261113000100 adds company/professional_domain/biography/degree to own
+profiles, an RLS owner-only profile_drafts table (14 application tables total),
+and two checked RPCs (19 application functions total). Draft content is never in
+directory output. Mentoring availability reuses mentorship_preferences. Direct
+client grants to private membership/roles/audit remain unchanged. Existing 17
+functions and RPC contracts are preserved. New discovery's fixed projection and
+consent filtering are described in task04a-profiles-discovery.md.

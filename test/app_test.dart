@@ -1,3 +1,7 @@
+import 'package:msgi_one/features/profile/data/profile_providers.dart';
+
+import 'helpers/fake_profile_repository.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -37,6 +41,7 @@ Future<void> pumpRoute(
       key: UniqueKey(),
       overrides: [
         authRepositoryProvider.overrideWithValue(repository),
+        profileRepositoryProvider.overrideWithValue(FakeProfileRepository()),
         initialLocationProvider.overrideWithValue(path),
       ],
       child: MediaQuery(
@@ -131,18 +136,31 @@ void main() {
     }
   });
 
-  testWidgets('search filters samples and shows a useful empty state', (
-    tester,
-  ) async {
-    await pumpRoute(tester, AppRoutes.discover);
-    await tester.enterText(find.byKey(const Key('alumni-search')), 'pUnE');
-    await tester.pumpAndSettle();
-    expect(find.text('Sample alumna B'), findsOneWidget);
-    expect(find.text('Sample alumnus A'), findsNothing);
-    await tester.enterText(find.byKey(const Key('alumni-search')), 'no-match');
-    await tester.pumpAndSettle();
-    expect(find.text('No sample matches'), findsOneWidget);
-  });
+  testWidgets(
+    'directory search submits server filters and shows an empty state',
+    (tester) async {
+      await pumpRoute(tester, AppRoutes.discover);
+      await tester.enterText(
+        find.byKey(const Key('alumni-search')),
+        'Test alumnus 2',
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Search alumni'));
+      await tester.tap(find.text('Search alumni'));
+      await tester.pumpAndSettle();
+      expect(find.text('Test alumnus 2'), findsWidgets);
+
+      await tester.enterText(
+        find.byKey(const Key('alumni-search')),
+        'no-match',
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Search alumni'));
+      await tester.tap(find.text('Search alumni'));
+      await tester.pumpAndSettle();
+      expect(find.text('No alumni found'), findsOneWidget);
+    },
+  );
 
   testWidgets('home mentor and opportunity cards navigate', (tester) async {
     for (final destination in const {

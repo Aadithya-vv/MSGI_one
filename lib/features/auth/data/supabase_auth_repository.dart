@@ -1,6 +1,10 @@
+import '../../catalog/data/supabase_catalog_repository.dart';
+import '../../catalog/domain/catalog_repository.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../../../core/config/auth_callback.dart';
+import '../../profile/data/supabase_profile_repository.dart';
 import '../domain/auth_repository.dart';
 import '../domain/onboarding.dart';
 
@@ -96,45 +100,21 @@ class SupabaseAuthRepository implements AuthRepository {
   });
   @override
   Future<OnboardingOptions> loadOnboardingOptions() => _safe(() async {
-    final rows = await Future.wait([
-      _client
-          .from('institutions')
-          .select('id,name')
-          .eq('active', true)
-          .order('name'),
-      _client
-          .from('departments')
-          .select('id,name,institution_id')
-          .eq('active', true)
-          .order('name'),
-      _client.from('skills').select('id,name').order('name').limit(200),
-      _client
-          .from('cities')
-          .select('id,name,country_code')
-          .order('name')
-          .limit(200),
-    ]);
-    List<CatalogEntry> entries(List<Map<String, dynamic>> data) => data
-        .map(
-          (r) => CatalogEntry(
-            id: r['id'] as String,
-            name: r['name'] as String,
-            institutionId: r['institution_id'] as String?,
-            countryCode: r['country_code'] as String?,
-          ),
-        )
-        .toList(growable: false);
+    final catalogs = SupabaseCatalogRepository(_client);
+    final rows = await Future.wait(
+      CatalogKind.values.map((kind) => catalogs.search(kind)),
+    );
     return OnboardingOptions(
-      institutions: entries(rows[0]),
-      departments: entries(rows[1]),
-      skills: entries(rows[2]),
-      cities: entries(rows[3]),
+      institutions: rows[0],
+      departments: rows[1],
+      skills: rows[2],
+      cities: rows[3],
     );
   });
   @override
   Future<void> submitOnboarding(OnboardingInput input) => _safe(() async {
     final problem = input.validate();
     if (problem != null) throw AuthFailure(problem);
-    await _client.rpc('submit_onboarding', params: input.toRpc());
+    await SupabaseProfileRepository(_client).save(input);
   });
 }

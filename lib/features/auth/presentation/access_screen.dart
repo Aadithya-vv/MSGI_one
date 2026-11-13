@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../core/routing/app_routes.dart';
 
 import '../../../core/widgets/one_widgets.dart';
 import '../application/auth_providers.dart';
@@ -57,6 +60,16 @@ class AccessScreen extends ConsumerWidget {
                   ),
                 ),
               if (access.phase != AccessPhase.configurationRequired) ...[
+                if (access.phase == AccessPhase.pending) ...[
+                  TextButton(
+                    onPressed: () => context.go(AppRoutes.ownProfile),
+                    child: const Text('View your submitted profile'),
+                  ),
+                  TextButton(
+                    onPressed: () => context.go(AppRoutes.profileEdit),
+                    child: const Text('Edit pending profile'),
+                  ),
+                ],
                 const SizedBox(height: 24),
                 OutlinedButton(
                   onPressed: () =>

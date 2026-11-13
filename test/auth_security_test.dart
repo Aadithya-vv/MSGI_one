@@ -1,3 +1,9 @@
+import 'package:msgi_one/features/profile/data/profile_providers.dart';
+
+import 'helpers/fake_profile_repository.dart';
+
+import 'package:msgi_one/features/profile/domain/profile_repository.dart';
+
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +39,7 @@ Future<void> pumpAuth(
   FakeAuthRepository repository, {
   String path = AppRoutes.home,
   double scale = 1,
+  ProfileRepository? profiles,
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
@@ -44,6 +51,9 @@ Future<void> pumpAuth(
       key: UniqueKey(),
       overrides: [
         authRepositoryProvider.overrideWithValue(repository),
+        profileRepositoryProvider.overrideWithValue(
+          profiles ?? FakeProfileRepository(),
+        ),
         initialLocationProvider.overrideWithValue(path),
       ],
       child: MediaQuery(
