@@ -177,3 +177,19 @@ admin claim, and treats successful server queue authorization as the capability
 check for showing its entry. Route/UI checks are not a database security boundary.
 Every mutation requires the actual server-side verified administrator check,
 self-review denial and private audit. No new schema or grants are required.
+
+## Task 05 - consent-safe geography and connection state
+
+Use flutter_map with bundled public-domain Natural Earth land as the default,
+avoiding an unapproved production tile service. Optional MapTiler use requires
+explicit review of a logo-exempt plan and retains linked text attribution.
+City catalog centroids are quantized, not user coordinates. Aggregate and detail
+RPCs enforce identical verification/consent criteria before filtering/pagination.
+Group markers client-side without downloading the alumni directory.
+
+Add forward-only RPCs rather than changing legacy contracts. Pair locks plus the
+existing unique relationship constraint serialize connection requests; direction
+and participant checks precede idempotency. Removed connections retain history as
+cancelled. Network rows hide unavailable peer details; student connection
+eligibility is distinct from availability of an alumni public profile. Server
+checks remain authoritative. See task05-map-network.md for contracts and limits.

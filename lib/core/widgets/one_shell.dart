@@ -25,13 +25,14 @@ class OneShell extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24, 4, 24, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: PreviewBadge(),
+            if (location != AppRoutes.map && location != AppRoutes.network)
+              const Padding(
+                padding: EdgeInsets.fromLTRB(24, 4, 24, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: PreviewBadge(),
+                ),
               ),
-            ),
             Expanded(child: child),
           ],
         ),

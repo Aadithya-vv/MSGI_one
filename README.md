@@ -79,7 +79,7 @@ demonstrated reason. No external images, fonts or branding assets are downloaded
 | Login / signup forms | `/login`, `/signup` |
 | Dashboard | `/home` |
 | Discover alumni | `/discover` |
-| Global alumni map placeholder | `/map` |
+| Global alumni map | `/map` |
 | My network | `/network` |
 | Profile | `/profile` |
 | Mentor recommendations preview | `/mentors` |
@@ -113,3 +113,7 @@ not treat Flutter fakes as RLS evidence. Follow `docs/supabase-setup.md` to supp
 actual public build configuration only after review. Never bundle privileged
 keys; client configuration does not replace authorization. No external accounts,
 hosted Supabase projects or remote repositories are created here.
+
+Task 05 implements live map and professional connection repositories. See
+[map/network contracts and local validation](docs/task05-map-network.md) for
+privacy, local fixtures, optional provider licensing and hosted prerequisites.

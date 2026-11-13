@@ -8,6 +8,7 @@ import '../../../core/widgets/one_widgets.dart';
 import '../../../core/errors/error_state.dart';
 import '../data/profile_providers.dart';
 import '../../administration/data/administration_providers.dart';
+import '../../connections/presentation/connection_controls.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -152,6 +153,8 @@ class AlumniDetailScreen extends ConsumerWidget {
                             Text(
                               '${p.text('city')}, ${p.text('country_code')}',
                             ),
+                          const SizedBox(height: 16),
+                          ConnectionControls(peer: p.id),
                         ],
                       ),
               ),

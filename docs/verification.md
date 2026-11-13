@@ -381,3 +381,50 @@ consented developer pending onboarding and reviewed kind/independent authorizer,
 explicit owner approval of concrete bootstrap operation, then controlled hosted
 student/alumni/reviewer flows. City data optional if map visibility remains off.
 No push, hosted seed, role assignment, schema operation or registration rollout.
+
+## Task 05 - local map and connections (November 13, 2026)
+
+- dart format lib test: passed; SDK integration test also formatted.
+- flutter analyze: no issues.
+- flutter test: 91 passed, including map grouping/rendering/consent-safe panels,
+  explicit filter snapshots, empty/offline/retry, profile actions, request tabs,
+  navigation guards and existing authentication/onboarding regression coverage.
+- Isolated local pgTAP: 146/146 passed (103 existing + 43 new assertions).
+  A final rerun exposed an older unscoped pagination count after API fixtures
+  persisted. Its three pagination calls now filter by their own test institution;
+  the full suite passes without deleting data or reducing coverage.
+- Real local REST/Auth API script: 34 passed. Synthetic accounts confirmed only
+  through isolated Mailpit. Checks cover map consent/filtering/projection,
+  duplicate/opposite requests, unauthorized reads/mutations, accept/remove/cancel,
+  declined-request replay, self-denial and suspension with an existing JWT.
+- Original database cluster/migrations/table counts match its saved baseline.
+  Isolated private.account_roles count is zero. No administrator provisioning.
+- Android local debug APK build passed before the emulator SDK test dependency;
+  final regular-entry APK and emulator acceptance results recorded below.
+- Changed-file scan against local/hosted key values passed; configuration ignored.
+  Four existing migrations, official seed and Android application ID unchanged.
+
+These are local results. Hosted map/network acceptance and physical-device testing
+remain pending; migration five requires separate hosted deployment approval.
+
+Final Task 05 emulator/SDK verification:
+- Flutter-native integration_test/map_network_test.dart passed on the existing
+  Pixel 4a API 34 / emulator-5554, using actual local GoTrue and PostgREST calls.
+  No repository overrides/fakes. Verified geographic rendering, explicit city and
+  domain filters, zoom/pan/world view, marker selection, consented city panel,
+  safe alumni detail navigation, incoming acceptance, accepted network card,
+  confirmed removal, profile request status, outgoing tab and cancellation.
+- Decline/idempotency/unauthorized transitions are covered at SQL/API layers;
+  decline was not separately exercised by the emulator integration scenario.
+- Sampled Flutter logcat contained no fixture password, access/refresh-token URL
+  patterns, RenderFlex overflow or unhandled-exception patterns. This is a sampled
+  diagnostic check, not a guarantee covering every future device log.
+- The private synthetic credential fixture was removed after success. The test
+  APK was removed by Flutter; normal-entry debug APK rebuilt for manual use.
+- Earlier ADB accessibility-based attempts stopped on locator/keyboard/startup
+  handling and are not counted as passed. The existing emulator was restarted
+  once after disconnecting. The committed SDK test replaces that brittle driver.
+- Bundled offline geography tested; optional MapTiler tiles were not enabled.
+  Provider key, approved plan and license review remain optional prerequisites.
+- No push, hosted schema/data/auth-limit change, real email, database reset or
+  privileged account provisioning. User AGENTS.md edit remains uncommitted.

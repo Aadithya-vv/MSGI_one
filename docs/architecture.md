@@ -25,8 +25,8 @@ observer and provider-owned GoRouter. No privileged key is accepted or logged.
 | features/auth/presentation | Startup/welcome, login/signup/recovery, onboarding, setup and membership states |
 | features/home | Original dashboard and feature entry points |
 | features/discovery | Authorized server-filtered directory, cursor pagination and safe details |
-| features/alumni_map | Illustrative map placeholder, no real geolocation |
-| features/connections | Sample network UI; live mutations deferred |
+| features/alumni_map | Consent-safe geographic map with offline land and authorized city aggregates |
+| features/connections | Authorized incoming/outgoing/accepted connections and profile actions |
 | features/profile | Own professional profile, private drafts, privacy settings and repositories |
 | features/catalog | Paginated authenticated reference catalog search |
 | features/mentorship / opportunities | Sample domain models/providers/cards |
@@ -80,3 +80,7 @@ cards wrap into one, two or four columns. Form fields/buttons use the establishe
 components, readable text and large tap targets. Original layout tests cover
 320/390/840 logical pixels with 100%/200% text. New account states are also tested
 with enlarged text. These are widget checks, not device or screen-reader sign-off.
+
+Task 05 implements live map and professional connection repositories. See
+[map/network contracts and local validation](task05-map-network.md) for
+privacy, local fixtures, optional provider licensing and hosted prerequisites.

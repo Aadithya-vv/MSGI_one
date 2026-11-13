@@ -86,3 +86,12 @@ directory output. Mentoring availability reuses mentorship_preferences. Direct
 client grants to private membership/roles/audit remain unchanged. Existing 17
 functions and RPC contracts are preserved. New discovery's fixed projection and
 consent filtering are described in task04a-profiles-discovery.md.
+
+## Task 05 additions (local only)
+
+Migration 20261113000200_map_and_connections.sql adds paired coarse city centroid
+columns and a partial map index; no existing migration is rewritten. New RPCs:
+alumni_city_clusters, map_city_members, request_connection, manage_connection,
+network_connections. Their bounded projections, access and transition contracts
+are documented in task05-map-network.md. Existing RLS and legacy RPCs remain.
+Hosted deployment has not been performed.

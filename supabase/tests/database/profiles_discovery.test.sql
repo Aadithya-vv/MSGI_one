@@ -44,9 +44,9 @@ insert into private.memberships(user_id,status,verified_kind)
 select user_id,'verified','alumni' from public.profiles where user_id::text like '54000000%' and user_id<>'54000000-0000-4000-8000-000000000001';
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"54000000-0000-4000-8000-000000000001","role":"authenticated"}',true);
-select is((select count(*) from public.discover_alumni()),20::bigint,'Default pagination bounded');
-select is((select count(*) from public.discover_alumni(p_limit=>21)),21::bigint,'Lookahead page bounded');
-select is((select count(*) from public.discover_alumni(p_after=>'54000000-0000-4000-8000-000000000020')),6::bigint,'Keyset pagination returns remaining rows');
+select is((select count(*) from public.discover_alumni(p_institution=>'50000000-0000-4000-8000-000000000001')),20::bigint,'Default pagination bounded');
+select is((select count(*) from public.discover_alumni(p_limit=>21,p_institution=>'50000000-0000-4000-8000-000000000001')),21::bigint,'Lookahead page bounded');
+select is((select count(*) from public.discover_alumni(p_after=>'54000000-0000-4000-8000-000000000020',p_institution=>'50000000-0000-4000-8000-000000000001')),6::bigint,'Keyset pagination returns remaining rows');
 select is((select count(*) from public.discover_alumni(p_search=>'professional')),1::bigint,'Name search');
 select is((select count(*) from public.discover_alumni(p_year=>1999)),0::bigint,'Graduation filter');
 select is((select count(*) from public.discover_alumni(p_profession=>'no match')),0::bigint,'Profession filter');

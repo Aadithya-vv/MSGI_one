@@ -1,3 +1,8 @@
+import 'package:msgi_one/features/alumni_map/data/map_providers.dart';
+import 'package:msgi_one/features/connections/data/connections_providers.dart';
+
+import 'helpers/fake_network_repositories.dart';
+
 import 'package:msgi_one/features/profile/data/profile_providers.dart';
 
 import 'helpers/fake_profile_repository.dart';
@@ -42,6 +47,12 @@ Future<void> pumpRoute(
       overrides: [
         authRepositoryProvider.overrideWithValue(repository),
         profileRepositoryProvider.overrideWithValue(FakeProfileRepository()),
+        alumniMapRepositoryProvider.overrideWithValue(
+          FakeAlumniMapRepository(),
+        ),
+        connectionsRepositoryProvider.overrideWithValue(
+          FakeConnectionsRepository(),
+        ),
         initialLocationProvider.overrideWithValue(path),
       ],
       child: MediaQuery(
