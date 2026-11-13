@@ -428,3 +428,44 @@ Final Task 05 emulator/SDK verification:
   Provider key, approved plan and license review remain optional prerequisites.
 - No push, hosted schema/data/auth-limit change, real email, database reset or
   privileged account provisioning. User AGENTS.md edit remains uncommitted.
+
+## Task 06 - intelligent mentor matching (November 13, 2026)
+
+- Deterministic server scoring, not a trained AI model. Weighted normalized
+  skills/domain/availability/interests, missing-data renormalization and explicit
+  evidence caps. No personal overlap yields zero relevance points.
+- Isolated database suite: 186/186 pgTAP assertions passed (146 existing + 40 new).
+  Exact/partial/missing/one-signal scores, equal-score cursors, unavailable/hidden/
+  suspended/unconfirmed/student candidates, active institutions, bidirectional
+  exclusions, private goal reads/writes, forged identity, bounds/sort guards,
+  existing connections and suspended requester JWT denial covered.
+- Local API script: 27 checks passed with three synthetic @example.test accounts,
+  Mailpit confirmation, real GoTrue/PostgREST and explicit isolated verification
+  fixtures. No administrator role assignment. Tests include goal persistence,
+  self-only RLS, explanations, safe projections, pagination, filter ordering,
+  opt-out/visibility/block/suspension and real connection status.
+- Flutter unit/widget tests: 102 passed (11 new), including data serialization,
+  evidence explanations, filters/pagination, profile navigation, empty/offline/
+  retry, preference loading/saving failure, required list bounds, catalog selection
+  while editing objectives, hiding/Undo and pending-member guards. Existing
+  authentication, recovery, onboarding, map and networking regressions preserved.
+- Flutter-native emulator scenario passed on Pixel 4a API 34 / emulator-5554:
+  actual local sign-in, live recommendations/explanations, domain filtering,
+  private objective edit and reload, catalog search, mentor profile, request
+  creation, return navigation/status and cancellation. No repository fakes.
+  Keyboard input transport is simulated to avoid the installed SDK's documented
+  real-IME/injected-input race; manually typed physical-device acceptance pending.
+- Sampled Flutter logs: no fixture password/access-token/refresh-token URL
+  patterns, overflow or unhandled exceptions. The private fixture was removed.
+- Fixed a Material surface assertion during preference navigation and a duplicated
+  catalog search label; regression tests cover both. Earlier failed native input
+  attempts are not counted as passes. The final synchronized-input scenario passed.
+- Formatter and analyzer clean. Normal-entry local debug APK build completed;
+  integration test APK is not the final distributable.
+- Migration six applied ONLY to isolated DB 55322. No hosted operation, reset,
+  push, administrator provisioning, dependency upgrade or Android ID change.
+  Official seed and the five prior migrations unchanged. AGENTS.md edit excluded.
+
+Hosted mentor acceptance remains pending reviewed deployment of migrations five
+and six, approved catalogs, complete consenting verified accounts and explicit
+alumni mentoring opt-in. See task06-mentor-matching.md for formula and limits.

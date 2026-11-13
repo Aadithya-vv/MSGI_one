@@ -193,3 +193,17 @@ and participant checks precede idempotency. Removed connections retain history a
 cancelled. Network rows hide unavailable peer details; student connection
 eligibility is distinct from availability of an alumni public profile. Server
 checks remain authoritative. See task05-map-network.md for contracts and limits.
+
+## Task 06 - deterministic evidence-based mentor matching
+
+Rank on the server over authorized, visible opted-in alumni. Use existing skills,
+public professional domains and career interests; private goals belong only to the
+requester. Missing signals are omitted and evidence caps prevent inflated sparse
+scores. Availability alone yields zero. Relevance is not AI success probability.
+Store objectives privately without pretending they affect this version's score.
+Use bounded keyset responses and UUID ties; reapply filters after goals change.
+
+Add mentor_goals and mentorship-scoped private exclusions in migration six;
+explicit RPC guards, empty search_path and unchanged existing RLS preserve the
+server authorization boundary. Reuse catalog search and connection controls,
+with no new dependencies. See task06-mentor-matching.md for formula and limits.

@@ -117,3 +117,8 @@ hosted Supabase projects or remote repositories are created here.
 Task 05 implements live map and professional connection repositories. See
 [map/network contracts and local validation](docs/task05-map-network.md) for
 privacy, local fixtures, optional provider licensing and hosted prerequisites.
+
+Task 06 implements deterministic, server-ranked mentor recommendations at
+`/mentors`, private career/learning goals and existing professional connection
+actions. See [mentor matching](docs/task06-mentor-matching.md) for algorithm,
+privacy, local test commands and hosted prerequisites.

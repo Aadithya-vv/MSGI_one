@@ -25,7 +25,9 @@ class OneShell extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (location != AppRoutes.map && location != AppRoutes.network)
+            if (location != AppRoutes.map &&
+                location != AppRoutes.network &&
+                location != AppRoutes.mentors)
               const Padding(
                 padding: EdgeInsets.fromLTRB(24, 4, 24, 0),
                 child: Align(

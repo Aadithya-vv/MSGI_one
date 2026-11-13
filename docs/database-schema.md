@@ -95,3 +95,12 @@ alumni_city_clusters, map_city_members, request_connection, manage_connection,
 network_connections. Their bounded projections, access and transition contracts
 are documented in task05-map-network.md. Existing RLS and legacy RPCs remain.
 Hosted deployment has not been performed.
+
+## Task 06 additions (local only)
+
+Migration 20261113000300_mentor_matching.sql adds public.mentor_goals (self-only
+verified reads, RPC-only writes), private.mentor_blocks and an available-mentor
+partial index. New RPCs: my_mentor_goals, save_mentor_goals, set_mentor_block,
+recommend_mentors. All derive identity from auth.uid() and require verified access.
+See task06-mentor-matching.md for scoring, safe projections and exclusion scope.
+No existing migration or hosted schema was changed.
