@@ -469,3 +469,43 @@ Final Task 05 emulator/SDK verification:
 Hosted mentor acceptance remains pending reviewed deployment of migrations five
 and six, approved catalogs, complete consenting verified accounts and explicit
 alumni mentoring opt-in. See task06-mentor-matching.md for formula and limits.
+
+## Task 07 - Career Bridge (November 14, 2026)
+
+- Formatter/analyzer: clean. Flutter tests: 117 passed (15 new Career Bridge
+  tests), including listing filters/cursors, URL validation, draft retry, versioned
+  edits, close/archive confirmation, author links, reports, capability guards,
+  unavailable/network states and a narrow phone editor at enlarged text scale.
+- Isolated pgTAP: 237/237 assertions passed (186 existing + 51 new). Checks cover
+  alumni-only/authorized-admin publishing, student/pending/suspended denial,
+  spoofed author/scope, URLs, duplicate creation, stale updates, skill filters,
+  institution/department audiences, private drafts/author names, reporting,
+  idempotent transitions and archives retaining moderation records.
+- Real local Auth/PostgREST API: 46 checks passed with three explicitly synthetic
+  @example.test accounts and isolated Mailpit confirmation. Actual current/stale
+  edit versions, RLS-hidden drafts/skills, cross-institution scope, referral/remote/
+  skill filters, cursor continuation, author masking, report retry/moderator denial,
+  close/archive retention and existing suspended JWT publishing denial verified.
+- Flutter-native emulator integration passed on Pixel 4a API 34 / emulator-5554.
+  Verified listing/search, external-link destination confirmation (cancelled before
+  opening), report submission, public author profile navigation, actual editor
+  type/audience/remote/referral/skill fields, draft save, edit/publish, category
+  filtering, closure, archival and My posts. Real local services; no repositories
+  mocked. Text input transport simulated to avoid the installed SDK's IME race.
+- Sampled Flutter logs contained no fixture password/access-token/refresh-token
+  URL patterns, overflow or unhandled exception patterns. Private fixture removed.
+- Local tests caught SQL kind-filter ambiguity; corrected in a NEW forward-only
+  migration, preserving applied migration seven. Native initial uppercase-header
+  locator and widget off-screen tap issues were corrected in test drivers, not
+  counted as passed attempts. Final scenarios and regressions passed.
+- Normal main.dart local debug APK built, replacing the integration test APK.
+- No new dependencies, Android configuration changes, hosted operations, reset,
+  administrator provisioning or push. Official seed and previous six migrations
+  unchanged. User AGENTS.md edit remains excluded from the commit.
+
+Migrations seven and eight require separate hosted review/deployment approval.
+Verify hosted history and all other pending prerequisites before deployment.
+Manual external-browser completion, physical-device and hosted acceptance remain
+unverified. Draft saving is explicit and requires valid title/description; closed
+and archived posts remain author-only. Report resolution uses existing protected
+backend moderation; no new moderation dashboard was added.

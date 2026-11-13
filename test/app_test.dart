@@ -3,6 +3,9 @@ import 'package:msgi_one/features/connections/data/connections_providers.dart';
 
 import 'helpers/fake_network_repositories.dart';
 import 'helpers/fake_mentor_repository.dart';
+import 'helpers/fake_career_repository.dart';
+
+import 'package:msgi_one/features/opportunities/data/career_providers.dart';
 
 import 'package:msgi_one/features/mentorship/data/mentor_providers.dart';
 
@@ -48,6 +51,7 @@ Future<void> pumpRoute(
     ProviderScope(
       key: UniqueKey(),
       overrides: [
+        careerRepositoryProvider.overrideWithValue(FakeCareerRepository()),
         mentorRepositoryProvider.overrideWithValue(FakeMentorRepository()),
         authRepositoryProvider.overrideWithValue(repository),
         profileRepositoryProvider.overrideWithValue(FakeProfileRepository()),

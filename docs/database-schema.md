@@ -104,3 +104,13 @@ partial index. New RPCs: my_mentor_goals, save_mentor_goals, set_mentor_block,
 recommend_mentors. All derive identity from auth.uid() and require verified access.
 See task06-mentor-matching.md for scoring, safe projections and exclusion scope.
 No existing migration or hosted schema was changed.
+
+## Task 07 additions (isolated local only)
+
+20261114000100_career_bridge.sql extends opportunities with professional_domain,
+organization, remote/referral, protected audience scope and archived_at; adds
+opportunity_skills with visibility RLS and lookup indexes, a URL CHECK and a
+restrictive opportunities SELECT policy. The five Career Bridge RPCs preserve the
+existing protected publishing rules. 20261114000200_fix_career_filter_ambiguity.sql
+qualifies discovery variables without rewriting the already-applied migration.
+Existing six migrations, moderator authorization and official seed are unchanged.

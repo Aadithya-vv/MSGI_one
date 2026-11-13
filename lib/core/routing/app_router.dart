@@ -17,6 +17,8 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/administration/presentation/administration_screen.dart';
 import '../../features/mentorship/presentation/mentorship_screen.dart';
 import '../../features/opportunities/presentation/opportunities_screen.dart';
+import '../../features/opportunities/presentation/career_editor_screen.dart';
+import '../../features/opportunities/presentation/career_detail_screen.dart';
 import '../errors/error_state.dart';
 import '../widgets/one_shell.dart';
 import 'app_routes.dart';
@@ -74,6 +76,20 @@ GoRouter createAppRouter({
       ),
     ),
     routes: [
+      GoRoute(
+        path: '/opportunities/new',
+        builder: (_, _) => const CareerEditorScreen(),
+      ),
+      GoRoute(
+        path: '/opportunities/:id/edit',
+        builder: (_, state) =>
+            CareerEditorScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/opportunities/:id',
+        builder: (_, state) =>
+            CareerDetailScreen(id: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: AppRoutes.administration,
         builder: (_, _) => const AdministrationScreen(),

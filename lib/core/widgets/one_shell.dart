@@ -27,7 +27,8 @@ class OneShell extends StatelessWidget {
           children: [
             if (location != AppRoutes.map &&
                 location != AppRoutes.network &&
-                location != AppRoutes.mentors)
+                location != AppRoutes.mentors &&
+                location != AppRoutes.opportunities)
               const Padding(
                 padding: EdgeInsets.fromLTRB(24, 4, 24, 0),
                 child: Align(

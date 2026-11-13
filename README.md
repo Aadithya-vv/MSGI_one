@@ -122,3 +122,8 @@ Task 06 implements deterministic, server-ranked mentor recommendations at
 `/mentors`, private career/learning goals and existing professional connection
 actions. See [mentor matching](docs/task06-mentor-matching.md) for algorithm,
 privacy, local test commands and hosted prerequisites.
+
+Task 07 implements the live Career Bridge: jobs, internships, referral flags,
+project posts, scoped discovery, private drafts, author edits/closure/archive and
+moderation reports. See [Career Bridge](docs/task07-career-bridge.md) for publishing
+permissions, local test commands and hosted deployment requirements.

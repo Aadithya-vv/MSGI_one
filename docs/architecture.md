@@ -30,7 +30,7 @@ observer and provider-owned GoRouter. No privileged key is accepted or logged.
 | features/profile | Own professional profile, private drafts, privacy settings and repositories |
 | features/catalog | Paginated authenticated reference catalog search |
 | features/mentorship | Private goals, server-ranked explainable mentors and existing connection actions |
-| features/opportunities | Sample domain models/providers/cards |
+| features/opportunities | Scoped Career Bridge discovery, versioned publishing/drafts, archival and reports |
 | supabase/migrations | Schema, constraints, grants/RLS and checked server workflows |
 | supabase/tests/database | Transactional pgTAP role/RLS/RPC tests verified locally |
 

@@ -207,3 +207,18 @@ Add mentor_goals and mentorship-scoped private exclusions in migration six;
 explicit RPC guards, empty search_path and unchanged existing RLS preserve the
 server authorization boundary. Reuse catalog search and connection controls,
 with no new dependencies. See task06-mentor-matching.md for formula and limits.
+
+## Task 07 - Career Bridge and preserved publishing policy
+
+Reuse can_publish (verified alumni/authorized administrators), existing kinds,
+draft/published/closed states and reports. Add explicit scope, required skills,
+referral flag and archival without weakening prior RLS. Closed/draft/archive data
+stays author-only. Mask private author identities and guard public profile links.
+Retry-safe client request IDs avoid duplicate creation; updated_at guards edits.
+Scope IDs come from the author profile, never client-selected institution IDs.
+
+Career relevance is explicit skill coverage, not AI inference. Bound server pages
+and tuple cursors; revalidate application URLs before a confirmed external launch.
+Use existing catalog UI and SDK integration tests with simulated input only.
+Keep the applied base migration and its forward-only filter qualification fix.
+See task07-career-bridge.md for contracts, constraints and validation instructions.
