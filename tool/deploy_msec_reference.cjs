@@ -5,19 +5,19 @@ const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { REF, hash, normalize, render, preflight } = require('./render_msec_reference.cjs');
 const { sha256, executeDedicated, executionPlan, PAYLOAD_SHA256 } = require('./msec_catalog_session.cjs');
+const { CONTRACT_SHA256, jsonArgs, parseResponse } = require('./supabase_cli_json.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const FILES = ['msec_reference_manifest.json', 'msec.sql', 'starter_skills_proposed.sql', 'msec_reference_atomic.sql'];
 const OVERRIDES = ['PGHOST', 'PGHOSTADDR', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD', 'PGSERVICE', 'PGSERVICEFILE', 'PGOPTIONS', 'PGPASSFILE', 'PGSSLMODE', 'DATABASE_URL', 'SUPABASE_DB_URL', 'SUPABASE_DB_HOST', 'SUPABASE_DB_PORT', 'SUPABASE_DB_NAME', 'SUPABASE_DB_USER', 'SUPABASE_PROJECT_REF', 'SUPABASE_PROJECT_ID', 'SUPABASE_API_HOST', 'SUPABASE_API_URL', 'SUPABASE_API_ENDPOINT', 'SUPABASE_URL', 'SUPABASE_WORKDIR', 'SUPABASE_PROFILE'];
-function parse(text) {
-  const i = text.search(/[\[{]/);
-  if (i < 0) throw Error('Expected supported CLI JSON response');
-  try { return JSON.parse(text.slice(i)); } catch { throw Error('Invalid CLI JSON response; raw response suppressed'); }
-}
 function invoke(args) {
+  const responseArgs = args;
+  args = jsonArgs(args);
   // Public reference SQL can exceed Windows argument limits. Stage only these
   // verified bytes, never credentials or user data, in a unique read-only file.
   let staged;
-  const last = args.at(-1);
+  // Locate the SQL argument before the explicit output flag appended above.
+  const sqlIndex = args.length - 2;
+  const last = args[sqlIndex];
   if (/^(select |set msgi\.)/i.test(last)) {
     const dir = path.join(ROOT, 'build');
     fs.mkdirSync(dir, { recursive: true });
@@ -25,7 +25,7 @@ function invoke(args) {
     fs.writeFileSync(staged, last, { flag: 'wx', mode: 0o600 });
     if (hash(fs.readFileSync(staged, 'utf8')) !== hash(last)) throw Error('Staged SQL identity mismatch');
     fs.chmodSync(staged, 0o400);
-    args = [...args.slice(0, -1), '--file', staged];
+    args = [...args.slice(0, sqlIndex), '--file', staged, ...args.slice(sqlIndex + 1)];
   }
   // Single-quoted PowerShell arguments + encoded source avoid shell interpolation.
   const quote = s => "'" + s.replaceAll("'", "''") + "'";
@@ -33,7 +33,7 @@ function invoke(args) {
   try {
     const r = cp.spawnSync('powershell.exe', ['-NoProfile', '-EncodedCommand', Buffer.from(command, 'utf16le').toString('base64')], { cwd: ROOT, encoding: 'utf8', windowsHide: true, maxBuffer: 8 * 1024 * 1024 });
     if (r.status !== 0) throw Error('CLI operation failed; raw response suppressed. Inspect hosted state read-only before any retry.');
-    return parse(r.stdout);
+    return parseResponse(responseArgs, r.stdout);
   } finally {
     if (staged) { fs.chmodSync(staged, 0o600); fs.unlinkSync(staged); }
   }
@@ -42,12 +42,13 @@ function run(args, io = {}) {
   const read = io.read || (p => fs.readFileSync(path.join(ROOT, p), 'utf8'));
   const cli = io.cli || invoke;
   const env = io.env || process.env;
-  let execute = false, checkOnly = false, approval, planApproval, project = REF;
+  let execute = false, checkOnly = false, approval, planApproval, responseApproval, project = REF;
   for (const arg of args) {
     if (arg === '--execute') execute = true;
     else if (arg === '--check') checkOnly = true;
     else if (arg.startsWith('--approve-sha256=')) approval = arg.slice(17);
     else if (arg.startsWith('--approve-execution-plan-sha256=')) planApproval = arg.slice('--approve-execution-plan-sha256='.length);
+    else if (arg.startsWith('--approve-cli-response-sha256=')) responseApproval = arg.slice('--approve-cli-response-sha256='.length);
     else if (arg.startsWith('--project-ref=')) project = arg.slice(14);
     else throw Error('Unexpected runner argument; connection overrides are not accepted');
   }
@@ -79,6 +80,7 @@ function run(args, io = {}) {
   if (sha256(payload) !== PAYLOAD_SHA256 || digest !== PAYLOAD_SHA256) throw Error('Raw payload byte identity mismatch');
   if (execute && approval !== digest) throw Error('Explicit approval must equal the exact reviewed bundle SHA-256');
   if (execute && planApproval !== executionPlan().execution_plan_sha256) throw Error('Separate approval of the dedicated-session execution plan is required');
+  if (execute && responseApproval !== CONTRACT_SHA256) throw Error('Renewed execution-plan review and CLI response-contract approval required before deployment');
   const projects = cli(['projects', 'list', '--workdir', ROOT]).projects;
   const metadata = projects?.find(p => p.id === REF && p.ref === REF);
   if (!metadata || !metadata.linked || metadata.database?.host !== `db.${REF}.supabase.co` || metadata.region !== 'ap-northeast-2') throw Error('Authenticated project/database metadata mismatch');
@@ -102,7 +104,7 @@ function run(args, io = {}) {
     const post = cli(['db', 'query', `--remote=${REF}`, '--read-only', '--workdir', ROOT, preflight(manifest)]).rows?.[0]?.catalog_preflight;
     if (!post || post.read_only !== 'on' || post.institutions_count !== 1 || post.departments_count !== 1 || post.programmes_count !== 13 || post.skills_count !== 36 || ['institutions','departments','programmes','skills'].some(t => post[t+'_conflict'])) throw Error('Post-write verification unexpected: STOP and inspect read-only; do not retry');
   }
-  return { mode: execute ? 'executed' : 'read-only-check', project_ref: REF, database_host_verified: true, payload_sha256: digest, execution_plan_sha256: executionPlan().execution_plan_sha256,
+  return { mode: execute ? 'executed' : 'read-only-check', project_ref: REF, database_host_verified: true, payload_sha256: digest, execution_plan_sha256: executionPlan().execution_plan_sha256, cli_response_contract_sha256: CONTRACT_SHA256,
     observed_preflight_counts: Object.fromEntries(['institutions','departments','programmes','skills'].map(t => [t,p[t+'_count']])),
     expected: { institutions: 1, departments: 1, programmes: 13, skills: 36 } };
 }

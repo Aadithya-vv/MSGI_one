@@ -344,3 +344,16 @@ plan, and closes the backend after success/error so approval is not returned to 
 pool. The owner credential uses the existing private environment workflow; no
 credential is embedded or logged. Direct hosted connectivity and this different
 transport require new explicit approval; local tests authorize no hosted writes.
+
+CLI response handling must explicitly select `--output-format=json` rather than
+depend on agent detection or `-o json`. Command-specific parsing retains project
+metadata and normalizes only the supported query-row array/envelope variants.
+This runner correction preserves the SQL/session-plan hashes but requires renewed
+execution-plan review and a separate response-contract approval before deployment.
+
+Incident recovery records only whitelist-based subprocess failure classifications,
+status/signal and BEGIN/COMMIT acknowledgement evidence, never raw output or
+credentials. A missing acknowledgement never authorizes a retry. The observed
+Docker bridge IPv6 failure and host-network CA-verification failure require an
+amended, independently reviewed network/trust plan; diagnostics do not silently
+change routing or weaken verify-full to obtain connectivity.

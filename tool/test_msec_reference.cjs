@@ -6,6 +6,8 @@ const assert = require('node:assert/strict');
 const { run, OVERRIDES } = require('./deploy_msec_reference.cjs');
 const { render, hash, normalize } = require('./render_msec_reference.cjs');
 const { executionPlan, executeDedicated, psqlOperations, CONTROLS, sha256 } = require('./msec_catalog_session.cjs');
+const { CONTRACT_SHA256 } = require('./supabase_cli_json.cjs');
+const responseFlag='--approve-cli-response-sha256='+CONTRACT_SHA256;
 const planFlag='--approve-execution-plan-sha256='+executionPlan().execution_plan_sha256;
 const manifest = JSON.parse(fs.readFileSync('supabase/catalogs/msec_reference_manifest.json', 'utf8'));
 const bundle = normalize(fs.readFileSync('supabase/catalogs/msec_reference_atomic.sql', 'utf8'));
@@ -64,10 +66,11 @@ function runnerTests() {
     return {cli,session:()=>{writes++;},counts:()=>({writes,reads})};
   }
   ok('Read-only mode never invokes a write, even with matching approval',()=>{const s=simulated();run(['--check','--approve-sha256='+hash(bundle)],{read:baseRead,env:{},cli:s.cli,session:s.session});assert.deepEqual(s.counts(),{writes:0,reads:1});});
-  ok('Exact approval executes one atomic write and independently verifies read-only',()=>{const s=simulated();run(['--execute','--approve-sha256='+hash(bundle),planFlag],{read:baseRead,env:{},cli:s.cli,session:s.session});assert.deepEqual(s.counts(),{writes:1,reads:2});});
-  ok('Conflict preflight refuses before a write',()=>{const s=simulated({conflict:true});assert.throws(()=>run(['--execute','--approve-sha256='+hash(bundle),planFlag],{read:baseRead,env:{},cli:s.cli,session:s.session}),/preflight/);assert.equal(s.counts().writes,0);});
-  ok('Bad post-write verification stops without retry',()=>{const s=simulated({badPost:true});assert.throws(()=>run(['--execute','--approve-sha256='+hash(bundle),planFlag],{read:baseRead,env:{},cli:s.cli,session:s.session}),/Post-write/);assert.equal(s.counts().writes,1);});
+  ok('Exact approval executes one atomic write and independently verifies read-only',()=>{const s=simulated();run(['--execute','--approve-sha256='+hash(bundle),planFlag,responseFlag],{read:baseRead,env:{},cli:s.cli,session:s.session});assert.deepEqual(s.counts(),{writes:1,reads:2});});
+  ok('Conflict preflight refuses before a write',()=>{const s=simulated({conflict:true});assert.throws(()=>run(['--execute','--approve-sha256='+hash(bundle),planFlag,responseFlag],{read:baseRead,env:{},cli:s.cli,session:s.session}),/preflight/);assert.equal(s.counts().writes,0);});
+  ok('Bad post-write verification stops without retry',()=>{const s=simulated({badPost:true});assert.throws(()=>run(['--execute','--approve-sha256='+hash(bundle),planFlag,responseFlag],{read:baseRead,env:{},cli:s.cli,session:s.session}),/Post-write/);assert.equal(s.counts().writes,1);});
   ok('Missing new execution-plan approval refuses before CLI',()=>refuses(['--execute','--approve-sha256='+hash(bundle)],{},/execution plan/));
+  ok('Missing renewed response-contract review refuses before CLI',()=>refuses(['--execute','--approve-sha256='+hash(bundle),planFlag],{},/Renewed execution-plan review/));
   ok('Raw CRLF substitution refuses despite normalized hash equality',()=>refuses([],{read:p=>p.endsWith('msec_reference_atomic.sql')?baseRead(p).replace(/\n/g,'\r\n'):baseRead(p)},/Raw payload/));
   ok('Dedicated adapter sends exact original bytes separately from controls',()=>{
     const secret='synthetic-local-only';let calls=0;

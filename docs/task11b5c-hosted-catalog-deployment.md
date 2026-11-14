@@ -1,9 +1,26 @@
 # Task 11B.5C: hosted reference catalog deployment gate
 
 Review date: 2026-11-15 (Asia/Calcutta).
-**Hosted status: NOT EXECUTED.** Original gate failure is preserved below.
+**Current hosted status: NOT COMPLETED.** One later external attempt was reported;
+recovery verified all catalogs empty. No retry was performed. Original gate
+failures and their historical statuses are preserved below.
 Task 11B.5C-FIX local correction is validated in the final section; its new
 execution plan requires separate hosted approval.
+
+Latest authorized attempt (2026-11-15): **FAILED at credential preflight, before
+any hosted connection or execution**. The owner approved both corrected hashes;
+no new approval is being requested. See the final attempt record below.
+
+**Incident update (2026-11-15):** the owner subsequently reported one external
+deployment attempt with an uncertain-session error. Fresh read-only recovery
+queries found all four catalogs empty (0/0/0/0), eleven migrations applied and
+48 unrelated-table fingerprints unchanged against the historical baseline.
+The approved Docker bridge path reproducibly fails with IPv6 network unreachable;
+a candidate host-network diagnostic instead reaches a TLS certificate-validation
+failure. No retry was performed. The prior headings above/below are historical,
+not evidence that the owner's later external attempt did not occur.
+See [the recovery incident report](task11b5c-deployment-incident.md) for exact
+evidence, diagnostic fixes, uncertainty limits and the new approval boundary.
 
 ## Source and intended scope
 
@@ -225,3 +242,79 @@ node tool/deploy_msec_reference.cjs --execute --approve-sha256=153f97a2eaff6fa02
 
 No automatic continuation to deployment, Auth/SMTP, administrator provisioning,
 signup or public onboarding is authorized by this local correction.
+
+## Authorized corrected-plan attempt: credential gate failure
+
+Review date: 2026-11-15 (Asia/Calcutta).
+HEAD: `752d8096755d78ebf219516108a53e51dc090ba3`.
+Intended target: `sbgshejyvkptmrffiwvd`.
+**Result: FAILED — preflight blocked; zero deployment attempts.**
+
+The new user instructions explicitly approve one corrected-plan deployment, with
+fresh destination, credential, TLS, backup, migration and empty-catalog gates.
+Those instructions require stopping if a gate fails, and forbid fallback endpoints
+or automatic retries. Authorization is sufficient; availability is the blocker.
+
+### Completed local checks
+
+- Git HEAD matches the reviewed implementation. Runner, dedicated-session helper,
+  atomic SQL, record manifest and hash manifest match the reviewed Git revision.
+- Independent reconstruction of the execution descriptor, removing its appended
+  hash field and hashing UTF-8 `JSON.stringify(descriptor)`, matched
+  `b44a29ca2f28188b67388ef557cc0ad1e8646849ddd653334828531d1c5eea83`.
+- The five session-control statements and their order are unchanged.
+- SHA-256 over the raw file bytes matched
+  `153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428`.
+- The manifest still contains the expected 1 institution, 1 department, 9 UG/4 PG
+  programmes and 36 skills. Approved deployment files were not rewritten.
+
+### Failed prerequisite and checks not reached
+
+The approved direct-session helper requires an existing privately supplied
+`SUPABASE_DB_PASSWORD`. Presence-only checks found it absent in **Process, User
+and Machine** Windows environment scopes. No credential values were printed,
+stored in the repository, requested in chat or inferred from public API keys.
+The CLI access token/public publishable key is not a substitute for this direct
+PostgreSQL owner's password.
+
+No hosted CLI/API/database request or direct TLS connection was issued during
+this attempt. Fresh actual-destination/TLS verification, backup integrity checks,
+migration/catalog baselines, concurrency checks and unrelated-data fingerprints
+were therefore not completed or claimed passed. Previous evidence is historical,
+not a substitute for those fresh gates.
+
+There is **no deployment timestamp**, because no transaction or execution attempt
+began. No automatic retry, pooler/API write substitution, correction or restore
+was attempted. Actual current hosted catalog counts are unverified in this
+attempt; expected approved totals remain 1/1/13/36 (51), not observed new totals.
+
+Auth, SMTP, TOTP, password policy, administrators, users, profiles, memberships,
+RLS, migrations, cities and existing application data were not touched. Backups,
+competition APK and signing configuration were not modified. Existing unrelated
+untracked reports were preserved. Only this safe report and ignored local
+identity-check evidence were updated; no commit or push was made, because the
+task conditions its documentation commit on successful deployment/verification.
+
+### Resume prerequisite
+
+Make the existing database password available privately through the approved
+`SUPABASE_DB_PASSWORD` environment mechanism, in the environment inherited by
+the deployment process. Do not paste it in chat or commit it to a config file.
+No new deployment approval is needed while the hashes, plan and scope remain
+unchanged. Once availability is confirmed, rerun **all** required fresh gates,
+including direct TLS/certificate validation and intact backup verification,
+before using the single authorized execution. If direct connectivity fails,
+stop rather than switching endpoints or weakening TLS.
+
+### Subsequent resume: process credential still inaccessible
+
+On the owner's resume request, presence-only checks in both the ordinary tool
+subprocess and the privileged deployment subprocess reported
+`process_credential_accessible: false`. No value was printed, logged or sent.
+The supplied variable was therefore not inherited by either execution context.
+
+The first mandatory gate failed, so all remaining checks and the single
+deployment were left unattempted. No hosted connection, SQL request, deployment
+retry, endpoint substitution, settings change or credential-store modification
+was made. Authorization remains unchanged; the blocker is subprocess credential
+availability. Only this report was updated; no commit or push was performed.

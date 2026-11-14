@@ -1,6 +1,7 @@
 // Dedicated DIRECT PostgreSQL session. Never use a pooled/API write connection.
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
+const { summarize, persist } = require('./msec_session_diagnostics.cjs');
 const REF = 'sbgshejyvkptmrffiwvd';
 const PAYLOAD_SHA256 = '153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428';
 const IMAGE = 'public.ecr.aws/supabase/postgres:17.11.0.019';
@@ -41,14 +42,24 @@ function executeDedicated({ payload, project, host, password, spawn = cp.spawnSy
     '--entrypoint','psql',IMAGE,'--host',host,'--port','5432','--username','postgres',
     '--dbname','postgres',...psqlOperations()];
   try {
-    const result = spawn('docker', args, { input: payload, encoding: 'utf8', windowsHide: true,
-      maxBuffer: 8 * 1024 * 1024, timeout: 120000,
-      env: { ...process.env, PGPASSWORD: password, PGSSLMODE: 'verify-full', PGSSLROOTCERT: 'system' } });
-    if (result.status !== 0) throw Error('Dedicated session failed or outcome uncertain; raw output suppressed. Inspect read-only; never retry automatically.');
+    let result;
+    try {
+      result = spawn('docker', args, { input: payload, encoding: 'utf8', windowsHide: true,
+        maxBuffer: 8 * 1024 * 1024, timeout: 120000,
+        env: { ...process.env, PGPASSWORD: password, PGSSLMODE: 'verify-full', PGSSLROOTCERT: 'system' } });
+    } catch (error) { result = { status: null, error }; }
+    const diagnostic = summarize(result);
+    const evidence = persist(client, diagnostic);
+    if (result.status !== 0) {
+      const error = Error(`Dedicated session failed (${diagnostic.classification}; exit ${diagnostic.exit_status ?? 'unknown'}). Outcome requires read-only inspection; never retry automatically.${evidence ? ' Sanitized evidence: '+evidence : ''}`);
+      error.diagnostic = diagnostic;
+      throw error;
+    }
   } finally {
     // Also close a stuck client/backend if its attached Docker command timed out.
     // Only our freshly generated client identity is targeted; no existing DB.
-    spawn('docker', ['stop','--timeout','5',client], { encoding: 'utf8', windowsHide: true, timeout: 15000, stdio:'pipe' });
+    try { spawn('docker', ['stop','--timeout','5',client], { encoding: 'utf8', windowsHide: true, timeout: 15000, stdio:'pipe' }); }
+    catch { /* Never replace the primary sanitized outcome with raw cleanup errors. */ }
   }
   return { payload_sha256: PAYLOAD_SHA256, execution_plan_sha256: executionPlan().execution_plan_sha256 };
 }
