@@ -30,3 +30,16 @@ or connect to a hosted project without the next task's explicit authorization.
 
 Flutter 3.50 generated `material_ui`; use its Material widgets consistently.
 Preserve generated Android Gradle configuration unless a concrete error requires a change.
+
+## Android Development and Testing
+
+- Preferred development device: `MSGI_One_Pixel_4a_API_34`.
+- Running emulator device ID: `emulator-5554`.
+- Prefer the Android emulator for Flutter development, UI testing, hot reload and integration testing.
+- Start the emulator when device testing is necessary and it is not already running.
+- Do not require a physical Android phone for routine development.
+- Use the existing local-only Supabase configuration for development tests unless a hosted test is explicitly requested.
+- Avoid unnecessary authentication emails or modifications to hosted data.
+- Report actual emulator test results separately from automated unit/widget tests.
+- Reserve physical-device testing for final verification of real hardware behavior, performance and Android callbacks.
+- Do not claim a device test passed unless it was executed successfully.
