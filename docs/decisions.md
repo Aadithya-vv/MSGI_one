@@ -289,3 +289,33 @@ Native integration acceptance now uses a separate persistence namespace and
 asserts the presenter's actual demo snapshot is unchanged. This permits physical
 debug testing without resetting the owner's demo data. See
 `android-competition-release.md` for backup and manual acceptance requirements.
+# Task 11A — real academic claims and local launch gate
+
+Keep degree programmes separate from authorization departments. MSEC receives
+stable application identifiers, nine undergraduate and four postgraduate
+programmes, and only the supplied Science and Humanities department. Composite
+foreign keys tie both academic references to the institution. Programme-only
+profiles are supported by compatible protected discovery/map/mentor/career RPCs;
+a degree choice never creates a department permission. Official MSEC catalog
+insertion is a separate guarded owner operation, not the normal empty seed.
+
+Staff is a self-declared account kind and, after independent verification, an
+ordinary member kind. It is not an administrator or alumni publisher. Keep email
+confirmation, institutional status and administrator grants distinct. Existing
+RPC signatures remain; v2 discovery/review projections add programme support.
+An enum-only migration commits before dependent schema changes. No historical
+migration or hosted infrastructure is changed.
+
+Successful profile persistence publishes an independent revision signal before
+membership refresh. Profile/draft/buffer providers consume that signal; the Auth
+controller must not read/invalidate providers that depend on itself (a Riverpod
+cycle) or rely on a form that a route redirect may dispose. Draft-save feedback
+is inline to avoid obscuring Submit/Log out on subsequent screens. SDK storage
+can be injected for isolated native acceptance; production defaults are retained.
+
+Task 11A tests real local Mailpit/Android callbacks and process restoration on a
+separate debug emulator, with no Samsung replacement or competition APK rebuild.
+Versioned Auth defaults are hardened for future application, while existing live
+stack settings and all hosted settings remain untouched. Public invitations need
+institutional/SMTP/privacy/operational approval and an independently reviewed
+deployment, as documented in `real-user-launch-readiness.md`.

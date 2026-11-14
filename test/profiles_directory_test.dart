@@ -242,7 +242,7 @@ void main() {
     await tester.tap(find.text('Save progress privately'));
     await tester.pumpAndSettle();
     expect(profiles.savedDraft!['institution_id'], 'second');
-    expect(profiles.savedDraft!['department_id'], '');
+    expect(profiles.savedDraft!['department_id'], isNull);
   });
   testWidgets(
     'Unsaved progress survives membership-check routes and clears on logout',

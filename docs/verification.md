@@ -693,3 +693,65 @@ backend moderation; no new moderation dashboard was added.
   profiling. Hosted integration limitations remain separate from offline demo.
 - Artifact/report/checksum: ignored `build/competition-release/`. See
   `android-competition-release.md` for secure signing and installation procedure.
+# Task 11A — real local MSEC onboarding and backend readiness
+
+- Starting HEAD `6718a9d318284e4c8971f7381a06e1cd3093eddb`, clean tree. AGENTS.md
+  was already committed and is unchanged. Eight historical migrations unchanged.
+- Three forward migrations applied locally, in order, only to the isolated
+  `msgi_one_clean_9a7b7923` stack (DB 55322/API 55321). No reset, volume deletion,
+  hosted operation or administrator provisioning for a real account. DB 54322
+  preserved. The first academic migration attempt rolled back on SQL dollar
+  quoting, corrected before application; not recorded as a successful migration.
+- Official local catalog operation run twice successfully: MSEC, exactly 9 UG +
+  4 PG programmes and Science and Humanities separately. No invented mappings or
+  official codes. Synthetic profiles/skills/cities remain explicitly local fixtures.
+- Formatting complete, analyzer clean, **193 Flutter tests passed**. Includes
+  programme-only Student/Alumni inputs, Staff affiliation/no academic years,
+  role hints across identity changes, resend throttling, safe 429 messages,
+  actionable expired-link feedback, nullable draft serialization, real programme
+  RPC contract and 200% long-programme layout. Original demo/security coverage kept.
+- **276 pgTAP assertions passed** across six files on the isolated DB, plus
+  **12 rollback-only initial-administrator operation checks**. Covers programme
+  FK/institution validation, RLS/grants, own-only data, verified academic locks,
+  Staff/pending/admin isolation, restricted discovery and privacy changes.
+- **207 local API checks passed**: new onboarding/Auth 65, profiles 35,
+  map/network 34, mentor matching 27, Career Bridge 46. Real synthetic local Auth
+  signups, confirmation/resend, duplicate handling, expired/replayed confirmation
+  and recovery, refresh/logout, programme-only map/discovery/mentor/career flows,
+  connection acceptance and ownership/privacy denials. HTTP 429 UX is tested with
+  a controlled local HTTP server, not a hosted email quota or load test.
+- Actual Android VIEW intents from local Mailpit confirmation links passed for
+  Student, Alumni and Staff on dedicated emulator-5558 (Android 14). Actual
+  recovery intent, password update/login, pending route denial and invalid-link
+  callback denial passed. Five native screenshots under build/task08/screenshots
+  have task11 prefixes. The SDK/widget recreation also restores the pending session.
+- A local-only standalone entry using the same isolated SDK storage then passed
+  **two actual force-stop/process relaunches**, restoring the saved Staff profile
+  without credential entry. Screenshots/timings are under build/task11a; sampled
+  app logs showed no password/token/overflow/unhandled-exception patterns.
+  The first standalone probe encountered UI-idle/startup timing; the retried probe
+  handles emulator idle readiness and completed both cycles.
+- Native failures revealed two fixed UI/state defects: draft snackbars obscured
+  controls and post-save form disposal left cached absent-profile data. Inline
+  save status and independent controller-published cache revision fix both.
+  Intermediate test-harness compilation/session-isolation failures and the initial
+  cycle-producing cache attempt were corrected; failed runs are not passes.
+- Offline Student/Alumni/Staff demo native regression passed separately on
+  emulator-5554, including restoration/reset, existing features and zero HTTP
+  client creation. Prior emulator network settings restored; app retained.
+- Ordinary `flutter build apk --debug` passed without backend defines. Separate
+  local test builds were installed only on the dedicated emulator. Samsung was
+  detected but not installed/uninstalled, cleared, overwritten or tested with new
+  code; its signed competition installation is protected.
+- Competition APK SHA-256 unchanged:
+  `aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+  Release keystore/certificate/app ID/deep link and dependency versions unchanged.
+- Versioned Supabase TOML parsed and prepared for confirmation-required signup,
+  exact mobile callback, minimum password length 12 and 60-second email interval.
+  These settings are not applied to active stacks/hosted Auth. The isolated
+  historical test stack retains server minimum 6 and synthetic mail interval 1s;
+  all test passwords meet client minimum 12. No claim of server-12 enforcement.
+- Remaining hosted gates and institutional decisions, including stronger server
+  Auth settings, SMTP, approved production reference data, independent reviewer
+  provisioning, privacy/export/deletion/recovery and scale validation, are listed
+  in real-user-launch-readiness.md. Not ready for public alumni invitations.

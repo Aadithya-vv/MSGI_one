@@ -7,6 +7,7 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../application/auth_providers.dart';
 import '../domain/auth_repository.dart';
+import '../domain/onboarding.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({
@@ -29,6 +30,47 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _confirm = TextEditingController();
   bool _busy = false, _showPassword = false;
   String? _notice;
+  AccountKind _kind = AccountKind.student;
+  DateTime? _lastEmailRequest;
+  Future<void> _resend() async {
+    if (_busy || AuthValidation.email(_email.text) != null) {
+      setState(() => _notice = 'Enter a valid email address first.');
+      return;
+    }
+    if (_lastEmailRequest != null &&
+        DateTime.now().difference(_lastEmailRequest!).inSeconds < 60) {
+      setState(
+        () => _notice =
+            'Please wait at least a minute before requesting another email.',
+      );
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _notice = null;
+    });
+    _lastEmailRequest = DateTime.now();
+    try {
+      await ref.read(authRepositoryProvider)!.resendConfirmation(_email.text);
+      if (mounted) {
+        setState(
+          () => _notice = 'If confirmation is needed, an email will be sent. Check spam and open only the newest link.',
+        );
+      }
+    } on AuthFailure catch (error) {
+      if (mounted) setState(() => _notice = error.message);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _notice =
+              'Confirmation email unavailable. Please try again later.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   @override
   void dispose() {
     _email.dispose();
@@ -65,15 +107,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       } else if (widget.reset) {
         await controller.updatePassword(_password.text);
       } else if (widget.signup) {
-        await controller.signUp(_email.text, _password.text);
+        await controller.signUp(_email.text, _password.text, kind: _kind);
+        _lastEmailRequest = DateTime.now();
         if (mounted) {
           setState(
-            () => _notice = 'Check your inbox to confirm your email before signing in. Institutional verification is still required.',
+            () => _notice = 'Check your inbox to confirm your email. If you already registered, log in or use password recovery instead. Institutional verification is still required.',
           );
         }
       } else {
         await controller.signIn(_email.text, _password.text);
       }
+    } on AuthFailure catch (error) {
+      if (mounted) setState(() => _notice = error.message);
     } catch (_) {
       if (mounted) {
         setState(
@@ -121,6 +166,36 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (widget.signup) ...[
+                    DropdownButtonFormField<AccountKind>(
+                      key: const Key('signup-account-kind'),
+                      initialValue: _kind,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Account type',
+                      ),
+                      items: AccountKind.values
+                          .map(
+                            (k) => DropdownMenuItem(
+                              value: k,
+                              child: Text(switch (k) {
+                                AccountKind.student => 'Student',
+                                AccountKind.alumni => 'Alumni',
+                                AccountKind.staff => 'Faculty / Staff',
+                              }),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: enabled
+                          ? (value) => setState(() => _kind = value!)
+                          : null,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Account type is self-declared. Email confirmation and institutional approval are separate; Staff does not grant administrator access.',
+                    ),
+                    const SizedBox(height: 16),
+                  ],
                   if (!widget.reset)
                     TextFormField(
                       key: const Key('auth-email'),
@@ -197,6 +272,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     ),
                   ),
                   StatusNotice(_notice),
+                  if (!widget.recovery && !widget.reset)
+                    TextButton(
+                      onPressed: enabled ? _resend : null,
+                      child: const Text('Resend confirmation email'),
+                    ),
                 ],
               ),
             ),

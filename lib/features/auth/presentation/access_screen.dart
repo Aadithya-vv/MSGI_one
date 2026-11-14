@@ -35,7 +35,7 @@ class AccessScreen extends ConsumerWidget {
       ),
       _ => (
         'Access check unavailable',
-        'Your membership could not be verified. Community access stays closed until a fresh check succeeds.',
+        access.notice ?? 'Your membership could not be verified. Community access stays closed until a fresh check succeeds.',
       ),
     };
     return Scaffold(

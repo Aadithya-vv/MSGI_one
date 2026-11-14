@@ -13,7 +13,7 @@ class SupabaseProfileRepository implements ProfileRepository {
     final row = await client
         .from('profiles')
         .select(
-          '*,institutions(name),departments(name),profile_skills(skill_id,skills(name)),mentorship_preferences(available)',
+          '*,institutions(name),departments(name),programmes(name),profile_skills(skill_id,skills(name)),mentorship_preferences(available)',
         )
         .eq('user_id', user)
         .maybeSingle()
@@ -35,8 +35,7 @@ class SupabaseProfileRepository implements ProfileRepository {
       OnboardingInput.fromJson(map),
       institution:
           row['institutions']?['name'] as String? ?? 'Institution unavailable',
-      department:
-          row['departments']?['name'] as String? ?? 'Department unavailable',
+      department: row['departments']?['name'] as String? ?? '',
       skills: (row['profile_skills'] as List)
           .map((s) => s['skills']['name'] as String)
           .toList(),
@@ -79,13 +78,14 @@ class SupabaseProfileRepository implements ProfileRepository {
     DirectoryFilter filter, {
     String? after,
   }) async {
-    if (filter.programme != null) {
-      throw UnsupportedError(
-        'Hosted programme filtering requires a reviewed backend contract.',
-      );
-    }
     final rows = await client
-        .rpc('discover_alumni', params: filter.params(after: after))
+        .rpc(
+          'discover_alumni_v2',
+          params: {
+            ...filter.params(after: after),
+            'p_programme': filter.programme,
+          },
+        )
         .timeout(const Duration(seconds: 20));
     return (rows as List)
         .map((r) => AlumniProfile(Map<String, dynamic>.from(r as Map)))
@@ -95,7 +95,7 @@ class SupabaseProfileRepository implements ProfileRepository {
   @override
   Future<AlumniProfile?> detail(String userId) async {
     final rows = await client.rpc(
-      'discover_alumni',
+      'discover_alumni_v2',
       params: const DirectoryFilter().params(user: userId, limit: 1),
     );
     return (rows as List).isEmpty

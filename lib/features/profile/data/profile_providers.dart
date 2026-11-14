@@ -16,6 +16,7 @@ class OnboardingBuffer extends Notifier<OnboardingInput?> {
   @override
   OnboardingInput? build() {
     ref.watch(authControllerProvider.select((s) => s.userId));
+    ref.watch(profileRevisionProvider);
     return null;
   }
 
@@ -34,10 +35,12 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
 });
 final ownProfileProvider = FutureProvider<MemberProfile?>((ref) {
   ref.watch(communityUserIdProvider);
+  ref.watch(profileRevisionProvider);
   return ref.watch(profileRepositoryProvider).own();
 });
 final profileDraftProvider = FutureProvider<Map<String, dynamic>?>((ref) {
   ref.watch(authControllerProvider.select((s) => s.userId));
+  ref.watch(profileRevisionProvider);
   return ref.watch(profileRepositoryProvider).draft();
 });
 final alumniDetailProvider = FutureProvider.autoDispose

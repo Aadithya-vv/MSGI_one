@@ -41,8 +41,14 @@ class ProfileScreen extends ConsumerWidget {
                       InfoCard(
                         icon: Icons.person_outline,
                         title: profile.input.displayName,
-                        description:
-                            '${profile.institution}\n${profile.department} · ${profile.input.joiningYear}–${profile.input.graduationYear}',
+                        description: [
+                          profile.institution,
+                          if (profile.department.isNotEmpty) profile.department,
+                          if (profile.input.affiliation.isNotEmpty)
+                            profile.input.affiliation,
+                          if (profile.input.graduationYear != 0)
+                            '${profile.input.joiningYear == 0 ? '' : '${profile.input.joiningYear}–'}${profile.input.graduationYear}',
+                        ].join('\n'),
                       ),
                       const SectionHeading('Career and education'),
                       Text(

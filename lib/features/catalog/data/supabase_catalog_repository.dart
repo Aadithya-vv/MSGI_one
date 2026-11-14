@@ -14,10 +14,13 @@ class SupabaseCatalogRepository implements CatalogRepository {
     int page = 0,
   }) async {
     var request = client.from(kind.name).select();
-    if (kind == CatalogKind.institutions || kind == CatalogKind.departments) {
+    if (kind == CatalogKind.institutions ||
+        kind == CatalogKind.departments ||
+        kind == CatalogKind.programmes) {
       request = request.eq('active', true);
     }
-    if (kind == CatalogKind.departments && institutionId != null) {
+    if ((kind == CatalogKind.departments || kind == CatalogKind.programmes) &&
+        institutionId != null) {
       request = request.eq('institution_id', institutionId);
     }
     if (query.trim().isNotEmpty) {
@@ -38,6 +41,8 @@ class SupabaseCatalogRepository implements CatalogRepository {
             name: r['name'] as String,
             institutionId: r['institution_id'] as String?,
             countryCode: r['country_code'] as String?,
+            level: r['level'] as String?,
+            catalogKey: r['catalog_key'] as String?,
           ),
         )
         .toList();

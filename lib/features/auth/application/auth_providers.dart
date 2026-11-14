@@ -7,6 +7,7 @@ import '../../../core/config/backend_config.dart';
 import '../data/supabase_auth_repository.dart';
 import '../domain/auth_repository.dart';
 import '../domain/onboarding.dart';
+import '../../profile/data/profile_providers.dart';
 
 final backendConfigProvider = Provider<BackendConfig>(
   (ref) => BackendConfig.fromEnvironment(),
@@ -24,6 +25,11 @@ final authRepositoryProvider = Provider<AuthRepository?>((ref) {
 final onboardingOptionsProvider = FutureProvider<OnboardingOptions>((
   ref,
 ) async {
+  // The suggested account type is an untrusted per-account hint, not a global catalog setting.
+  final userId = ref.watch(
+    authControllerProvider.select((state) => state.userId),
+  );
+  if (userId == null) throw const AuthFailure();
   final repository = ref.watch(authRepositoryProvider);
   if (repository == null) throw const AuthFailure();
   return repository.loadOnboardingOptions();
@@ -71,14 +77,20 @@ class AuthController extends Notifier<AccessState> {
     return const AccessState(AccessPhase.loading);
   }
 
-  void _failClosed() {
+  void _failClosed({String? notice}) {
     if (_disposed) return;
     _generation++;
-    state = AccessState(AccessPhase.error, userId: _session?.userId);
+    state = AccessState(
+      AccessPhase.error,
+      userId: _session?.userId,
+      notice: notice,
+    );
   }
 
   /// Callback validation failures close protected UI without inventing a session.
-  void authLinkFailed() => _failClosed();
+  void authLinkFailed() => _failClosed(
+    notice: 'This authentication link is invalid, expired or already used. Log out to request a fresh confirmation or recovery email, then open only its newest link.',
+  );
 
   Future<void> _onSession(AuthSession? session) async {
     if (_disposed) return;
@@ -108,6 +120,7 @@ class AuthController extends Notifier<AccessState> {
         MembershipState.pending => AccessPhase.pending,
         MembershipState.verifiedStudent => AccessPhase.verifiedStudent,
         MembershipState.verifiedAlumni => AccessPhase.verifiedAlumni,
+        MembershipState.verifiedStaff => AccessPhase.verifiedStaff,
         MembershipState.rejected => AccessPhase.rejected,
         MembershipState.suspended => AccessPhase.suspended,
       };
@@ -139,10 +152,14 @@ class AuthController extends Notifier<AccessState> {
     await refresh();
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(
+    String email,
+    String password, {
+    AccountKind kind = AccountKind.student,
+  }) async {
     _recoveryRequested = false;
     _logoutBlocked = false;
-    await _repository!.signUp(email, password);
+    await _repository!.signUp(email, password, kind: kind);
     await refresh();
   }
 
@@ -161,7 +178,13 @@ class AuthController extends Notifier<AccessState> {
   }
 
   Future<void> submitOnboarding(OnboardingInput input) async {
+    final userId = _session?.userId;
     await _repository!.submitOnboarding(input);
+    if (_disposed || _logoutBlocked || _session?.userId != userId) return;
+    // Publish through an independent revision signal: profile providers depend
+    // on Auth, so reading/invalidating them here would create a Riverpod cycle.
+    // This happens before refresh can navigate away and dispose the form.
+    ref.read(profileRevisionProvider.notifier).refresh();
     await refresh();
   }
 

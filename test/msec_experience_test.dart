@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
@@ -216,19 +220,32 @@ void main() {
   );
 
   test(
-    'Unsupported hosted programme filters fail before issuing an RPC',
-    () async {
+    'Programme filtering uses the reviewed v2 RPC and server parameter',
+    () => HttpOverrides.runWithHttpOverrides(() async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      String? path;
+      Map<String, dynamic>? body;
+      server.listen((request) async {
+        path = request.uri.path;
+        body = jsonDecode(
+          await utf8.decoder.bind(request).join(),
+        ) as Map<String, dynamic>;
+        request.response.headers.contentType = ContentType.json;
+        request.response.write('[]');
+        await request.response.close();
+      });
       final client = SupabaseClient(
-        'http://127.0.0.1:1',
+        'http://127.0.0.1:${server.port}',
         'synthetic-public-key',
       );
       addTearDown(client.dispose);
-      await expectLater(
-        SupabaseProfileRepository(client)
-            .discover(const DirectoryFilter(programme: 'msec-ug-cse')),
-        throwsUnsupportedError,
-      );
-    },
+      addTearDown(() => server.close(force: true));
+      final result = await SupabaseProfileRepository(client)
+          .discover(const DirectoryFilter(programme: 'programme-uuid'));
+      expect(result, isEmpty);
+      expect(path, '/rest/v1/rpc/discover_alumni_v2');
+      expect(body!['p_programme'], 'programme-uuid');
+    }, _LocalHttp()),
   );
 
   testWidgets('Direct mentor entry uses Home as the Android Back fallback', (
@@ -439,3 +456,5 @@ void main() {
     },
   );
 }
+
+class _LocalHttp extends HttpOverrides {}

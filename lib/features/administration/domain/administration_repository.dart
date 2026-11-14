@@ -7,9 +7,15 @@ class MembershipCandidate {
     required this.departmentId,
     required this.joiningYear,
     required this.graduationYear,
+    this.programme = '',
+    this.affiliation = '',
+    this.institution = '',
+    this.department = '',
   });
-  final String id, name, claimedKind, institutionId, departmentId;
-  final int joiningYear, graduationYear;
+  final String id, name, claimedKind, institutionId;
+  final String? departmentId;
+  final int? joiningYear, graduationYear;
+  final String programme, affiliation, institution, department;
 }
 
 enum ReviewDecision { verified, rejected, suspended }
@@ -30,7 +36,7 @@ class MembershipReview {
       return 'Enter an audit reason of 1–1000 characters.';
     }
     if (decision == ReviewDecision.verified &&
-        !['student', 'alumni'].contains(verifiedKind)) {
+        !['student', 'alumni', 'staff'].contains(verifiedKind)) {
       return 'Choose the independently verified membership type.';
     }
     if (decision != ReviewDecision.verified && verifiedKind != null) {

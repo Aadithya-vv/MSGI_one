@@ -39,9 +39,13 @@ begin
  if current_membership.status<>'pending' then raise exception 'Candidate must have pending membership'; end if;
  select p.claimed_kind into profile_claim from public.profiles p
    join public.institutions i on i.id=p.institution_id and i.active
-   join public.departments d on d.id=p.department_id and d.institution_id=p.institution_id and d.active
-   where p.user_id=actor for update of p;
- if not found or profile_claim<>approved_kind or not exists(select 1 from public.profile_skills ps where ps.profile_id=actor) then raise exception 'Review complete profile, active catalogs and approved account kind first'; end if;
+   left join public.departments d on d.id=p.department_id and d.institution_id=p.institution_id
+   left join public.programmes pr on pr.id=p.programme_id and pr.institution_id=p.institution_id
+   where p.user_id=actor and (p.department_id is null or d.active)
+     and (p.programme_id is null or pr.active)
+     and (p.department_id is not null or p.programme_id is not null or (p.claimed_kind='staff' and nullif(btrim(p.affiliation),'') is not null))
+   for update of p;
+ if not found or profile_claim<>approved_kind or (profile_claim<>'staff' and not exists(select 1 from public.profile_skills ps where ps.profile_id=actor)) then raise exception 'Review complete profile, active catalogs and approved account kind first'; end if;
  update private.memberships set status='verified',verified_kind=approved_kind,updated_at=now() where user_id=actor and status='pending';
  get diagnostics affected=row_count;
  if affected<>1 then raise exception 'Unexpected membership update count'; end if;

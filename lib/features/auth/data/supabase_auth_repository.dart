@@ -14,7 +14,7 @@ class SupabaseAuthRepository implements AuthRepository {
   bool _recovering = false;
   AuthSession? _session() {
     final user = _client.auth.currentSession?.user;
-    return user == null
+    return user == null || user.emailConfirmedAt == null
         ? null
         : AuthSession(user.id, passwordRecovery: _recovering);
   }
@@ -30,6 +30,29 @@ class SupabaseAuthRepository implements AuthRepository {
   Future<T> _safe<T>(Future<T> Function() action) async {
     try {
       return await action().timeout(const Duration(seconds: 20));
+    } on AuthFailure {
+      rethrow;
+    } on sb.AuthException catch (error) {
+      if (error.statusCode == '429' ||
+          error.code == 'over_email_send_rate_limit' ||
+          error.code == 'over_request_rate_limit') {
+        throw const AuthFailure(
+          'Too many requests. Please wait before requesting another email.',
+        );
+      }
+      if (error.code == 'email_not_confirmed') {
+        throw const AuthFailure(
+          'Confirm your email before logging in. You can request another confirmation below.',
+        );
+      }
+      if (error.code == 'otp_expired') {
+        throw const AuthFailure(
+          'This link is invalid or expired. Request a fresh email and open only its newest link.',
+        );
+      }
+      throw const AuthFailure(
+        'Unable to complete the request. Check your details or try logging in if you already registered.',
+      );
     } catch (_) {
       throw const AuthFailure();
     }
@@ -51,10 +74,25 @@ class SupabaseAuthRepository implements AuthRepository {
     );
   });
   @override
-  Future<void> signUp(String email, String password) => _safe(() async {
+  Future<void> signUp(
+    String email,
+    String password, {
+    AccountKind kind = AccountKind.student,
+  }) => _safe(() async {
     await _client.auth.signUp(
       email: email.trim(),
       password: password,
+      emailRedirectTo: authCallbackUri,
+      data: {
+        'account_kind': kind.name,
+      }, // Untrusted UX hint, never a membership/role grant.
+    );
+  });
+  @override
+  Future<void> resendConfirmation(String email) => _safe(() async {
+    await _client.auth.resend(
+      type: sb.OtpType.signup,
+      email: email.trim(),
       emailRedirectTo: authCallbackUri,
     );
   });
@@ -89,6 +127,9 @@ class SupabaseAuthRepository implements AuthRepository {
     if (status == 'verified' && row['verified_kind'] == 'alumni') {
       return MembershipState.verifiedAlumni;
     }
+    if (status == 'verified' && row['verified_kind'] == 'staff') {
+      return MembershipState.verifiedStaff;
+    }
     throw const AuthFailure('Membership data could not be verified.');
   }
 
@@ -109,6 +150,16 @@ class SupabaseAuthRepository implements AuthRepository {
       departments: rows[1],
       skills: rows[2],
       cities: rows[3],
+      programmes: rows[4],
+      suggestedKind:
+          AccountKind.values
+              .where(
+                (k) =>
+                    k.name ==
+                    _client.auth.currentUser?.userMetadata?['account_kind'],
+              )
+              .firstOrNull ??
+          AccountKind.student,
     );
   });
   @override

@@ -122,7 +122,7 @@ void main() {
     );
   });
   for (final phase in AccessPhase.values.where(
-    (p) => p != AccessPhase.verifiedAlumni && p != AccessPhase.verifiedStudent,
+    (p) => !AccessState(p).isVerified,
   )) {
     test('$phase blocks every protected route without redirect loops', () {
       for (final path in [

@@ -1,6 +1,6 @@
 import '../../auth/domain/onboarding.dart';
 
-enum CatalogKind { institutions, departments, skills, cities }
+enum CatalogKind { institutions, departments, skills, cities, programmes }
 
 abstract class CatalogRepository {
   Future<List<CatalogEntry>> search(

@@ -27,6 +27,8 @@ OnboardingInput? _resumeInput(
       'department_id',
       'joining_year',
       'graduation_year',
+      'programme_id',
+      'affiliation',
     ]) {
       content[key] = saved[key];
     }
@@ -58,7 +60,7 @@ class OnboardingScreen extends ConsumerWidget {
           const FeatureHeader(
             eyebrow: 'Your membership begins here',
             title: 'Complete your profile',
-            description: 'Save progress privately and resume later. Student or alumni is a claim; institutional review grants access.',
+            description: 'Save progress privately and resume later. Student, Alumni and Faculty / Staff are claims; institutional review grants access.',
           ),
           ref
               .watch(onboardingOptionsProvider)
@@ -68,13 +70,10 @@ class OnboardingScreen extends ConsumerWidget {
                   message: 'Institutional options could not be loaded.',
                   onRetry: () => ref.invalidate(onboardingOptionsProvider),
                 ),
-                data: (options) =>
-                    options.institutions.isEmpty ||
-                        options.departments.isEmpty ||
-                        options.skills.isEmpty
+                data: (options) => options.institutions.isEmpty
                     ? const EmptyState(
                         title: 'Institutional catalog is not ready',
-                        message: 'Approved institutions, departments and skills are required before registration can continue.',
+                        message: 'Approved institutions and academic catalogs are required before onboarding can continue.',
                       )
                     : ref
                           .watch(profileDraftProvider)
@@ -142,14 +141,17 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
       _company = TextEditingController(),
       _domain = TextEditingController(),
       _bio = TextEditingController(),
-      _degree = TextEditingController();
+      _degree = TextEditingController(),
+      _affiliation = TextEditingController();
   AccountKind _kind = AccountKind.student;
-  String? _institution, _department, _city, _error;
+  String? _institution, _department, _programme, _city, _error;
+  String? _savedNotice;
   final _skills = <String>{};
   bool _readyToRemember = false, _submitted = false;
   bool _departmentLoading = false;
   bool _directory = false, _map = false, _mentoring = false, _busy = false;
   late List<CatalogEntry> _institutions, _departments, _skillOptions, _cities;
+  late List<CatalogEntry> _programmes;
   @override
   void initState() {
     super.initState();
@@ -163,6 +165,7 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
       _domain,
       _bio,
       _degree,
+      _affiliation,
     ]) {
       c.addListener(_remember);
     }
@@ -170,6 +173,8 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     _departments = [...widget.options.departments];
     _skillOptions = [...widget.options.skills];
     _cities = [...widget.options.cities];
+    _programmes = [...widget.options.programmes];
+    _kind = widget.options.suggestedKind;
     Future.microtask(() {
       if (mounted) _readyToRemember = true;
     });
@@ -182,6 +187,8 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     _kind = i.kind;
     _institution = i.institutionId.isEmpty ? null : i.institutionId;
     _department = i.departmentId.isEmpty ? null : i.departmentId;
+    _programme = i.programmeId;
+    _affiliation.text = i.affiliation;
     _joining.text = i.joiningYear == 0 ? '' : '${i.joiningYear}';
     _graduation.text = i.graduationYear == 0 ? '' : '${i.graduationYear}';
     _designation.text = i.designation;
@@ -215,6 +222,15 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     if (_city != null && !_cities.any((e) => e.id == _city)) {
       _cities.add(CatalogEntry(id: _city!, name: 'Saved city'));
     }
+    if (_programme != null && !_programmes.any((e) => e.id == _programme)) {
+      _programmes.add(
+        CatalogEntry(
+          id: _programme!,
+          name: i.degree.isEmpty ? 'Saved programme' : i.degree,
+          institutionId: _institution,
+        ),
+      );
+    }
   }
 
   @override
@@ -229,6 +245,7 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
       _domain,
       _bio,
       _degree,
+      _affiliation,
     ]) {
       c.dispose();
     }
@@ -240,6 +257,8 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     kind: _kind,
     institutionId: _institution ?? '',
     departmentId: _department ?? '',
+    programmeId: _kind == AccountKind.staff ? null : _programme,
+    affiliation: _kind == AccountKind.staff ? _affiliation.text : '',
     joiningYear: int.tryParse(_joining.text) ?? 0,
     graduationYear: int.tryParse(_graduation.text) ?? 0,
     designation: _designation.text,
@@ -273,18 +292,26 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     _update(() {
       _institution = value;
       _department = null;
+      _programme = null;
       _departmentLoading = false;
     });
-    if (value == null || _departments.any((d) => d.institutionId == value)) {
+    if (value == null) {
       return;
     }
     _update(() => _departmentLoading = true);
     try {
-      final rows = await ref
-          .read(catalogRepositoryProvider)
-          .search(CatalogKind.departments, institutionId: value);
+      final catalog = ref.read(catalogRepositoryProvider);
+      final rows = await Future.wait([
+        catalog.search(CatalogKind.departments, institutionId: value),
+        catalog.search(CatalogKind.programmes, institutionId: value),
+      ]);
       if (mounted && _institution == value) {
-        _update(() => _departments.addAll(rows));
+        _update(() {
+          _departments.removeWhere((e) => e.institutionId == value);
+          _departments.addAll(rows[0]);
+          _programmes.removeWhere((e) => e.institutionId == value);
+          _programmes.addAll(rows[1].where((e) => e.level != null));
+        });
       }
     } catch (_) {
       if (mounted && _institution == value) {
@@ -312,23 +339,20 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
     _update(() {
       _busy = true;
       _error = null;
+      _savedNotice = null;
     });
     try {
       if (draft) {
         await ref.read(profileRepositoryProvider).saveDraft(input.toJson());
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Progress saved privately to your account.'),
-            ),
+          _update(
+            () => _savedNotice = 'Progress saved privately to your account.',
           );
         }
       } else {
         await ref.read(authControllerProvider.notifier).submitOnboarding(input);
+        if (!mounted) return;
         _submitted = true;
-        ref.read(onboardingBufferProvider.notifier).store(null);
-        ref.invalidate(ownProfileProvider);
-        ref.invalidate(profileDraftProvider);
         if (mounted) {
           context.go(
             ref.read(authControllerProvider).isVerified
@@ -382,7 +406,12 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
       isExpanded: true,
       decoration: InputDecoration(labelText: label),
       items: items
-          .map((e) => DropdownMenuItem(value: e.id, child: Text(e.name)))
+          .map(
+            (e) => DropdownMenuItem(
+              value: e.id,
+              child: Text(e.name, maxLines: 3, overflow: TextOverflow.ellipsis),
+            ),
+          )
           .toList(),
       validator: (v) => v == null ? 'Select $label.' : null,
       onChanged: _busy || locked ? null : change,
@@ -406,20 +435,31 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
           DropdownButtonFormField<AccountKind>(
             initialValue: _kind,
             isExpanded: true,
-            decoration: const InputDecoration(labelText: 'Student or alumni'),
+            decoration: const InputDecoration(labelText: 'Account type'),
             items: AccountKind.values
                 .map(
                   (k) => DropdownMenuItem(
                     value: k,
-                    child: Text(
-                      k == AccountKind.student ? 'Student' : 'Alumni',
-                    ),
+                    child: Text(switch (k) {
+                      AccountKind.student => 'Student',
+                      AccountKind.alumni => 'Alumni',
+                      AccountKind.staff => 'Faculty / Staff',
+                    }),
                   ),
                 )
                 .toList(),
             onChanged: _busy || verified
                 ? null
-                : (v) => _update(() => _kind = v!),
+                : (v) => _update(() {
+                    _kind = v!;
+                    if (_kind == AccountKind.staff) {
+                      _programme = null;
+                      _joining.clear();
+                      _graduation.clear();
+                      _degree.clear();
+                      _mentoring = false;
+                    }
+                  }),
           ),
           const SizedBox(height: 16),
           _select(
@@ -430,30 +470,74 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
             locked: verified,
           ),
           if (_departmentLoading) const LinearProgressIndicator(),
+          if (_kind != AccountKind.staff &&
+              (_programmes.any((p) => p.institutionId == _institution) ||
+                  _institutions.any(
+                    (i) => i.id == _institution && i.catalogKey == 'msec',
+                  )))
+            _select(
+              'Degree programme',
+              _programme,
+              _programmes
+                  .where((p) => p.institutionId == _institution)
+                  .toList(),
+              (value) => _update(() {
+                _programme = value;
+                _degree.text = _programmes
+                    .firstWhere((p) => p.id == value)
+                    .name;
+              }),
+              locked: verified,
+            ),
           _select(
-            'Department',
-            _department,
-            _departments.where((d) => d.institutionId == _institution).toList(),
-            (v) => _update(() => _department = v),
+            _programme != null || _kind == AccountKind.staff
+                ? 'Academic department (optional)'
+                : 'Department',
+            _programme != null || _kind == AccountKind.staff
+                ? (_department ?? '')
+                : _department,
+            [
+              if (_programme != null || _kind == AccountKind.staff)
+                const CatalogEntry(id: '', name: 'No department claim'),
+              ..._departments.where((d) => d.institutionId == _institution),
+            ],
+            (v) => _update(() => _department = v == '' ? null : v),
             locked: verified,
           ),
-          _field(_joining, 'Joining year', number: true, locked: verified),
-          _field(
-            _graduation,
-            'Graduation year (actual or expected)',
-            number: true,
-            locked: verified,
-          ),
+          if (_kind == AccountKind.staff)
+            _field(
+              _affiliation,
+              'Institutional affiliation (if no department selected)',
+              required: false,
+              max: 120,
+              locked: verified,
+            ),
+          if (_kind != AccountKind.staff)
+            _field(
+              _joining,
+              'Joining year',
+              number: true,
+              required: _kind == AccountKind.student,
+              locked: verified,
+            ),
+          if (_kind != AccountKind.staff)
+            _field(
+              _graduation,
+              'Graduation year (actual or expected)',
+              number: true,
+              locked: verified,
+            ),
           if (verified)
             const Text(
               'Verified education changes require institutional review.',
             ),
-          _field(
-            _degree,
-            'Degree / qualification (optional)',
-            required: false,
-            max: 120,
-          ),
+          if (_kind != AccountKind.staff && _programme == null)
+            _field(
+              _degree,
+              'Degree / qualification (optional)',
+              required: false,
+              max: 120,
+            ),
           TextButton(
             onPressed: () {
               _update(() => _step = 1);
@@ -468,7 +552,7 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
           _field(
             _designation,
             'Professional designation (if applicable)',
-            required: false,
+            required: _kind == AccountKind.staff,
             max: 120,
           ),
           if (_kind == AccountKind.alumni) ...[
@@ -497,7 +581,9 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
             ),
           ],
           _field(_interests, 'Career interests (comma separated)'),
-          Text('Skills — select 1–20 (${_skills.length} selected)'),
+          Text(
+            'Skills — select up to 20 (${_skills.length} selected)${_kind == AccountKind.staff ? ' · optional' : ''}',
+          ),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -592,6 +678,21 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
                 ),
               if (!verified && _institution != null)
                 CatalogPicker(
+                  key: ValueKey('programmes-$_institution'),
+                  kind: CatalogKind.programmes,
+                  institutionId: _institution,
+                  label: 'Degree programmes',
+                  enabled: !_busy && _kind != AccountKind.staff,
+                  onSelected: (entry) => _update(() {
+                    if (!_programmes.any((p) => p.id == entry.id)) {
+                      _programmes.add(entry);
+                    }
+                    _programme = entry.id;
+                    _degree.text = entry.name;
+                  }),
+                ),
+              if (!verified && _institution != null)
+                CatalogPicker(
                   key: ValueKey(_institution),
                   kind: CatalogKind.departments,
                   institutionId: _institution,
@@ -627,6 +728,8 @@ class _OnboardingFormState extends ConsumerState<_OnboardingForm> {
             ],
           ),
           if (_error != null) Semantics(liveRegion: true, child: Text(_error!)),
+          if (_savedNotice != null)
+            Semantics(liveRegion: true, child: Text(_savedNotice!)),
           OutlinedButton(
             onPressed: _busy ? null : () => _save(draft: true),
             child: const Text('Save progress privately'),

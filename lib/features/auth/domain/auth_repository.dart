@@ -11,6 +11,7 @@ enum MembershipState {
   pending,
   verifiedStudent,
   verifiedAlumni,
+  verifiedStaff,
   rejected,
   suspended,
 }
@@ -23,6 +24,7 @@ enum AccessPhase {
   pending,
   verifiedStudent,
   verifiedAlumni,
+  verifiedStaff,
   rejected,
   suspended,
   passwordRecovery,
@@ -30,12 +32,14 @@ enum AccessPhase {
 }
 
 class AccessState {
-  const AccessState(this.phase, {this.userId});
+  const AccessState(this.phase, {this.userId, this.notice});
   final AccessPhase phase;
   final String? userId;
+  final String? notice;
   bool get isVerified =>
       phase == AccessPhase.verifiedStudent ||
-      phase == AccessPhase.verifiedAlumni;
+      phase == AccessPhase.verifiedAlumni ||
+      phase == AccessPhase.verifiedStaff;
 }
 
 class AuthFailure implements Exception {
@@ -51,7 +55,12 @@ abstract interface class AuthRepository {
   Stream<AuthSession?> get sessions;
   Future<AuthSession?> restoreSession();
   Future<void> signIn(String email, String password);
-  Future<void> signUp(String email, String password);
+  Future<void> signUp(
+    String email,
+    String password, {
+    AccountKind kind = AccountKind.student,
+  });
+  Future<void> resendConfirmation(String email);
   Future<void> requestPasswordReset(String email);
   Future<void> updatePassword(String password);
   Future<void> signOut();

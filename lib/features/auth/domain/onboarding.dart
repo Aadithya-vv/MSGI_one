@@ -1,4 +1,4 @@
-enum AccountKind { student, alumni }
+enum AccountKind { student, alumni, staff }
 
 class CatalogEntry {
   const CatalogEntry({
@@ -6,11 +6,15 @@ class CatalogEntry {
     required this.name,
     this.institutionId,
     this.countryCode,
+    this.level,
+    this.catalogKey,
   });
   final String id;
   final String name;
   final String? institutionId;
   final String? countryCode;
+  final String? level;
+  final String? catalogKey;
 }
 
 class OnboardingOptions {
@@ -19,11 +23,15 @@ class OnboardingOptions {
     required this.departments,
     required this.skills,
     required this.cities,
+    this.programmes = const [],
+    this.suggestedKind = AccountKind.student,
   });
   final List<CatalogEntry> institutions;
   final List<CatalogEntry> departments;
   final List<CatalogEntry> skills;
   final List<CatalogEntry> cities;
+  final List<CatalogEntry> programmes;
+  final AccountKind suggestedKind;
 }
 
 class OnboardingInput {
@@ -45,6 +53,8 @@ class OnboardingInput {
     this.biography = '',
     this.degree = '',
     this.mentoring = false,
+    this.programmeId,
+    this.affiliation = '',
   });
   final String displayName;
   final AccountKind kind;
@@ -60,9 +70,13 @@ class OnboardingInput {
   final bool mapOptIn;
   final String company, professionalDomain, biography, degree;
   final bool mentoring;
+  final String? programmeId;
+  final String affiliation;
   factory OnboardingInput.fromJson(Map<String, dynamic> j) => OnboardingInput(
     displayName: j['display_name'] as String? ?? '',
-    kind: j['kind'] == 'alumni' ? AccountKind.alumni : AccountKind.student,
+    kind:
+        AccountKind.values.where((k) => k.name == j['kind']).firstOrNull ??
+        AccountKind.student,
     institutionId: j['institution_id'] as String? ?? '',
     departmentId: j['department_id'] as String? ?? '',
     joiningYear: j['joining_year'] as int? ?? 0,
@@ -78,14 +92,18 @@ class OnboardingInput {
     biography: j['biography'] as String? ?? '',
     degree: j['degree'] as String? ?? '',
     mentoring: j['mentoring'] == true,
+    programmeId: j['programme_id'] as String?,
+    affiliation: j['affiliation'] as String? ?? '',
   );
   Map<String, dynamic> toJson() => {
     'display_name': displayName.trim(),
     'kind': kind.name,
     'institution_id': institutionId,
-    'department_id': departmentId,
-    'joining_year': joiningYear,
-    'graduation_year': graduationYear,
+    'department_id': departmentId.isEmpty ? null : departmentId,
+    'programme_id': programmeId,
+    'affiliation': affiliation.trim(),
+    'joining_year': joiningYear == 0 ? null : joiningYear,
+    'graduation_year': graduationYear == 0 ? null : graduationYear,
     'interests': interests,
     'skill_ids': skillIds,
     'designation': designation.trim(),
@@ -109,14 +127,30 @@ class OnboardingInput {
     if (displayName.trim().length < 2 || displayName.trim().length > 80) {
       return 'Display name must contain 2–80 characters.';
     }
-    if (institutionId.isEmpty || departmentId.isEmpty) {
-      return 'Select your institution and department.';
+    if (institutionId.isEmpty ||
+        (kind != AccountKind.staff &&
+            departmentId.isEmpty &&
+            (programmeId == null || programmeId!.isEmpty))) {
+      return 'Select your institution and degree programme or department.';
     }
-    if (joiningYear < 1950 ||
-        joiningYear > year ||
-        graduationYear < joiningYear ||
-        graduationYear > year + 8 ||
-        (kind == AccountKind.alumni && graduationYear > year)) {
+    if (kind == AccountKind.staff &&
+        (designation.trim().isEmpty ||
+            (departmentId.isEmpty && affiliation.trim().isEmpty) ||
+            affiliation.length > 120 ||
+            programmeId != null ||
+            joiningYear != 0 ||
+            graduationYear != 0)) {
+      return 'Staff require a designation and department or affiliation, without student academic years.';
+    }
+    if (kind != AccountKind.staff &&
+        ((joiningYear != 0 &&
+                (joiningYear < 1950 ||
+                    joiningYear > year ||
+                    graduationYear < joiningYear)) ||
+            (kind == AccountKind.student && joiningYear == 0) ||
+            graduationYear < 1950 ||
+            graduationYear > year + 8 ||
+            (kind == AccountKind.alumni && graduationYear > year))) {
       return 'Check joining and graduation years for your account type.';
     }
     if (designation.length > 120) {
@@ -127,7 +161,7 @@ class OnboardingInput {
         interests.any((v) => v.trim().isEmpty || v.trim().length > 80)) {
       return 'Add 1–10 career interests, each at most 80 characters.';
     }
-    if (skillIds.isEmpty ||
+    if ((skillIds.isEmpty && kind != AccountKind.staff) ||
         skillIds.length > 20 ||
         skillIds.toSet().length != skillIds.length) {
       return 'Select 1–20 distinct skills.';

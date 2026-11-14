@@ -18,6 +18,7 @@ class ProductionSession {
   final Future<Supabase>? initializing;
   static Future<ProductionSession> open({
     bool detectSessionInUri = true,
+    LocalStorage? localStorage,
   }) async {
     final config = BackendConfig.fromEnvironment();
     if (config.problem != null) return ProductionSession(config);
@@ -27,6 +28,7 @@ class ProductionSession {
       publishableKey: config.publishableKey,
       authOptions: FlutterAuthClientOptions(
         detectSessionInUri: detectSessionInUri,
+        localStorage: localStorage,
       ),
     );
     try {

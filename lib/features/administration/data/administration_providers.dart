@@ -10,7 +10,7 @@ class SupabaseAdministrationRepository implements AdministrationRepository {
   @override
   Future<List<MembershipCandidate>> pending({int limit = 30}) async {
     final rows = await client
-        .rpc('pending_memberships', params: {'p_limit': limit})
+        .rpc('pending_memberships_v2', params: {'p_limit': limit})
         .timeout(const Duration(seconds: 20));
     return (rows as List)
         .map(
@@ -19,9 +19,13 @@ class SupabaseAdministrationRepository implements AdministrationRepository {
             name: r['display_name'] as String,
             claimedKind: r['claimed_kind'] as String,
             institutionId: r['institution_id'] as String,
-            departmentId: r['department_id'] as String,
-            joiningYear: r['joining_year'] as int,
-            graduationYear: r['graduation_year'] as int,
+            departmentId: r['department_id'] as String?,
+            joiningYear: r['joining_year'] as int?,
+            graduationYear: r['graduation_year'] as int?,
+            programme: r['programme'] as String? ?? '',
+            affiliation: r['affiliation'] as String? ?? '',
+            institution: r['institution'] as String? ?? '',
+            department: r['department'] as String? ?? '',
           ),
         )
         .toList();

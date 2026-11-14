@@ -52,10 +52,16 @@ class AdministrationScreen extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               Text(
-                                'Claimed ${p.claimedKind} · ${p.joiningYear}–${p.graduationYear}',
+                                'Claimed ${p.claimedKind}${p.graduationYear == null ? '' : ' · ${p.joiningYear == null ? '' : '${p.joiningYear}–'}${p.graduationYear}'}',
                               ),
                               SelectableText(
-                                'Account: ${p.id}\nInstitution: ${p.institutionId}\nDepartment: ${p.departmentId}',
+                                [
+                                  p.institution,
+                                  p.programme,
+                                  p.department,
+                                  p.affiliation,
+                                  'Account: ${p.id}',
+                                ].where((value) => value.isNotEmpty).join('\n'),
                               ),
                               OutlinedButton(
                                 onPressed:
@@ -176,6 +182,10 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
                 items: const [
                   DropdownMenuItem(value: 'student', child: Text('Student')),
                   DropdownMenuItem(value: 'alumni', child: Text('Alumni')),
+                  DropdownMenuItem(
+                    value: 'staff',
+                    child: Text('Faculty / Staff'),
+                  ),
                 ],
                 onChanged: _busy ? null : (v) => setState(() => _kind = v),
               ),

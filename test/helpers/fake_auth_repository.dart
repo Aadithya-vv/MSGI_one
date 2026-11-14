@@ -14,6 +14,8 @@ class FakeAuthRepository implements AuthRepository {
   final events = StreamController<AuthSession?>.broadcast(sync: true);
   bool failMembership = false, failRestore = false, failLogout = false;
   int signInCalls = 0, signUpCalls = 0, recoveryCalls = 0, passwordUpdates = 0;
+  int resendCalls = 0;
+  AccountKind? signupKind;
   Completer<MembershipState>? membershipRequest;
   Completer<AuthSession?>? restorationRequest;
   OnboardingInput? submitted;
@@ -37,8 +39,18 @@ class FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(
+    String email,
+    String password, {
+    AccountKind kind = AccountKind.student,
+  }) async {
     signUpCalls++;
+    signupKind = kind;
+  }
+
+  @override
+  Future<void> resendConfirmation(String email) async {
+    resendCalls++;
   }
 
   @override

@@ -36,6 +36,17 @@ class DemoCatalogRepository implements CatalogRepository {
     int page = 0,
   }) async {
     final rows = switch (kind) {
+      CatalogKind.programmes =>
+        MsecCatalog.catalog.programmes
+            .map(
+              (p) => CatalogEntry(
+                id: p.id,
+                name: p.name,
+                institutionId: p.institutionId,
+                level: p.level.name,
+              ),
+            )
+            .toList(),
       CatalogKind.institutions => [
         const CatalogEntry(id: MsecCatalog.id, name: MsecCatalog.name),
       ],
