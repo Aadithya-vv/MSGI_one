@@ -5,6 +5,8 @@
 !.env.example
 *.jks
 *.keystore
+*.p12
+*.dpapi
 **/key.properties
 config/*.local.json
 /supabase/.temp/

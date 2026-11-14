@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:msgi_one/main.dart' as app;
+import 'package:msgi_one/features/demo/presentation/experience_root.dart';
 import 'package:msgi_one/features/mentorship/presentation/mentorship_screen.dart';
 import 'package:msgi_one/features/demo/domain/demo_store.dart';
 import 'package:msgi_one/features/demo/data/demo_persistence.dart';
@@ -19,6 +20,21 @@ class OfflineDemoHttp extends HttpOverrides {
   }
 }
 
+// Device acceptance must never reset the presenter's real demo progress.
+class AcceptancePersistence implements DemoPersistence {
+  static const key = 'msgi_one.acceptance.demo';
+  final _preferences = SharedPreferencesAsync();
+  @override
+  Future<Map<String, dynamic>?> read() async {
+    final raw = await _preferences.getString(key);
+    return raw == null ? null : jsonDecode(raw) as Map<String, dynamic>;
+  }
+
+  @override
+  Future<void> write(Map<String, dynamic> value) =>
+      _preferences.setString(key, jsonEncode(value));
+}
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Offline Student Alumni Staff journeys and demo restoration', (
@@ -26,7 +42,15 @@ void main() {
   ) async {
     final prefs = SharedPreferencesAsync();
     // Only the demo namespace and this synthetic sentinel are touched.
-    await prefs.remove(PreferencesDemoPersistence.key);
+    final originalDemo = await prefs.getString(PreferencesDemoPersistence.key);
+    await prefs.remove(AcceptancePersistence.key);
+    addTearDown(() async {
+      expect(
+        await prefs.getString(PreferencesDemoPersistence.key),
+        originalDemo,
+      );
+      await prefs.remove(AcceptancePersistence.key);
+    });
     await prefs.setString(
       'msgi_one.task08.test_sentinel',
       'keep-independent-data',
@@ -34,7 +58,7 @@ void main() {
     final oldHttp = HttpOverrides.current, http = OfflineDemoHttp();
     HttpOverrides.global = http;
     addTearDown(() => HttpOverrides.global = oldHttp);
-    await app.main();
+    runApp(ExperienceRoot(persistence: AcceptancePersistence()));
     tester.testTextInput.register();
     addTearDown(tester.testTextInput.unregister);
     Future<void> ready(Finder f) async {
@@ -204,7 +228,7 @@ void main() {
     // Recreate the app tree: role and graph changes come from device storage.
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
-    await app.main();
+    runApp(ExperienceRoot(persistence: AcceptancePersistence()));
     await ready(find.text('Welcome, Kavya Sen'));
     expect(find.byType(DemoExperience), findsOneWidget);
     await tap(find.byTooltip('Demo controls'));

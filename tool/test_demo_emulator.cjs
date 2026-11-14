@@ -11,7 +11,7 @@ try{
  fs.writeFileSync('build/task08/emulator-network.json',JSON.stringify({wifi,data}));
  run('shell','svc','wifi','disable');run('shell','svc','data','disable');
  console.log('Emulator-only Wi-Fi/mobile data disabled for offline demo acceptance.');
- const result=cp.spawnSync('cmd.exe',['/d','/c','flutter drive --driver=test_driver/demo_driver.dart --target=integration_test/demo_experience_test.dart -d emulator-5554 --no-pub --debug > build/task08-emulator.log 2>&1'],{stdio:'pipe',timeout:600000});
+ const result=cp.spawnSync('cmd.exe',['/d','/c','flutter drive --driver=test_driver/demo_driver.dart --target=integration_test/demo_experience_test.dart -d emulator-5554 --no-pub --debug --keep-app-running > build/task08-emulator.log 2>&1'],{stdio:'pipe',timeout:600000});
  if(result.status!==0)throw Error('Demo journeys failed');
  const logs=run('logcat','-d','-s','flutter:I');
  if(/access_token=|refresh_token=|RenderFlex overflowed|Unhandled Exception/.test(logs))throw Error('Unexpected diagnostic pattern');

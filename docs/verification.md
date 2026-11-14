@@ -650,3 +650,46 @@ backend moderation; no new moderation dashboard was added.
 - The ordinary unconfigured Android debug APK built successfully and was
   installed and launched on emulator-5554. Physical-device, TalkBack and real
   keyboard acceptance remain pending; no hosted testing or changes were made.
+# Task 10A+B — Samsung and signed competition APK
+
+- Baseline: `973aafe825d58fcfeb3946bbeabc3d00d3d0250d`; existing AGENTS.md
+  edit preserved. Formatter completed, analyzer clean, all 174 Flutter tests pass.
+- Samsung `RZ8RA1DN4YA`, SM M215G, Android 13/API 33: automated debug native
+  Student/Alumni/Staff journey passed with test-only preferences and an HTTP
+  creation sentinel. This is widget-driven Android rendering, not manual touch.
+- Execution incident: the first physical `flutter drive` command omitted
+  `--keep-app-running`. Flutter's default cleanup uninstalled the app and deleted
+  its local data after assertions passed, without owner approval. The owner did
+  not cause it. Disclosed to owner; previous progress/sessions were not recovered.
+  Safe wrappers now retain the installation. A subsequent emulator integration
+  run passed and post-test package retention was explicitly confirmed.
+- Signed standalone APK built and installed on Samsung. Owner confirmed all three
+  roles, Android Back, closing/reopening offline, and no keyboard obstruction or
+  clipped text. These are owner-reported manual release checks. Installed signing
+  certificate was independently verified against the distributed release APK.
+- Separate clean Android 14 AVD `MSGI_One_Release_Acceptance_API_34`, port 5556,
+  stored under ignored build output: 13 standalone release UI/input checks passed
+  offline, including all roles, main modules, mentor system Back and Staff role
+  persistence across process restart. Thirteen screenshots captured. Initial
+  Android System UI/system-process ANR dialogs resolved before the final run;
+  they are not attributed to an MSGI One app crash. Initial smoke assertion used
+  the wrong fictional alumni surname; corrected to Arjun Iyer and rerun passed.
+- Dedicated RSA-3072 certificate, APK Signature Scheme v2 verified; differs from
+  debug certificate. Missing signing credentials explicitly rejected, with no
+  debug fallback. Release is non-debuggable, backup disabled, cleartext disabled,
+  no debug localhost security resource. Exact supplied backend config values and
+  private signing/config files were not found in scanned APK content. No hosted
+  operations, database changes or real authentication requests were performed.
+- Identity retained: `com.msgi.nexus.msgi_nexus`, MSGI One, version `1.0.0+1`,
+  minSdk 24, targetSdk 36; development callback unchanged. Existing launcher icon
+  retained. Platform permission INTERNET plus AndroidX private signature permission.
+- Samsung release activity cold launches: first install 2,732 ms, later
+  force-stop/relaunch 829 ms. Immediate PSS snapshot 104,761 KB, RSS 142,205 KB.
+  Spot measurements only; not a time-to-interactive, frame-rate or memory-leak
+  benchmark. No crash/ANR/overflow/unhandled exception patterns in sampled current
+  Samsung release-process error logs.
+- Pending: owner-confirmed independent keystore/password backup and recovery test,
+  TalkBack, detailed rotation/cutout acceptance, sustained release frame/memory
+  profiling. Hosted integration limitations remain separate from offline demo.
+- Artifact/report/checksum: ignored `build/competition-release/`. See
+  `android-competition-release.md` for secure signing and installation procedure.

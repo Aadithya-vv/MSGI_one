@@ -276,3 +276,16 @@ inferred. Empty affiliations do not grant department-scoped demo visibility.
 Use pushed detail routes with pop/fallback return behavior and explicit save results
 to preserve parents without duplicate opportunity editors/details. Existing server
 authorization remains unchanged. See task09-msec-integration.md.
+# Dedicated competition signing and acceptance storage
+
+Task 10A+B replaces the generated release-to-debug signing fallback with explicit
+release-only environment credentials. A local Windows helper provisions one
+non-overwriting key outside Git with DPAPI-protected password storage and a
+restricted directory ACL; the build helper supplies credentials only to the
+build process and accepts no backend defines. Missing release signing fails closed.
+The existing application ID, version and callback are retained. Owner-approved
+data removal is required to replace a debug-signed installation with this key.
+Native integration acceptance now uses a separate persistence namespace and
+asserts the presenter's actual demo snapshot is unchanged. This permits physical
+debug testing without resetting the owner's demo data. See
+`android-competition-release.md` for backup and manual acceptance requirements.

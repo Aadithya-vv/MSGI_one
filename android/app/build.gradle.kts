@@ -4,6 +4,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Secrets are supplied only to the build process by the local release wrapper.
+val releaseStore = System.getenv("MSGI_RELEASE_STORE_FILE")
+val releaseStorePassword = System.getenv("MSGI_RELEASE_STORE_PASSWORD")
+val releaseAlias = System.getenv("MSGI_RELEASE_KEY_ALIAS")
+val releaseKeyPassword = System.getenv("MSGI_RELEASE_KEY_PASSWORD")
+val releaseSigningReady = listOf(releaseStore, releaseStorePassword, releaseAlias, releaseKeyPassword)
+    .all { !it.isNullOrBlank() }
+
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.project == project && it.name.contains("Release") }) {
+        check(releaseSigningReady) {
+            "Release signing is required. Use tool/Build-CompetitionRelease.ps1; debug signing is never a fallback."
+        }
+    }
+}
+
 android {
     namespace = "com.msgi.nexus.msgi_nexus"
     compileSdk = flutter.compileSdkVersion
@@ -29,11 +45,20 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("competition") {
+            if (releaseSigningReady) {
+                storeFile = file(releaseStore!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("competition")
         }
     }
 }
