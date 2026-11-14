@@ -6,9 +6,15 @@ import '../data/connections_providers.dart';
 import '../domain/connections_repository.dart';
 
 class ConnectionControls extends ConsumerStatefulWidget {
-  const ConnectionControls({super.key, required this.peer, this.connection});
+  const ConnectionControls({
+    super.key,
+    required this.peer,
+    this.connection,
+    this.compact = false,
+  });
   final String peer;
   final ProfessionalConnection? connection;
+  final bool compact;
   @override
   ConsumerState<ConnectionControls> createState() => _ConnectionControlsState();
 }
@@ -74,17 +80,19 @@ class _ConnectionControlsState extends ConsumerState<ConnectionControls> {
   Widget _buttons(ProfessionalConnection? c) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Text(
-        c == null
-            ? 'Not connected'
-            : c.status == 'pending'
-            ? (c.incoming ? 'Incoming request' : 'Request sent')
-            : c.status == 'accepted'
-            ? 'Connected'
-            : c.status == 'rejected'
-            ? 'Request declined'
-            : 'Previous connection closed',
-      ),
+      if (!widget.compact || c != null)
+        Text(
+          c == null
+              ? 'Not connected'
+              : c.status == 'pending'
+              ? (c.incoming ? 'Incoming request' : 'Request sent')
+              : c.status == 'accepted'
+              ? 'Connected'
+              : c.status == 'rejected'
+              ? 'Request declined'
+              : 'Previous connection closed',
+          style: widget.compact ? const TextStyle(fontSize: 12) : null,
+        ),
       if (_busy) const LinearProgressIndicator(),
       Wrap(
         spacing: 8,

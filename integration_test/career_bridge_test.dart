@@ -68,7 +68,7 @@ void main() {
     await ready(find.text('Map'));
     Future<void> homeCareers() async {
       await tap(find.text('Home'));
-      await tap(find.text('Career opportunities'));
+      await tap(find.text('Opportunities'));
       await ready(find.text('CAREER BRIDGE'));
     }
 

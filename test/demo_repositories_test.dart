@@ -42,7 +42,11 @@ void main() {
       expect(s.profiles.values.where((p) => p['role'] == 'staff').length, 4);
       expect(s.posts.length, 12);
       for (final p in s.profiles.values) {
-        expect(p['display_name'], contains('(Demo)'));
+        expect(
+          (p['display_name'] as String).split(' ').length,
+          greaterThanOrEqualTo(2),
+        );
+        expect(p['display_name'], isNot(contains('Alumni 0')));
         expect(p.containsKey('verified'), false);
         expect(p.containsKey('email'), false);
         expect((p['institution'] as String).startsWith('Sample'), true);
@@ -247,7 +251,7 @@ void main() {
     final bad = jsonDecode(jsonEncode(s.snapshot())) as Map<String, dynamic>;
     ((bad['profiles'] as Map)['demo-student-01'] as Map).remove('display_name');
     final restored = DemoStore.restore(bad);
-    expect(restored.person['display_name'], 'Mira Rao (Demo)');
+    expect(restored.person['display_name'], 'Mira Rao');
     expect(restored.active, false);
     expect(DemoStore.restore({'version': 999}).profiles.length, 36);
     s.dispose();

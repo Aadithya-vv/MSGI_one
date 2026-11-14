@@ -248,3 +248,18 @@ results without removing controls. Retain actual score evidence and server filte
 Provide an inner transparent Material in PageBody because navigator transitions
 can insert opaque backgrounds above the shell Material and hide ListTile ink.
 No packages, backend contracts or permissions change. See task08b-ui-polish.md.
+
+## Task 08C - content-first feeds and isolated tab retention
+
+Keep demo disclosure visible as a compact information action instead of repeating
+long warnings on every screen. Fictional organizations remain explicitly labeled;
+never add fabricated production metrics. Upgrade version-one demo placeholder copy
+selectively while preserving user edits, graph transitions and privacy choices.
+Use stateful branches only inside the independent demo router to retain tab state;
+real membership/authorization architecture is unchanged.
+
+Use bounded sliver builders for discovery/mentor/opportunity rows and existing RPC
+pagination, not full-directory downloads. Shared compact search, status, person and
+skeleton components unify feeds. The map uses its content viewport with floating
+filters, draggable authorized city results and fixed attribution. No location data,
+consent or backend contracts change. See task08c-consumer-experience.md.

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/widgets/consumer_widgets.dart';
 import '../../../core/theme/app_theme.dart';
 import '../domain/map_repository.dart';
 import '../data/map_providers.dart';
@@ -39,6 +40,7 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
   String _appliedDomain = '', _appliedLocation = '';
   int _generation = 0, _memberGeneration = 0;
   double _zoom = 1;
+  final _sheetController = DraggableScrollableController();
   // No network tiles without an approved account/license. Free-plan logo support
   // must be implemented before using a free key; default geography is public domain.
   static const _tileKey = String.fromEnvironment('MAPTILER_PUBLIC_KEY');
@@ -60,6 +62,7 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
   void dispose() {
     _generation++;
     _memberGeneration++;
+    _sheetController.dispose();
     _controller.dispose();
     _location.dispose();
     _domain.dispose();
@@ -131,6 +134,17 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
             : rows.take(20).toList();
         _memberMore = rows.length > 20;
       });
+      if (!next && _sheetController.isAttached) {
+        if (MediaQuery.disableAnimationsOf(context)) {
+          _sheetController.jumpTo(.55);
+        } else {
+          _sheetController.animateTo(
+            .55,
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOutCubic,
+          );
+        }
+      }
     } catch (_) {
       if (mounted && generation == _memberGeneration) {
         setState(
@@ -149,197 +163,185 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
     _controller.move(camera.center, (camera.zoom + delta).clamp(0, 8));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final land = ref.watch(landPolygonsProvider);
-    final groups = groupCities(_cities, _zoom);
-    return PageBody(
+  Future<void> _filters() => showFilterSheet<void>(
+    context,
+    title: 'Map filters',
+    builder: (context) => Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        FeatureHeader(
-          eyebrow: 'One World',
-          title: 'Global alumni map',
-          description: widget.description,
-        ),
         TextField(
-          controller: _location,
-          maxLength: 100,
-          decoration: const InputDecoration(
-            labelText: 'City or country',
-            prefixIcon: Icon(Icons.search),
-          ),
+          controller: _domain,
+          maxLength: 120,
+          decoration: const InputDecoration(labelText: 'Professional domain'),
         ),
-        ExpansionTile(
-          tilePadding: EdgeInsets.zero,
-          title: const Text('Map filters'),
-          leading: const Icon(Icons.tune),
-          children: [
-            TextField(
-              controller: _domain,
-              maxLength: 120,
-              decoration: const InputDecoration(
-                labelText: 'Professional domain',
-              ),
-            ),
-          ],
-        ),
+        const SizedBox(height: 12),
         FilledButton(
-          onPressed: _busy ? null : _load,
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            _load();
+            Navigator.pop(context);
+          },
           child: const Text('Filter map'),
         ),
-        if (_busy) const LinearProgressIndicator(),
-        if (_error != null)
-          Column(
-            children: [
-              Text(_error!),
-              TextButton(onPressed: _load, child: const Text('Retry map')),
-            ],
-          ),
-        SizedBox(
-          height: (MediaQuery.sizeOf(context).height * .44).clamp(280, 420),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
+        const SizedBox(height: 12),
+        Text(
+          widget.description,
+          style: const TextStyle(color: OneColors.muted, fontSize: 12),
+        ),
+      ],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final land = ref.watch(landPolygonsProvider),
+        groups = groupCities(_cities, _zoom);
+    return Material(
+      child: LayoutBuilder(
+        builder: (context, constraints) => Stack(
+          children: [
+            FlutterMap(
+              mapController: _controller,
+              options: MapOptions(
+                initialCenter: const LatLng(20, 0),
+                initialZoom: 1,
+                minZoom: 0,
+                maxZoom: 8,
+                backgroundColor: const Color(0xFFDCEEF8),
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                ),
+                onPositionChanged: (camera, _) {
+                  if ((camera.zoom - _zoom).abs() > 0.1) {
+                    setState(() => _zoom = camera.zoom);
+                  }
+                },
+              ),
               children: [
-                FlutterMap(
-                  mapController: _controller,
-                  options: MapOptions(
-                    initialCenter: const LatLng(20, 0),
-                    initialZoom: 1,
-                    minZoom: 0,
+                if (land.asData != null)
+                  PolygonLayer(polygons: land.requireValue),
+                if (_tiles)
+                  TileLayer(
+                    urlTemplate:
+                        'https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=$_tileKey',
+                    userAgentPackageName: 'com.msgi.nexus.msgi_nexus',
                     maxZoom: 8,
-                    backgroundColor: const Color(0xFFDCEEF8),
-                    interactionOptions: const InteractionOptions(
-                      flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-                    ),
-                    onPositionChanged: (camera, _) {
-                      if ((camera.zoom - _zoom).abs() > 0.1) {
-                        setState(() => _zoom = camera.zoom);
+                    errorTileCallback: (_, _, _) {
+                      if (mounted && !_tileError) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) setState(() => _tileError = true);
+                        });
                       }
                     },
                   ),
-                  children: [
-                    if (land.asData != null)
-                      PolygonLayer(polygons: land.requireValue),
-                    if (_tiles)
-                      TileLayer(
-                        urlTemplate:
-                            'https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=$_tileKey',
-                        userAgentPackageName: 'com.msgi.nexus.msgi_nexus',
-                        maxZoom: 8,
-                        errorTileCallback: (_, _, _) {
-                          if (mounted && !_tileError) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted) setState(() => _tileError = true);
-                            });
-                          }
-                        },
-                      ),
-                    MarkerLayer(
-                      markers: groups
-                          .map(
-                            (g) => Marker(
-                              point: g.center,
-                              width: 52,
-                              height: 52,
-                              child: Semantics(
-                                button: true,
-                                label: g.cities.length == 1
-                                    ? '${g.cities.first.name}: ${g.count} alumni'
-                                    : '${g.cities.length} cities: ${g.count} alumni',
-                                child: Tooltip(
-                                  message: g.cities.length == 1
-                                      ? g.cities.first.name
-                                      : 'Zoom to ${g.cities.length} cities',
-                                  child: FilledButton(
-                                    style: FilledButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: const Size(48, 48),
-                                      shape: const CircleBorder(),
-                                      backgroundColor: OneColors.gold,
-                                      foregroundColor: OneColors.navy,
-                                    ),
-                                    onPressed: () {
-                                      if (g.cities.length > 1) {
-                                        if (_zoom >= 7.9) {
-                                          showModalBottomSheet<void>(
-                                            context: context,
-                                            builder: (ctx) => SafeArea(
-                                              child: SizedBox(
-                                                height: 320,
-                                                child: ListView(
-                                                  children: [
-                                                    for (final city in g.cities)
-                                                      ListTile(
-                                                        title: Text(city.name),
-                                                        subtitle: Text(
-                                                          '${city.count} alumni',
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.pop(ctx);
-                                                          _select(city);
-                                                        },
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
+                MarkerLayer(
+                  markers: groups
+                      .map(
+                        (g) => Marker(
+                          point: g.center,
+                          width: 52,
+                          height: 52,
+                          child: Semantics(
+                            button: true,
+                            label: g.cities.length == 1
+                                ? '${g.cities.first.name}: ${g.count} alumni'
+                                : '${g.cities.length} cities: ${g.count} alumni',
+                            child: Tooltip(
+                              message: g.cities.length == 1
+                                  ? g.cities.first.name
+                                  : 'Zoom to ${g.cities.length} cities',
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: const Size(48, 48),
+                                  shape: const CircleBorder(),
+                                  backgroundColor: OneColors.gold,
+                                  foregroundColor: OneColors.navy,
+                                ),
+                                onPressed: () {
+                                  if (g.cities.length > 1) {
+                                    if (_zoom >= 7.9) {
+                                      showModalBottomSheet<void>(
+                                        context: context,
+                                        builder: (ctx) => SafeArea(
+                                          child: SizedBox(
+                                            height: 320,
+                                            child: ListView(
+                                              children: [
+                                                for (final city in g.cities)
+                                                  ListTile(
+                                                    title: Text(city.name),
+                                                    subtitle: Text(
+                                                      '${city.count} alumni',
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.pop(ctx);
+                                                      _select(city);
+                                                    },
+                                                  ),
+                                              ],
                                             ),
-                                          );
-                                        } else {
-                                          _controller.move(
-                                            g.center,
-                                            (_zoom + 2).clamp(0, 8),
-                                          );
-                                        }
-                                      } else {
-                                        _select(g.cities.first);
-                                      }
-                                    },
-                                    child: Text(
-                                      '${g.count}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      _controller.move(
+                                        g.center,
+                                        (_zoom + 2).clamp(0, 8),
+                                      );
+                                    }
+                                  } else {
+                                    _select(g.cities.first);
+                                  }
+                                },
+                                child: Text(
+                                  '${g.count}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
-                          )
-                          .toList(),
-                    ),
-                  ],
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Column(
-                    children: [
-                      IconButton.filledTonal(
-                        tooltip: 'Zoom in',
-                        onPressed: () => _move(1),
-                        icon: const Icon(Icons.add),
-                      ),
-                      IconButton.filledTonal(
-                        tooltip: 'Zoom out',
-                        onPressed: () => _move(-1),
-                        icon: const Icon(Icons.remove),
-                      ),
-                      IconButton.filledTonal(
-                        tooltip: 'World view',
-                        onPressed: () =>
-                            _controller.move(const LatLng(20, 0), 1),
-                        icon: const Icon(Icons.public),
-                      ),
+              ],
+            ),
+
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      OneColors.background,
+                      OneColors.background,
+                      Color(0x00F5F7FC),
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: ColoredBox(
-                    color: Colors.white.withValues(alpha: 0.95),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Global alumni map',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    CompactSearch(
+                      controller: _location,
+                      label: 'City or country',
+                      onSearch: _load,
+                      onFilters: _filters,
+                      filterCount: _appliedDomain.isEmpty ? 0 : 1,
+                    ),
+                    Wrap(
                       children: [
                         TextButton(
                           onPressed: () => launchUrl(
@@ -347,14 +349,20 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
                               'https://www.naturalearthdata.com/about/terms-of-use/',
                             ),
                           ),
-                          child: const Text('Made with Natural Earth'),
+                          child: const Text(
+                            'Made with Natural Earth',
+                            style: TextStyle(fontSize: 10),
+                          ),
                         ),
                         if (_tiles) ...[
                           TextButton(
                             onPressed: () => launchUrl(
                               Uri.parse('https://www.maptiler.com/copyright/'),
                             ),
-                            child: const Text('© MapTiler'),
+                            child: const Text(
+                              'MapTiler',
+                              style: TextStyle(fontSize: 10),
+                            ),
                           ),
                           TextButton(
                             onPressed: () => launchUrl(
@@ -362,81 +370,210 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
                                 'https://www.openstreetmap.org/copyright',
                               ),
                             ),
-                            child: const Text('© OpenStreetMap contributors'),
+                            child: const Text(
+                              'OpenStreetMap contributors',
+                              style: TextStyle(fontSize: 10),
+                            ),
                           ),
                         ],
                       ],
                     ),
-                  ),
+                    if (_busy) const LinearProgressIndicator(),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-        if (land.hasError)
-          const Text(
-            'Offline geography could not be loaded. City list remains available.',
-          ),
-        if (_tileError)
-          const Text('Detailed tiles are offline. Showing bundled geography.'),
-        if (!_busy && _error == null && _cities.isEmpty)
-          const EmptyState(
-            title: 'No map-visible alumni',
-            message: 'Try fewer filters. Only approved alumni with directory and map consent in configured cities appear.',
-          ),
-        const SectionHeading('Explore by city'),
-        const Text(
-          'A list alternative to map gestures. Locations are approximate.',
-          style: TextStyle(color: OneColors.muted, fontSize: 12),
-        ),
-        // Accessible city list is also a non-gesture alternative to map markers.
-        for (final c in _cities)
-          ListTile(
-            selected: _selected?.id == c.id,
-            selectedTileColor: const Color(0xFFE8EFF9),
-            title: Text('${c.name}, ${c.country}'),
-            subtitle: Text('${c.count} alumni · approximate city center'),
-            leading: const Icon(
-              Icons.location_city_outlined,
-              color: OneColors.blue,
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => _select(c),
-          ),
-        if (_more)
-          OutlinedButton(
-            onPressed: _busy ? null : () => _load(next: true),
-            child: const Text('Load more cities'),
-          ),
-        if (_selected != null) ...[
-          SectionHeading('${_selected!.name} alumni'),
-          if (_memberBusy) const LinearProgressIndicator(),
-          if (_memberError != null)
-            TextButton(
-              onPressed: () => _select(_selected!),
-              child: Text('$_memberError Retry'),
-            ),
-          if (!_memberBusy && _memberError == null && _members.isEmpty)
-            const Text('No members currently available for these filters.'),
-          for (final p in _members)
-            ListTile(
-              leading: ProfileAvatar(p['display_name'] as String),
-              trailing: const Icon(Icons.chevron_right),
-              title: Text(p['display_name'] as String),
-              subtitle: Text(
-                '${p['designation'] ?? ''} · ${p['company'] ?? ''}',
               ),
-              onTap: () => context.go('/alumni/${p['user_id']}'),
             ),
-          if (_memberMore)
-            OutlinedButton(
-              onPressed: _memberBusy
-                  ? null
-                  : () => _select(_selected!, next: true),
-              child: const Text('Load more city alumni'),
+            Positioned(
+              top: MediaQuery.textScalerOf(context).scale(1) > 1.5 ? 220 : 164,
+              right: 12,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton.filled(
+                    tooltip: 'Zoom in',
+                    onPressed: () => _move(1),
+                    icon: const Icon(Icons.add),
+                  ),
+                  IconButton.filledTonal(
+                    tooltip: 'Zoom out',
+                    onPressed: () => _move(-1),
+                    icon: const Icon(Icons.remove),
+                  ),
+                  IconButton.filledTonal(
+                    tooltip: 'World view',
+                    onPressed: () => _controller.move(const LatLng(20, 0), 1),
+                    icon: const Icon(Icons.public),
+                  ),
+                ],
+              ),
             ),
-        ],
-      ],
+            DraggableScrollableSheet(
+              controller: _sheetController,
+              initialChildSize: .24,
+              minChildSize: .16,
+              maxChildSize: .82,
+              builder: (context, scrollController) => Material(
+                elevation: 6,
+                color: Colors.white,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 36,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: OneColors.border,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _selected == null
+                                        ? 'Explore by city'
+                                        : '${_selected!.name} alumni',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium,
+                                  ),
+                                ),
+                                if (_selected != null)
+                                  IconButton(
+                                    tooltip: 'All cities',
+                                    onPressed: () {
+                                      _memberGeneration++;
+                                      setState(() {
+                                        _selected = null;
+                                        _members = [];
+                                      });
+                                    },
+                                    icon: const Icon(Icons.arrow_back),
+                                  )
+                                else
+                                  IconButton(
+                                    tooltip: 'Expand city list',
+                                    onPressed: () =>
+                                        _sheetController.jumpTo(.7),
+                                    icon: const Icon(Icons.keyboard_arrow_up),
+                                  ),
+                              ],
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'City-level locations only. No live tracking.',
+                                style: TextStyle(
+                                  color: OneColors.muted,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            if (_error != null) Text(_error!),
+                            if (_error != null)
+                              TextButton(
+                                onPressed: _load,
+                                child: const Text('Retry map'),
+                              ),
+                            if (_memberBusy) const LinearProgressIndicator(),
+                            if (_memberError != null)
+                              TextButton(
+                                onPressed: () => _select(_selected!),
+                                child: Text('$_memberError Retry'),
+                              ),
+                            if (land.hasError || _tileError)
+                              const Text(
+                                'Detailed geography is offline. City list remains available.',
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (_selected == null)
+                      SliverList.builder(
+                        itemCount: _cities.length,
+                        itemBuilder: (context, index) {
+                          final c = _cities[index];
+                          return ListTile(
+                            leading: const Icon(
+                              Icons.location_city_outlined,
+                              color: OneColors.blue,
+                            ),
+                            title: Text('${c.name}, ${c.country}'),
+                            subtitle: Text('${c.count} alumni'),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => _select(c),
+                          );
+                        },
+                      )
+                    else
+                      SliverList.builder(
+                        itemCount: _members.length,
+                        itemBuilder: (context, index) {
+                          final p = _members[index];
+                          return ListTile(
+                            leading: ProfileAvatar(p['display_name'] as String),
+                            title: Text(p['display_name'] as String),
+                            subtitle: Text(
+                              '${p['designation'] ?? ''} / ${p['company'] ?? ''}',
+                            ),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => context.go('/alumni/${p['user_id']}'),
+                          );
+                        },
+                      ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            if (!_busy && _error == null && _cities.isEmpty)
+                              const EmptyState(
+                                title: 'No map-visible alumni',
+                                message: 'Try fewer filters. Only consenting members appear.',
+                              ),
+                            if (_selected != null &&
+                                !_memberBusy &&
+                                _members.isEmpty &&
+                                _memberError == null)
+                              const Text(
+                                'No members currently available for these filters.',
+                              ),
+                            if (_selected == null && _more)
+                              OutlinedButton(
+                                onPressed: _busy
+                                    ? null
+                                    : () => _load(next: true),
+                                child: const Text('Load more cities'),
+                              ),
+                            if (_selected != null && _memberMore)
+                              OutlinedButton(
+                                onPressed: _memberBusy
+                                    ? null
+                                    : () => _select(_selected!, next: true),
+                                child: const Text('Load more city alumni'),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

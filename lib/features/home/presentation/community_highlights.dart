@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/widgets/consumer_widgets.dart';
 import '../../mentorship/data/mentor_providers.dart';
 import '../../mentorship/domain/mentor_repository.dart';
 import '../../opportunities/data/career_providers.dart';
@@ -23,80 +24,46 @@ final recentCareersProvider = FutureProvider.autoDispose<List<CareerPost>>(
 class CommunityQuickLinks extends StatelessWidget {
   const CommunityQuickLinks({super.key});
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final wide = constraints.maxWidth >= 600;
-      final columns =
-          constraints.maxWidth < 300 ||
-              MediaQuery.textScalerOf(context).scale(1) > 1.5
-          ? 1
-          : wide
-          ? 4
-          : 2;
-      return Wrap(
-        spacing: 12,
-        runSpacing: 12,
-        children: [
-          for (final item in const [
-            (
-              '/discover',
-              'Discover alumni',
-              'Find shared beginnings',
-              Icons.search,
-            ),
-            (
-              '/mentors',
-              'Find a mentor',
-              'Learn from experience',
-              Icons.school_outlined,
-            ),
-            (
-              '/opportunities',
-              'Career Bridge',
-              'Your next opportunity',
-              Icons.work_outline,
-            ),
-            (
-              '/map',
-              'Global alumni map',
-              'One worldwide community',
-              Icons.public,
-            ),
-          ])
-            SizedBox(
-              width: (constraints.maxWidth - 12 * (columns - 1)) / columns,
-              child: Card(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => context.go(item.$1),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(item.$4, color: OneColors.blue),
-                        const SizedBox(height: 12),
-                        Text(
-                          item.$2,
-                          style: const TextStyle(fontWeight: FontWeight.w800),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item.$3,
-                          style: const TextStyle(
-                            color: OneColors.muted,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+  Widget build(BuildContext context) => QuickFilters(
+    children: [
+      for (final item in const [
+        ('/discover', 'Discover alumni', Icons.people_outline),
+        ('/mentors', 'Find a mentor', Icons.school_outlined),
+        ('/opportunities', 'Opportunities', Icons.work_outline),
+        ('/map', 'Global alumni map', Icons.public),
+      ])
+        SizedBox(
+          width: MediaQuery.textScalerOf(context).scale(88).clamp(88, 140),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => context.go(item.$1),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: OneColors.primaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(item.$3, color: OneColors.blue),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    item.$2,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-        ],
-      );
-    },
+          ),
+        ),
+    ],
   );
 }
 

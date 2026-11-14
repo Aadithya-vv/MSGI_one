@@ -66,18 +66,18 @@ void main() {
     await tap(find.text('Explore Demo'));
     await binding.takeScreenshot('00_demo_perspectives');
     await tap(find.text('Student demo'));
-    await ready(find.text('Welcome, Mira Rao (Demo)'));
+    await ready(find.text('Welcome, Mira Rao'));
     expect(find.text('Demo'), findsOneWidget);
     await tester.pumpAndSettle();
     await binding.takeScreenshot('01_student_home');
     await tap(find.text('Discover alumni'));
-    await tester.enterText(find.byKey(const Key('alumni-search')), 'Alumni 08');
+    await tester.enterText(find.byKey(const Key('alumni-search')), 'Anika');
     await tap(find.text('Search alumni'));
     await binding.takeScreenshot('01_alumni_discovery');
     await tap(find.text('Filter alumni'));
     await binding.takeScreenshot('01_alumni_filters');
     await tap(find.byTooltip('Close filters'));
-    await tap(find.text('Alumni 08 (Demo)'));
+    await tap(find.text('Anika Bose'));
     await ready(find.text('FICTIONAL DEMONSTRATION PROFILE'));
     expect(find.text('VERIFIED ALUMNI'), findsNothing);
     await tap(find.text('Connect'));
@@ -100,9 +100,9 @@ void main() {
     await tester.pumpAndSettle();
     await binding.takeScreenshot('03_mentor_recommendations');
     await tap(find.text('Home'));
-    await tap(find.text('Career Bridge'));
+    await tap(find.text('Opportunities'));
     await tap(find.text('Internships'));
-    await ready(find.textContaining('internship'));
+    await ready(find.textContaining('Internship'));
     await binding.takeScreenshot('03_career_opportunities');
     await tap(find.text('View opportunity'));
     await ready(find.text('Opportunity details'));
@@ -115,12 +115,12 @@ void main() {
     await binding.takeScreenshot('04_offline_map');
 
     await role('Alumni');
-    await ready(find.text('Welcome, Arjun Iyer (Demo)'));
+    await ready(find.text('Welcome, Arjun Iyer'));
     await tap(find.text('Network'));
     await tap(find.text('Incoming'));
     await tap(find.text('Accept'));
     await tap(find.text('Connected'));
-    await ready(find.text('Mira Rao (Demo)'));
+    await ready(find.text('Mira Rao'));
     await binding.takeScreenshot('05_alumni_connections');
     await tap(find.text('Profile'));
     await tap(find.text('Demo mentoring availability'));
@@ -130,7 +130,7 @@ void main() {
     expect(mentoring.value, false);
     await binding.takeScreenshot('05_alumni_profile');
     await tap(find.text('Home'));
-    await tap(find.text('Career Bridge'));
+    await tap(find.text('Opportunities'));
     await tap(find.text('Create opportunity'));
     await ready(find.byKey(const Key('career-title')));
     await binding.takeScreenshot('05_opportunity_editor');
@@ -160,7 +160,7 @@ void main() {
     await binding.takeScreenshot('06_simulated_opportunity');
 
     await role('Staff / Faculty');
-    await ready(find.text('Welcome, Kavya Sen (Demo)'));
+    await ready(find.text('Welcome, Kavya Sen'));
     await tap(find.text('Students and faculty'));
     await tap(find.text('student'));
     await tap(find.text('View sample profile'));
@@ -174,19 +174,19 @@ void main() {
     await tap(find.text('Find a mentor'));
     await ready(find.text('Mentor recommendations'));
     await tap(find.text('Home'));
-    await tap(find.text('Career Bridge'));
+    await tap(find.text('Opportunities'));
     expect(find.text('Create opportunity'), findsNothing);
     await tester.pump(const Duration(seconds: 1));
     // Recreate the app tree: role and graph changes come from device storage.
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
     await app.main();
-    await ready(find.text('Welcome, Kavya Sen (Demo)'));
+    await ready(find.text('Welcome, Kavya Sen'));
     expect(find.byType(DemoExperience), findsOneWidget);
     await tap(find.byTooltip('Demo controls'));
     await tap(find.text('Reset demo'));
     await tap(find.text('Reset demo'));
-    await ready(find.text('Welcome, Mira Rao (Demo)'));
+    await ready(find.text('Welcome, Mira Rao'));
     expect(
       await prefs.getString('msgi_one.task08.test_sentinel'),
       'keep-independent-data',

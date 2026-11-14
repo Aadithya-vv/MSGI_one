@@ -90,12 +90,14 @@ class _DemoExperienceState extends State<DemoExperience> {
       overridePlatformDefaultLocation: true,
       routes: [
         ShellRoute(
-          builder: (context, state, child) => _frame(child),
+          builder: (context, state, child) => _frame(context, child),
           routes: [
             GoRoute(
               path: '/opportunities/new',
-              builder: (_, _) =>
-                  const CareerEditorScreen(allowExternalLinks: false),
+              builder: (_, _) => const CareerEditorScreen(
+                allowExternalLinks: false,
+                intro: 'Create a fictional opportunity for this demo. Save a draft to continue later.',
+              ),
             ),
             GoRoute(
               path: '/opportunities/:id/edit',
@@ -121,46 +123,70 @@ class _DemoExperienceState extends State<DemoExperience> {
                 );
               },
             ),
-            ShellRoute(
-              builder: (context, state, child) =>
-                  _DemoNavigation(location: state.uri.path, child: child),
-              routes: [
-                GoRoute(
-                  path: '/home',
-                  builder: (_, _) => DemoHomeScreen(store: widget.store),
+            StatefulShellRoute.indexedStack(
+              builder: (context, state, shell) =>
+                  _DemoNavigation(location: state.uri.path, child: shell),
+              branches: [
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: '/home',
+                      builder: (_, _) => DemoHomeScreen(store: widget.store),
+                    ),
+                    GoRoute(
+                      path: '/mentors',
+                      builder: (_, _) => const MentorshipScreen(),
+                    ),
+                    GoRoute(
+                      path: '/opportunities',
+                      builder: (_, _) =>
+                          const OpportunitiesScreen(simulated: true),
+                    ),
+                    GoRoute(
+                      path: '/community',
+                      builder: (_, _) =>
+                          DemoCommunityScreen(store: widget.store),
+                    ),
+                  ],
                 ),
-                GoRoute(
-                  path: '/discover',
-                  builder: (_, _) => const DiscoveryScreen(
-                    description: 'Fictional alumni only. Profiles and activities are simulated; no institutional verification or endorsement is implied.',
-                  ),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: '/discover',
+                      builder: (_, _) => const DiscoveryScreen(
+                        description: 'Meet people across generations.',
+                      ),
+                    ),
+                  ],
                 ),
-                GoRoute(
-                  path: '/profile',
-                  builder: (_, _) => DemoOwnProfileScreen(store: widget.store),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: '/map',
+                      builder: (_, _) => const AlumniMapScreen(
+                        enableNetworkTiles: false,
+                        description:
+                            'Fictional alumni at approximate city centers.',
+                      ),
+                    ),
+                  ],
                 ),
-                GoRoute(
-                  path: '/community',
-                  builder: (_, _) => DemoCommunityScreen(store: widget.store),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: '/network',
+                      builder: (_, _) => const NetworkScreen(),
+                    ),
+                  ],
                 ),
-                GoRoute(
-                  path: '/map',
-                  builder: (_, _) => const AlumniMapScreen(
-                    enableNetworkTiles: false,
-                    description: 'Explore fictional alumni at approximate sample city centers using bundled offline geography. No tracking or real people.',
-                  ),
-                ),
-                GoRoute(
-                  path: '/network',
-                  builder: (_, _) => const NetworkScreen(),
-                ),
-                GoRoute(
-                  path: '/mentors',
-                  builder: (_, _) => const MentorshipScreen(),
-                ),
-                GoRoute(
-                  path: '/opportunities',
-                  builder: (_, _) => const OpportunitiesScreen(simulated: true),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: '/profile',
+                      builder: (_, _) =>
+                          DemoOwnProfileScreen(store: widget.store),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -187,6 +213,22 @@ class _DemoExperienceState extends State<DemoExperience> {
       oldScope.dispose();
     });
   }
+
+  void _about() => showDialog<void>(
+    context: _router.routerDelegate.navigatorKey.currentContext!,
+    builder: (context) => AlertDialog(
+      title: const Text('All activity is simulated'),
+      content: const Text(
+        'All people, institutions, organizations and opportunities are fictional. Changes stay only on this device. No real accounts, approvals, vacancies or administrator privileges.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Got it'),
+        ),
+      ],
+    ),
+  );
 
   Future<void> _reset() async {
     final confirmed = await showDialog<bool>(
@@ -229,7 +271,7 @@ class _DemoExperienceState extends State<DemoExperience> {
       routerConfig: _router,
     ),
   );
-  Widget _frame(Widget child) => Material(
+  Widget _frame(BuildContext context, Widget child) => Material(
     color: OneColors.background,
     textStyle: const TextStyle(fontSize: 14, color: OneColors.navy),
     child: SafeArea(
@@ -238,47 +280,55 @@ class _DemoExperienceState extends State<DemoExperience> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 10,
-              runSpacing: 2,
+            child: Row(
               children: [
-                const Text(
-                  'MSGI One',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Chip(
-                  label: Text('Demo'),
-                  visualDensity: VisualDensity.compact,
-                  backgroundColor: Color(0xFFFFF3CE),
-                  labelStyle: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: OneColors.navy,
+                if (MediaQuery.textScalerOf(context).scale(1) > 1.2)
+                  const Icon(
+                    Icons.hub_outlined,
+                    semanticLabel: 'MSGI One',
+                    color: OneColors.blue,
+                  )
+                else
+                  const Text(
+                    'MSGI One',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                   ),
+                const SizedBox(width: 8),
+                ActionChip(
+                  label: const Text('Demo'),
+                  tooltip: 'About fictional demo data',
+                  onPressed: _about,
+                  backgroundColor: const Color(0xFFFFF3CE),
                 ),
-                SizedBox(
-                  width: 140,
-                  child: DropdownButton<DemoRole>(
-                    isExpanded: true,
-                    style: const TextStyle(fontSize: 14, color: OneColors.navy),
-                    value: widget.store.role,
-                    items: [
-                      for (final role in DemoRole.values)
-                        DropdownMenuItem(
-                          value: role,
-                          child: Text(
-                            role.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<DemoRole>(
+                      isExpanded: true,
+                      iconSize: 18,
+                      value: widget.store.role,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: OneColors.navy,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      items: [
+                        for (final role in DemoRole.values)
+                          DropdownMenuItem(
+                            value: role,
+                            child: Text(
+                              role.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                    ],
-                    onChanged: (role) {
-                      if (role != null && role != widget.store.role) {
-                        _rebuild(() => widget.store.switchRole(role));
-                      }
-                    },
+                      ],
+                      onChanged: (role) {
+                        if (role != null && role != widget.store.role) {
+                          _rebuild(() => widget.store.switchRole(role));
+                        }
+                      },
+                    ),
                   ),
                 ),
                 PopupMenuButton<String>(
@@ -317,13 +367,6 @@ class _DemoExperienceState extends State<DemoExperience> {
                   ],
                 ),
               ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              'Fictional people and activities. No real account or approval.',
-              style: TextStyle(fontSize: 11),
             ),
           ),
           if (widget.storageProblem)

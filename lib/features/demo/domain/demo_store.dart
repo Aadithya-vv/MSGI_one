@@ -23,7 +23,87 @@ class DemoStore extends ChangeNotifier {
   DemoStore() {
     _seed();
   }
-  static const version = 1;
+  static const version = 2;
+  static const alumniNames = [
+    'Arjun Iyer',
+    'Leela Menon',
+    'Rohan Das',
+    'Nila Varma',
+    'Dev Shah',
+    'Sara Nair',
+    'Ishan Rao',
+    'Anika Bose',
+    'Kabir Sen',
+    'Tara Mehta',
+    'Vihaan Pillai',
+    'Zoya Kumar',
+    'Aditya Roy',
+    'Meera Joshi',
+    'Neil Thomas',
+    'Riya Anand',
+    'Samar Kapoor',
+    'Asha Patel',
+    'Yuvan Krishnan',
+    'Diya Sethi',
+    'Arav Malik',
+    'Ira Balan',
+    'Kian Dutta',
+    'Sana Verma',
+  ];
+  static const studentNames = [
+    'Mira Rao',
+    'Ayan Suri',
+    'Eva Menon',
+    'Rehan Nair',
+    'Nisha Dev',
+    'Om Varma',
+    'Sia Raman',
+    'Ved Sen',
+  ];
+  static const staffNames = [
+    'Kavya Sen',
+    'Priya Narang',
+    'Vikram Bedi',
+    'Aditi Soman',
+  ];
+  static const organizations = [
+    'Cobalt Orchard Labs',
+    'Northglow Digital',
+    'Juniper Signal Studio',
+    'Horizon Loom Systems',
+    'Terracotta Grid Works',
+    'Saffron Arc Analytics',
+  ];
+  static const designations = [
+    'Embedded Systems Engineer',
+    'Mobile Product Engineer',
+    'Data Science Specialist',
+    'Cloud Platform Engineer',
+    'Structural Design Engineer',
+    'Business Analytics Lead',
+  ];
+  static const stories = [
+    'Builds reliable embedded products and guides early-career engineers through hardware-to-software transitions.',
+    'Creates accessible mobile experiences and mentors students on portfolios, Flutter and product thinking.',
+    'Turns open datasets into useful tools and helps newcomers develop practical analytical judgment.',
+    'Designs resilient cloud platforms and shares hands-on guidance on infrastructure and engineering careers.',
+    'Works on sustainable structures and enjoys helping students connect design principles with field practice.',
+    'Connects data with business decisions and supports students exploring analytics and cross-functional careers.',
+  ];
+  static const opportunityTitles = [
+    'Embedded Systems Engineer',
+    'Flutter Engineering Internship',
+    'Open Data Accessibility Project',
+    'Cloud Platform Engineer',
+    'Structural Design Internship',
+    'Market Insights Collaboration',
+    'Firmware Test Engineer',
+    'Mobile Product Internship',
+    'Community Data Atlas',
+    'Cloud Reliability Engineer',
+    'Sustainable Design Internship',
+    'Analytics Portfolio Project',
+  ];
   DemoRole role = DemoRole.student;
   bool active = false;
   int tick = 1000;
@@ -104,18 +184,16 @@ class DemoStore extends ChangeNotifier {
         final role = entry.$1,
             id = 'demo-${role.name}-${i.toString().padLeft(2, '0')}',
             d = (i - 1) % 6;
-        final named = switch (id) {
-          'demo-student-01' => 'Mira Rao',
-          'demo-alumni-01' => 'Arjun Iyer',
-          'demo-staff-01' => 'Kavya Sen',
-          _ =>
-            '${role == DemoRole.staff ? 'Faculty' : role.label} ${i.toString().padLeft(2, '0')}',
+        final named = switch (role) {
+          DemoRole.alumni => alumniNames[i - 1],
+          DemoRole.student => studentNames[i - 1],
+          DemoRole.staff => staffNames[i - 1],
         };
         final pair = d * 2;
         final skills = [skillId(pair), skillId(pair + 1), skillId(5)];
         profiles[id] = {
           'user_id': id,
-          'display_name': '$named (Demo)',
+          'display_name': named,
           'role': role.name,
           'institution_id': i % 2 == 0 ? 'demo-campus-b' : 'demo-campus-a',
           'department_id': i % 2 == 0 ? 'demo-dept-b' : 'demo-dept-a',
@@ -126,23 +204,26 @@ class DemoStore extends ChangeNotifier {
           'graduation_year': role == DemoRole.student ? 2028 : 2010 + i % 14,
           'joining_year': role == DemoRole.student ? 2024 : 2006 + i % 14,
           'designation': role == DemoRole.staff
-              ? 'Sample faculty advisor'
+              ? 'Faculty & Career Advisor'
               : role == DemoRole.student
-              ? 'Sample engineering student'
-              : 'Sample ${domains[d]} specialist',
+              ? 'Engineering Student'
+              : designations[d],
           'company': role == DemoRole.student
-              ? 'Sample student project group'
+              ? 'Student Innovation Circle (Fictional)'
               : role == DemoRole.staff
-              ? 'Sample teaching community'
-              : 'Sample Organization ${i.toString().padLeft(2, '0')}',
+              ? 'Faculty Learning Collective (Fictional)'
+              : '${organizations[d]} (Fictional)',
           'professional_domain': id == 'demo-student-01'
               ? 'Software Engineering'
               : domains[d],
-          'biography':
-              'A fictional ${role.label.toLowerCase()} profile created only for the MSGI One demonstration. No institutional endorsement or real identity is implied.',
+          'biography': role == DemoRole.alumni
+              ? stories[d]
+              : role == DemoRole.student
+              ? 'Exploring ${domains[d].toLowerCase()} through student projects, practical learning and guidance from the alumni community.'
+              : 'Supports student projects, interdisciplinary learning and thoughtful career exploration across the community.',
           'degree': role == DemoRole.staff
-              ? 'Sample postgraduate qualification'
-              : 'Sample engineering degree',
+              ? 'Postgraduate Engineering'
+              : 'Bachelor of Engineering',
           'skill_ids': id == 'demo-student-01'
               ? [skillId(2), skillId(3)]
               : skills.toSet().toList(),
@@ -183,10 +264,9 @@ class DemoStore extends ChangeNotifier {
       posts['demo-post-${i.toString().padLeft(2, '0')}'] = {
         'id': 'demo-post-${i.toString().padLeft(2, '0')}',
         'author_id': author,
-        'title':
-            'Demo ${p['professional_domain']} ${kind == 'collaboration' ? 'project' : kind} $i',
+        'title': opportunityTitles[i - 1],
         'description':
-            'Fictional demonstration only. This simulated ${kind == 'collaboration' ? 'project' : 'opening'} is not a real vacancy, employer partnership or referral. Explore the sample author profile to simulate networking.',
+            'Fictional demo opportunity. ${stories[(i - 1) % 6]} Collaborate on practical challenges, share your approach and learn with a supportive team. This is not a real vacancy, employer partnership or referral.',
         'kind': kind,
         'location_text': cities[(i - 1) % 6].$1,
         'external_url': '',
@@ -250,7 +330,9 @@ class DemoStore extends ChangeNotifier {
     final result = DemoStore();
     if (value == null) return result;
     try {
-      if (value['version'] != version) throw StateError('Unknown demo format');
+      if (value['version'] != 1 && value['version'] != version) {
+        throw StateError('Unknown demo format');
+      }
       final restored = jsonDecode(jsonEncode(value)) as Map<String, dynamic>;
       final role = DemoRole.values.byName(restored['role'] as String);
       final people = Map<String, dynamic>.from(restored['profiles'] as Map);
@@ -274,6 +356,56 @@ class DemoStore extends ChangeNotifier {
           'goals' => result.goals,
           _ => result.reports,
         };
+        // Upgrade only original placeholder copy; preserve edited profiles, posts,
+        // preferences, requests and status transitions from the previous demo.
+        if (value['version'] == 1 &&
+            (field == 'profiles' || field == 'posts')) {
+          for (final entry in data.entries) {
+            final old = Map<String, dynamic>.from(entry.value as Map);
+            final fresh = target[entry.key];
+            if (fresh == null) continue;
+            if (field == 'profiles') {
+              for (final key in [
+                'display_name',
+                'designation',
+                'company',
+                'biography',
+                'degree',
+              ]) {
+                final text = old[key] as String? ?? '';
+                final originalName =
+                    RegExp(r'^(Alumni|Student|Faculty) \d{2} \(Demo\)$')
+                        .hasMatch(text) ||
+                    [
+                      'Mira Rao (Demo)',
+                      'Arjun Iyer (Demo)',
+                      'Kavya Sen (Demo)',
+                    ].contains(text);
+                if ((key == 'display_name' && originalName) ||
+                    (key != 'display_name' && text.startsWith('Sample ')) ||
+                    (key == 'biography' && text.startsWith('A fictional '))) {
+                  old[key] = fresh[key];
+                }
+              }
+            } else {
+              if (RegExp(r'^Demo .+ (job|internship|project) \d+$')
+                  .hasMatch(old['title'] as String? ?? '')) {
+                old['title'] = fresh['title'];
+              }
+              if ((old['description'] as String? ?? '').startsWith(
+                'Fictional demonstration only.',
+              )) {
+                old['description'] = fresh['description'];
+              }
+              if ((old['organization'] as String? ?? '').startsWith(
+                'Sample Organization ',
+              )) {
+                old['organization'] = fresh['organization'];
+              }
+            }
+            data[entry.key] = old;
+          }
+        }
         target.clear();
         target.addAll(
           data.map((k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map))),

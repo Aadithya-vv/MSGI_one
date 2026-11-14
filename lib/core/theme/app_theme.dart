@@ -6,14 +6,30 @@ abstract final class OneColors {
   static const gold = Color(0xFFF5BF30);
   static const background = Color(0xFFF5F7FC);
   static const muted = Color(0xFF526079);
+  static const primary = navy;
+  static const primaryContainer = Color(0xFFE8EFF9);
+  static const secondary = blue;
+  static const accent = gold;
+  static const surface = Colors.white;
+  static const surfaceVariant = Color(0xFFEDF2F8);
+  static const textPrimary = navy;
+  static const textSecondary = muted;
+  static const border = Color(0xFFDCE4EF);
+  static const success = Color(0xFF17654A);
+  static const warning = Color(0xFF805600);
+  static const error = Color(0xFFAE2632);
+  static const disabled = Color(0xFF697586);
 }
 
 abstract final class OneSpace {
+  static const tiny = 4.0;
   static const small = 8.0;
+  static const compact = 12.0;
   static const medium = 16.0;
+  static const card = 20.0;
   static const large = 24.0;
   static const section = 32.0;
-  static const radius = 20.0;
+  static const radius = 16.0;
   static const maxWidth = 960.0;
 }
 
@@ -32,13 +48,13 @@ abstract final class AppTheme {
       textTheme: base.textTheme
           .copyWith(
             headlineMedium: const TextStyle(
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: FontWeight.w800,
               height: 1.2,
               letterSpacing: -.7,
             ),
             headlineSmall: const TextStyle(
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
               height: 1.25,
             ),
@@ -87,7 +103,10 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.all(18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -102,8 +121,8 @@ abstract final class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size(48, 52),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          minimumSize: const Size(48, 48),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -111,7 +130,7 @@ abstract final class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 52),
+          minimumSize: const Size(48, 48),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),

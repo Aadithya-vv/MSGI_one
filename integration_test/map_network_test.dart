@@ -68,7 +68,7 @@ void main() {
       find.widgetWithText(TextField, 'City or country'),
       city.split(' ').last,
     );
-    await tap(find.text('Map filters'));
+    await tap(find.byTooltip('Filters'));
     await tester.enterText(
       find.widgetWithText(TextField, 'Professional domain'),
       'Research',

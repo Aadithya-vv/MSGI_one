@@ -109,7 +109,7 @@ void main() {
   });
 
   for (final width in [320.0, 390.0]) {
-    for (final scale in [1.0, 2.0]) {
+    for (final scale in [1.0, 1.5, 2.0]) {
       testWidgets('Demo filters/cards/navigation fit $width at $scale text', (
         tester,
       ) async {
@@ -153,9 +153,10 @@ void main() {
         await tapText(tester, 'Find a mentor');
         await tapText(tester, 'Refine recommendations');
         expect(find.text('Only new connections'), findsOneWidget);
-        await tapText(tester, 'Refine recommendations');
+        await tester.tap(find.byTooltip('Close filters'));
+        await tester.pumpAndSettle();
         await tapText(tester, 'Home');
-        await tapText(tester, 'Career Bridge');
+        await tapText(tester, 'Opportunities');
         await tapText(tester, 'Status and sorting');
         expect(find.text('My posts and drafts'), findsOneWidget);
         expect(tester.takeException(), isNull);

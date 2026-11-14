@@ -136,3 +136,10 @@ mentor cards and Career Bridge controls. See
 [UI audit and validation limits](docs/task08b-ui-polish.md).
 Build without backend defines for the offline demo. Real community access retains
 all existing configuration, authentication and membership requirements.
+
+## Consumer experience
+
+Task 08C adds compact result feeds, retained demo tabs, a full-viewport offline map
+and named fictional professional identities. Existing saved demo activity upgrades
+without affecting real authentication storage. See the
+[consumer experience audit](docs/task08c-consumer-experience.md).

@@ -153,7 +153,7 @@ void main() {
       );
       await tap(find.text('Explore Demo'));
       await tap(find.text('Student demo'));
-      await ready(find.text('Welcome, Mira Rao (Demo)'));
+      await ready(find.text('Welcome, Mira Rao'));
       expect(openings, 0);
       await tap(find.byTooltip('Demo controls'));
       await tap(find.text('Exit demo'));
@@ -174,7 +174,7 @@ void main() {
       await tap(find.text('Back to welcome'));
       await tap(find.text('Explore Demo'));
       await tap(find.text('Alumni demo'));
-      await ready(find.text('Welcome, Arjun Iyer (Demo)'));
+      await ready(find.text('Welcome, Arjun Iyer'));
       await latest!.stopped.future;
       expect(openings, 1);
       await tap(find.byTooltip('Demo controls'));

@@ -98,7 +98,7 @@ void main() {
     AppRoutes.network: 'My network',
     AppRoutes.profile: 'Your profile',
     AppRoutes.mentors: 'Mentor recommendations',
-    AppRoutes.opportunities: 'Career opportunities',
+    AppRoutes.opportunities: 'Opportunities',
   };
 
   for (final screen in screens.entries) {
@@ -184,7 +184,7 @@ void main() {
   testWidgets('home mentor and opportunity cards navigate', (tester) async {
     for (final destination in const {
       'Find a mentor': 'Mentor recommendations',
-      'Career Bridge': 'Career opportunities',
+      'Opportunities': 'Opportunities',
     }.entries) {
       await pumpRoute(tester, AppRoutes.home);
       await tester.ensureVisible(find.text(destination.key));

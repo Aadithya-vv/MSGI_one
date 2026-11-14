@@ -45,9 +45,27 @@ Future<void> pumpMentors(
 }
 
 Future<void> press(WidgetTester tester, String text) async {
-  final target = find.text(text).first;
-  await tester.ensureVisible(target);
-  await tester.tap(target);
+  final target = find.text(text);
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pumpAndSettle();
+  if (target.evaluate().isEmpty) {
+    tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+  }
+  if (target.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      target,
+      500,
+      scrollable: find.byType(Scrollable).first,
+      maxScrolls: 100,
+    );
+  }
+  await Scrollable.ensureVisible(tester.element(target.first), alignment: .5);
+  await tester.pumpAndSettle();
+  await tester.tap(target.first);
   await tester.pumpAndSettle();
 }
 
@@ -112,6 +130,11 @@ void main() {
     await pumpMentors(tester, repo);
     await press(tester, 'Load more mentors');
     expect(repo.lastAfter, 'id-019');
+    await tester.scrollUntilVisible(
+      find.text('Synthetic mentor 24'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Synthetic mentor 24'), findsOneWidget);
     await press(tester, 'Refine recommendations');
     await tester.ensureVisible(find.text('Filter mentor domain'));
@@ -191,6 +214,13 @@ void main() {
   ) async {
     final repo = FakeMentorRepository();
     await pumpMentors(tester, repo);
+    await Scrollable.ensureVisible(
+      tester.element(find.byTooltip('Mentor options').first),
+      alignment: .5,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Mentor options').first);
+    await tester.pumpAndSettle();
     await press(tester, 'Hide this mentor');
     expect(repo.hidden, contains('id-000'));
     expect(find.text('Synthetic mentor 0'), findsNothing);

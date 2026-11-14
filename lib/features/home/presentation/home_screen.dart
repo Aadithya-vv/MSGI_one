@@ -14,7 +14,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => PageBody(
     children: [
       Container(
-        padding: const EdgeInsets.all(26),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [OneColors.navy, OneColors.blue],
@@ -63,21 +63,16 @@ class HomeScreen extends ConsumerWidget {
                   loading: () => const SizedBox.shrink(),
                   error: (_, _) => const SizedBox.shrink(),
                 ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             Text(
               'Welcome to your\nMSGI community.',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w800,
                 height: 1.15,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Different generations. Shared beginnings.\nFind the people who help you move forward.',
-              style: TextStyle(color: Color(0xFFE0E9F8), height: 1.6),
-            ),
-            const SizedBox(height: 24),
             FilledButton(
               onPressed: () => context.go(AppRoutes.discover),
               style: FilledButton.styleFrom(
@@ -98,7 +93,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      const SizedBox(height: 20),
+      const SizedBox(height: 12),
       Semantics(
         button: true,
         label: 'Search alumni',
@@ -128,7 +123,7 @@ class HomeScreen extends ConsumerWidget {
       const SectionHeading('Make your next connection'),
       const CommunityQuickLinks(),
       const CommunityHighlights(),
-      const SizedBox(height: 24),
+      const SizedBox(height: 16),
     ],
   );
 }

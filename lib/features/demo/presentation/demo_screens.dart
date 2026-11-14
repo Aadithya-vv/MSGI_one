@@ -14,13 +14,42 @@ class DemoHomeScreen extends StatelessWidget {
     listenable: store,
     builder: (context, _) => PageBody(
       children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome, ${store.person['display_name']}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${store.role.label} perspective',
+                    style: const TextStyle(
+                      color: OneColors.muted,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            ProfileAvatar(store.person['display_name'] as String),
+          ],
+        ),
+        const SizedBox(height: 16),
         Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [OneColors.navy, OneColors.blue],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,58 +58,38 @@ class DemoHomeScreen extends StatelessWidget {
                 'ONE COMMUNITY. INFINITE CONNECTIONS.',
                 style: TextStyle(
                   color: OneColors.gold,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Welcome, ${store.person['display_name']}',
-                style: Theme.of(context).textTheme.headlineSmall
-                    ?.copyWith(color: Colors.white),
+              const SizedBox(height: 8),
+              const Text(
+                'Your next chapter starts\nwith a connection.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 21,
+                  height: 1.2,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 12),
-              Text(
-                '${store.role.label} perspective. A fictional community, ready to explore.',
-                style: const TextStyle(color: Colors.white),
-              ),
-              const SizedBox(height: 16),
-              FilledButton(
+              FilledButton.icon(
                 onPressed: () => context.go('/discover'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: OneColors.gold,
+                  backgroundColor: Colors.white,
                   foregroundColor: OneColors.navy,
                 ),
-                child: const Text('Discover alumni'),
+                icon: const Icon(Icons.arrow_forward, size: 18),
+                label: const Text('Discover alumni'),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            Chip(
-              label: Text(
-                '${store.profiles.values.where((p) => p['role'] == 'alumni').length} sample alumni',
-              ),
-            ),
-            Chip(
-              label: Text(
-                '${store.profiles.values.where((p) => p['role'] == 'student').length} sample students',
-              ),
-            ),
-            Chip(
-              label: Text(
-                '${store.profiles.values.where((p) => p['role'] == 'staff').length} sample faculty',
-              ),
-            ),
-            Chip(label: Text('${store.posts.length} simulated opportunities')),
-          ],
-        ),
-        const SectionHeading('Choose your next connection'),
+        const SizedBox(height: 12),
         const CommunityQuickLinks(),
         const SizedBox(height: 12),
+        const CommunityHighlights(),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -96,11 +105,6 @@ class DemoHomeScreen extends StatelessWidget {
                 label: Text(item.$2),
               ),
           ],
-        ),
-        const CommunityHighlights(),
-        const SectionHeading('How the demo works'),
-        const Text(
-          'Every person, organization, institution and opportunity here is fictional. Requests, posts and preferences are saved only in this device\'s separate demo state. No real authentication, institutional approval or employer endorsement is implied.',
         ),
         const SizedBox(height: 24),
       ],
@@ -227,7 +231,7 @@ class _DemoCommunityScreenState extends State<DemoCommunityScreen> {
         const FeatureHeader(
           eyebrow: 'Fictional institutional network',
           title: 'Students and faculty',
-          description: 'Explore sample students, alumni and faculty. This demo does not grant production staff or administrator privileges.',
+          description: 'Find shared interests across the community.',
         ),
         TextField(
           controller: _query,
@@ -332,7 +336,7 @@ class _DemoProfileEditDialogState extends State<_DemoProfileEditDialog> {
           if (!_form.currentState!.validate()) return;
           final name = _name.text.trim();
           widget.store.updatePerson({
-            'display_name': name.endsWith('(Demo)') ? name : '$name (Demo)',
+            'display_name': name,
             'biography': _bio.text.trim(),
           });
           Navigator.pop(context);

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/widgets/consumer_widgets.dart';
+import '../../connections/presentation/connection_controls.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/errors/error_state.dart';
 import '../../profile/domain/profile_repository.dart';
@@ -201,211 +203,132 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) => PageBody(
-    children: [
-      FeatureHeader(
-        eyebrow: 'Your alumni community',
-        title: 'Discover alumni',
-        description: widget.description,
-      ),
-      TextField(
-        key: const Key('alumni-search'),
-        controller: _query,
-        maxLength: 100,
-        onSubmitted: (_) => _search(),
-        decoration: const InputDecoration(
-          labelText: 'Search alumni by name',
-          prefixIcon: Icon(Icons.search),
-        ),
-      ),
-      const SizedBox(height: 8),
-      OutlinedButton.icon(
-        onPressed: _filters,
-        icon: const Icon(Icons.tune),
-        label: Text(
-          _filterCount == 0
-              ? 'Filter alumni'
-              : 'Filter alumni ($_filterCount active)',
-        ),
-      ),
-      if (_filterCount > 0)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final label in _labels.values)
-                Chip(label: Text(label, softWrap: true)),
-              if (_profession.text.isNotEmpty)
-                Chip(label: Text(_profession.text)),
-              if (_year.text.isNotEmpty) Chip(label: Text(_year.text)),
-            ],
-          ),
-        ),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          FilledButton.icon(
-            onPressed: _search,
-            icon: const Icon(Icons.search),
-            label: const Text('Search alumni'),
-          ),
-          TextButton(
-            onPressed: () {
-              _query.clear();
-              _clear();
-              _search();
-            },
-            child: const Text('Clear'),
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-      ref
-          .watch(directoryProvider)
-          .when(
-            loading: () => const LoadingState(),
-            error: (_, _) => ErrorState(
-              message: 'Directory unavailable. Your access may have changed, or the network is unavailable.',
-              onRetry: _search,
-            ),
-            data: (page) => Column(
+  Widget build(BuildContext context) {
+    final result = ref.watch(directoryProvider), page = result.asData?.value;
+    return PageBody(
+      itemCount: page?.people.length ?? 0,
+      itemBuilder: (context, index) {
+        final person = page!.people[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: PersonCard(
+            key: ValueKey(person.id),
+            name: person.name,
+            headline: [
+              person.text('designation'),
+              person.text('company'),
+            ].where((s) => s.isNotEmpty).join(' | '),
+            education: [
+              person.text('department'),
+              person.text('graduation_year'),
+              person.text('institution'),
+            ].where((s) => s.isNotEmpty).join(' / '),
+            skills: person.skills,
+            onProfile: () => context.go('/alumni/${person.id}'),
+            indicator: person.mentoring
+                ? const StatusPill(
+                    'Open to mentoring',
+                    icon: Icons.school_outlined,
+                    color: OneColors.success,
+                  )
+                : null,
+            footer: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (page.people.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${page.people.length} alumni loaded',
-                        style: const TextStyle(
-                          color: OneColors.muted,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ),
-                if (page.people.isEmpty)
-                  const EmptyState(
-                    title: 'No alumni found',
-                    message: 'Try fewer filters. Only approved, visible alumni are listed.',
-                  ),
-                for (final person in page.people)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Semantics(
-                      button: true,
-                      child: InkWell(
-                        onTap: () => context.go('/alumni/${person.id}'),
-                        borderRadius: BorderRadius.circular(20),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ProfileAvatar(person.name),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            person.name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            [
-                                                  person.text('designation'),
-                                                  person.text('company'),
-                                                ]
-                                                .where((s) => s.isNotEmpty)
-                                                .join(' \u00b7 '),
-                                            style: const TextStyle(
-                                              color: OneColors.muted,
-                                              height: 1.4,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  [
-                                    person.text('institution'),
-                                    person.text('department'),
-                                    person.text('graduation_year'),
-                                  ].where((s) => s.isNotEmpty).join(' \u00b7 '),
-                                  style: const TextStyle(
-                                    color: OneColors.muted,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                if (person.skills.isNotEmpty) ...[
-                                  const SizedBox(height: 10),
-                                  SkillTags(person.skills.take(3).toList()),
-                                ],
-                                if (person.mentoring)
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      'Available for mentoring',
-                                      style: TextStyle(
-                                        color: OneColors.blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'View profile',
-                                  style: TextStyle(
-                                    color: OneColors.blue,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                if (page.moreError)
-                  const Text(
-                    'Next page could not be loaded. Existing results are retained.',
-                  ),
-                if (page.hasMore)
-                  OutlinedButton(
-                    onPressed: page.loadingMore
-                        ? null
-                        : () => ref.read(directoryProvider.notifier).next(),
-                    child: Text(
-                      page.loadingMore
-                          ? 'Loading more…'
-                          : page.moreError
-                          ? 'Retry next page'
-                          : 'Load more alumni',
-                    ),
-                  ),
+                TextButton(
+                  onPressed: () => context.go('/alumni/${person.id}'),
+                  child: const Text('View profile'),
+                ),
+                ConnectionControls(peer: person.id, compact: true),
               ],
             ),
           ),
-    ],
-  );
+        );
+      },
+      footer: [
+        if (page?.moreError ?? false)
+          const Text(
+            'Next page could not be loaded. Existing results are retained.',
+          ),
+        if (page?.hasMore ?? false)
+          OutlinedButton(
+            onPressed: page!.loadingMore
+                ? null
+                : () => ref.read(directoryProvider.notifier).next(),
+            child: Text(
+              page.loadingMore
+                  ? 'Loading more...'
+                  : page.moreError
+                  ? 'Retry next page'
+                  : 'Load more alumni',
+            ),
+          ),
+      ],
+      children: [
+        const FeedHeading(
+          'Discover alumni',
+          subtitle: 'Find experience. Build your network.',
+        ),
+        CompactSearch(
+          controller: _query,
+          label: 'Search alumni by name',
+          fieldKey: const Key('alumni-search'),
+          onSearch: _search,
+          onFilters: _filters,
+          filterCount: _filterCount,
+        ),
+        const SizedBox(height: 8),
+        QuickFilters(
+          children: [
+            ActionChip(
+              avatar: const Icon(Icons.tune, size: 16),
+              onPressed: _filters,
+              label: Text(
+                _filterCount == 0
+                    ? 'Filter alumni'
+                    : 'Filter alumni ($_filterCount active)',
+              ),
+            ),
+            ActionChip(label: const Text('Search alumni'), onPressed: _search),
+            ActionChip(
+              label: const Text('Clear'),
+              onPressed: () {
+                _query.clear();
+                _clear();
+                _search();
+              },
+            ),
+          ],
+        ),
+        if (_labels.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: SkillTags(_labels.values.toList()),
+          ),
+        const SizedBox(height: 12),
+        result.when(
+          loading: () => const FeedSkeleton(),
+          error: (_, _) => ErrorState(
+            message: 'Directory unavailable. Your access or connection may have changed.',
+            onRetry: _search,
+          ),
+          data: (page) => page.people.isEmpty
+              ? const EmptyState(
+                  title: 'No alumni found',
+                  message: 'Try another name or fewer filters.',
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    '${page.people.length} alumni loaded',
+                    style: const TextStyle(
+                      color: OneColors.muted,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+        ),
+      ],
+    );
+  }
 }

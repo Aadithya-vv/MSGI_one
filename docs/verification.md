@@ -580,3 +580,37 @@ backend moderation; no new moderation dashboard was added.
   Existing AGENTS.md edit excluded; no push or publication.
 - Final ordinary APK installed and launched; process and expected demo UI confirmed
   using Android's read-only UI hierarchy inspection.
+
+## Task 08C - consumer experience validation
+
+- Final formatting completed for lib, test and integration_test. Analyzer: no
+  issues. Full Flutter suite: 158 passed, preserving the prior 151 scenarios with
+  appropriate label/interaction updates and adding seven regression cases.
+- New coverage: legacy demo-content upgrades preserving presenter edits and graph
+  state, lazy row mounting/scrolling, map viewport/draggable list, tab-state
+  retention, runtime text-size changes and 150% phone layouts. Existing 100/200%
+  width/route, privacy, authorization, session and recovery tests remain passing.
+- Presentation tests initially exposed stale text/scroll assumptions, a test
+  MediaQuery with zero viewport size, and the dynamic large-text header context.
+  Corrected those issues rather than weakening assertions or authorization.
+- No database/API suites rerun: this task changed no schema, grants, hosted data,
+  server filtering, RPC contracts or production authentication adapters.
+- Offline emulator acceptance exercised all three perspectives, real demo graph
+  mutations, publication, mentor preferences, map/profile navigation, persistence
+  and reset. No backend configuration supplied; HTTP client creation rejected.
+- Captured 16 screen images, inspected home/discovery/profile/mentor/map/network/
+  opportunities/entry/perspectives/settings/staff views, and performed targeted
+  refinement after actual review. Comparison images: build/task08c/initial;
+  current captures: build/task08/screenshots. Final native/APK completion below.
+- Android 14 Pixel 4a emulator is the executed platform. Android 13 hardware, real
+  IME/TalkBack walkthrough and signed-release performance remain separate checks.
+  Large text intentionally wraps and requires additional scrolling.
+- Final native rerun passed all three offline journeys and runtime 200% screenshot;
+  16 screenshots captured. Inspected corrected compact header, unobstructed map
+  controls, visible attribution and all requested key screen categories. No sampled
+  token/overflow/unhandled-exception patterns; prior emulator network settings
+  restored. Text input remains scripted; this is automated emulator acceptance.
+- Final ordinary debug APK built without backend configuration. No release signing
+  or hosted acceptance claimed. Secret scan and git diff --check passed.
+- Final ordinary APK installed and launched on emulator-5554. Running process and
+  expected demo interface confirmed through Android UI hierarchy inspection.

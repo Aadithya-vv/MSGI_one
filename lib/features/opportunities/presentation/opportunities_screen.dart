@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/widgets/consumer_widgets.dart';
 import '../../../core/theme/app_theme.dart';
 import '../domain/opportunity_preview.dart';
 import '../domain/career_repository.dart';
@@ -111,61 +112,12 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
           },
         ),
       );
-  @override
-  Widget build(BuildContext context) => PageBody(
-    children: [
-      FeatureHeader(
-        eyebrow: 'Career Bridge',
-        title: 'Career opportunities',
-        description: widget.simulated
-            ? 'Fictional jobs, internships and projects. Explore possibilities; these are not real vacancies.'
-            : 'Find your next role, referral or project. Shared by eligible members of the verified MSGI community.',
-      ),
-      if (_canPublish)
-        FilledButton.icon(
-          onPressed: () => context.go('/opportunities/new'),
-          icon: const Icon(Icons.add),
-          label: const Text('Create opportunity'),
-        ),
-      if (!_busy && !_canPublish && _error == null && !widget.simulated)
-        const Text(
-          'Publishing is reserved for verified alumni and authorized administrators.',
-        ),
-      const SizedBox(height: 16),
-      TextField(
-        controller: _search,
-        maxLength: 100,
-        onSubmitted: (_) => _load(),
-        decoration: const InputDecoration(
-          labelText: 'Search opportunities',
-          prefixIcon: Icon(Icons.search),
-          counterText: '',
-        ),
-      ),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final e in const {
-            'all': 'All types',
-            'job': 'Jobs',
-            'internship': 'Internships',
-            'collaboration': 'Projects',
-          }.entries)
-            ChoiceChip(
-              label: Text(e.value),
-              selected: _kind == e.key,
-              onSelected: (_) {
-                setState(() => _kind = e.key);
-                _load();
-              },
-            ),
-        ],
-      ),
-      ExpansionTile(
-        title: const Text('Filter opportunities'),
-        leading: const Icon(Icons.tune),
-        childrenPadding: const EdgeInsets.all(16),
+  Future<void> _filters() => showFilterSheet<void>(
+    context,
+    title: 'Opportunity filters',
+    builder: (_) => StatefulBuilder(
+      builder: (context, update) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
             controller: _domain,
@@ -174,17 +126,75 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
               labelText: 'Career domain filter',
             ),
           ),
+          const SizedBox(height: 12),
           TextField(
             controller: _location,
             maxLength: 160,
             decoration: const InputDecoration(labelText: 'Location filter'),
           ),
-          _check('Remote only', _remote, (v) => setState(() => _remote = v)),
-          _check(
-            'Referrals only',
-            _referrals,
-            (v) => setState(() => _referrals = v),
+          _check('Remote only', _remote, (v) {
+            setState(() => _remote = v);
+            update(() {});
+          }),
+          _check('Referrals only', _referrals, (v) {
+            setState(() => _referrals = v);
+            update(() {});
+          }),
+          _check('My posts and drafts', _mine, (v) {
+            setState(() {
+              _mine = v;
+              _state = v ? 'all' : 'published';
+            });
+            update(() {});
+          }),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final e in const {
+                'published': 'Open posts',
+                'closed': 'Closed posts',
+                'draft': 'Drafts',
+                'all': 'Any status',
+              }.entries)
+                ChoiceChip(
+                  label: Text(e.value),
+                  selected: _state == e.key,
+                  onSelected: (_) {
+                    setState(() => _state = e.key);
+                    update(() {});
+                    _load();
+                  },
+                ),
+            ],
           ),
+          const Text(
+            'Drafts, closed posts and archives are author-only.',
+            style: TextStyle(fontSize: 12, color: OneColors.muted),
+          ),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final e in const {
+                'recent': 'Most recent',
+                'relevance': 'Skill overlap',
+              }.entries)
+                ChoiceChip(
+                  label: Text(e.value),
+                  selected: _sort == e.key,
+                  onSelected: (_) {
+                    setState(() => _sort = e.key);
+                    update(() {});
+                    _load();
+                  },
+                ),
+            ],
+          ),
+          const Text(
+            'Skill overlap compares listed requirements with your public skills; it is not an AI prediction.',
+            style: TextStyle(fontSize: 12, color: OneColors.muted),
+          ),
+          const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             initialValue: _scope,
             isExpanded: true,
@@ -211,92 +221,195 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
                   _skill = null;
                   _skillName = null;
                 });
+                update(() {});
                 _load();
               },
             ),
           CatalogPicker(
             kind: CatalogKind.skills,
             label: 'opportunity skills',
+            compact: true,
             onSelected: (e) {
               setState(() {
                 _skill = e.id;
                 _skillName = e.name;
               });
+              update(() {});
               _load();
             },
           ),
+          FilledButton(
+            onPressed: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              _load();
+            },
+            child: const Text('Search Career Bridge'),
+          ),
         ],
       ),
-      Card(
-        child: ExpansionTile(
-          title: const Text('Status and sorting'),
-          subtitle: Text(
-            _mine ? 'Your posts and drafts' : 'Open community posts',
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) => PageBody(
+    itemCount: _posts.length,
+    itemBuilder: (context, index) {
+      final p = _posts[index];
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    StatusPill(
+                      careerKindLabel(p.data['kind'] as String),
+                      icon: p.data['kind'] == 'collaboration'
+                          ? Icons.groups_outlined
+                          : Icons.work_outline,
+                    ),
+                    StatusPill(
+                      p.archived ? 'Archived' : careerStatusLabel(p.status),
+                      color: p.status == 'published'
+                          ? OneColors.success
+                          : OneColors.muted,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  p.title,
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  p.data['organization'] as String? ?? '',
+                  style: const TextStyle(color: OneColors.muted, fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 6,
+                  children: [
+                    Text(
+                      p.data['remote'] == true
+                          ? 'Remote'
+                          : p.data['location_text'] as String? ?? '',
+                      style: const TextStyle(
+                        color: OneColors.muted,
+                        fontSize: 12,
+                      ),
+                    ),
+                    if (p.data['referral'] == true)
+                      const Text(
+                        'Referral available',
+                        style: TextStyle(color: OneColors.blue, fontSize: 12),
+                      ),
+                    if ((p.data['shared_count'] as num? ?? 0) > 0)
+                      Text(
+                        '${p.data['shared_count']} skills in common',
+                        style: const TextStyle(
+                          color: OneColors.blue,
+                          fontSize: 12,
+                        ),
+                      ),
+                  ],
+                ),
+                if (p.skills.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SkillTags(p.skills.take(3).toList()),
+                  ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: () => context.go('/opportunities/${p.id}'),
+                    icon: const Icon(Icons.arrow_forward, size: 16),
+                    label: const Text('View opportunity'),
+                  ),
+                ),
+              ],
+            ),
           ),
-          childrenPadding: const EdgeInsets.all(16),
-          children: [
-            _check(
-              'My posts and drafts',
-              _mine,
-              (v) => setState(() {
-                _mine = v;
-                _state = v ? 'all' : 'published';
-              }),
-            ),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final e in const {
-                  'published': 'Open posts',
-                  'closed': 'Closed posts',
-                  'draft': 'Drafts',
-                  'all': 'Any status',
-                }.entries)
-                  ChoiceChip(
-                    label: Text(e.value),
-                    selected: _state == e.key,
-                    onSelected: (_) {
-                      setState(() => _state = e.key);
-                      _load();
-                    },
-                  ),
-              ],
-            ),
-            const Text(
-              'Drafts, closed posts and archives are author-only. My posts includes your retained archives.',
-            ),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final e in const {
-                  'recent': 'Most recent',
-                  'relevance': 'Skill overlap',
-                }.entries)
-                  ChoiceChip(
-                    label: Text(e.value),
-                    selected: _sort == e.key,
-                    onSelected: (_) {
-                      setState(() => _sort = e.key);
-                      _load();
-                    },
-                  ),
-              ],
-            ),
-            const Text(
-              'Skill overlap uses your public profile skills against listed requirements. It is not an AI prediction or eligibility assessment.',
-            ),
-          ],
         ),
+      );
+    },
+    footer: [
+      if (_busy && _posts.isNotEmpty) const LinearProgressIndicator(),
+      if (_more)
+        OutlinedButton(
+          onPressed: _busy ? null : () => _load(next: true),
+          child: const Text('Load more opportunities'),
+        ),
+    ],
+    children: [
+      FeedHeading(
+        'Opportunities',
+        subtitle: widget.simulated
+            ? 'Fictional openings. Real possibilities to explore.'
+            : 'Find your next role, project or referral.',
+      ),
+      CompactSearch(
+        controller: _search,
+        label: 'Search opportunities',
+        onSearch: () => _load(),
+        onFilters: _filters,
+        filterCount:
+            (_remote ? 1 : 0) +
+            (_referrals ? 1 : 0) +
+            (_mine ? 1 : 0) +
+            (_skill == null ? 0 : 1) +
+            (_domain.text.isEmpty ? 0 : 1) +
+            (_location.text.isEmpty ? 0 : 1),
       ),
       const SizedBox(height: 8),
-      OutlinedButton(
-        onPressed: _busy ? null : () => _load(),
-        child: const Text('Search Career Bridge'),
+      QuickFilters(
+        children: [
+          for (final e in const {
+            'all': 'All types',
+            'job': 'Jobs',
+            'internship': 'Internships',
+            'collaboration': 'Projects',
+          }.entries)
+            ChoiceChip(
+              label: Text(e.value),
+              selected: _kind == e.key,
+              onSelected: (_) {
+                setState(() => _kind = e.key);
+                _load();
+              },
+            ),
+          FilterChip(
+            label: const Text('Referrals'),
+            selected: _referrals,
+            onSelected: (v) {
+              setState(() => _referrals = v);
+              _load();
+            },
+          ),
+          ActionChip(
+            label: const Text('Status and sorting'),
+            onPressed: _filters,
+          ),
+          if (_canPublish)
+            ActionChip(
+              avatar: const Icon(Icons.add, size: 16),
+              label: const Text('Create opportunity'),
+              onPressed: () => context.go('/opportunities/new'),
+            ),
+        ],
       ),
-      if (_busy) const LinearProgressIndicator(),
+      const SizedBox(height: 12),
+      if (_busy && _posts.isEmpty) const FeedSkeleton(),
       if (_error != null) ...[
-        Semantics(liveRegion: true, child: Text(_error!)),
+        StatusNotice(_error),
         TextButton(
           onPressed: () => _load(),
           child: const Text('Retry careers'),
@@ -305,74 +418,7 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
       if (!_busy && _error == null && _posts.isEmpty)
         const EmptyState(
           title: 'No opportunities found',
-          message: 'Try fewer filters or return later. Only posts permitted for your account appear.',
-        ),
-      for (final p in _posts)
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: [
-                      Chip(
-                        label: Text(careerKindLabel(p.data['kind'] as String)),
-                      ),
-                      Chip(
-                        label: Text(
-                          p.archived ? 'Archived' : careerStatusLabel(p.status),
-                        ),
-                      ),
-                      if (p.data['remote'] == true)
-                        const Chip(label: Text('Remote')),
-                      if (p.data['referral'] == true)
-                        const Chip(label: Text('Referral')),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    p.title,
-                    style: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${p.data['organization']} \u00b7 ${p.data['professional_domain']}',
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    p.data['location_text'] as String? ?? '',
-                    style: const TextStyle(
-                      color: OneColors.muted,
-                      fontSize: 13,
-                    ),
-                  ),
-                  if ((p.data['shared_count'] as num? ?? 0) > 0)
-                    Text(
-                      '${p.data['shared_count']} listed skills in common',
-                      style: const TextStyle(
-                        color: OneColors.blue,
-                        fontSize: 12,
-                      ),
-                    ),
-                  TextButton(
-                    onPressed: () => context.go('/opportunities/${p.id}'),
-                    child: const Text('View opportunity'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      if (_more)
-        OutlinedButton(
-          onPressed: _busy ? null : () => _load(next: true),
-          child: const Text('Load more opportunities'),
+          message: 'Try fewer filters or return later.',
         ),
     ],
   );

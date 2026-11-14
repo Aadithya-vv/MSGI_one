@@ -127,10 +127,10 @@ void main() {
         'Fictional Presenter',
       );
       await demoTap(tester, 'Save demo profile');
-      expect(find.text('Fictional Presenter (Demo)'), findsOneWidget);
+      expect(find.text('Fictional Presenter'), findsOneWidget);
       expect(
         (p.value?['profiles'] as Map)['demo-alumni-01']['display_name'],
-        'Fictional Presenter (Demo)',
+        'Fictional Presenter',
       );
       expect(find.text('VERIFIED ALUMNI'), findsNothing);
     },
@@ -179,7 +179,7 @@ void main() {
     (tester) async {
       final p = await enterDemo(tester);
       expect(find.text('Demo'), findsOneWidget);
-      expect(find.text('Welcome, Mira Rao (Demo)'), findsOneWidget);
+      expect(find.text('Welcome, Mira Rao'), findsOneWidget);
       expect(find.text('Log in'), findsNothing);
       expect(find.text('VERIFIED ALUMNI'), findsNothing);
       expect(p.value?['active'], true);
@@ -190,12 +190,9 @@ void main() {
     (tester) async {
       await enterDemo(tester);
       await demoTap(tester, 'Discover alumni');
-      await tester.enterText(
-        find.byKey(const Key('alumni-search')),
-        'Alumni 08',
-      );
+      await tester.enterText(find.byKey(const Key('alumni-search')), 'Anika');
       await demoTap(tester, 'Search alumni');
-      await demoTap(tester, 'Alumni 08 (Demo)');
+      await demoTap(tester, 'Anika Bose');
       expect(find.text('FICTIONAL DEMONSTRATION PROFILE'), findsOneWidget);
       await demoTap(tester, 'Connect');
       expect(find.text('Request sent'), findsOneWidget);
@@ -206,9 +203,9 @@ void main() {
       expect(find.text('Mentor recommendations'), findsOneWidget);
       expect(find.text('100 / 100 relevance'), findsWidgets);
       await demoTap(tester, 'Home');
-      await demoTap(tester, 'Career Bridge');
+      await demoTap(tester, 'Opportunities');
       await demoTap(tester, 'Internships');
-      expect(find.textContaining('internship'), findsWidgets);
+      expect(find.textContaining('Internship'), findsWidgets);
       await demoTap(tester, 'Map');
       expect(find.byType(FlutterMap), findsOneWidget);
       expect(find.byType(TileLayer), findsNothing);
@@ -224,7 +221,7 @@ void main() {
     (tester) async {
       final p = await enterDemo(tester);
       await chooseRole(tester, 'Alumni');
-      expect(find.text('Welcome, Arjun Iyer (Demo)'), findsOneWidget);
+      expect(find.text('Welcome, Arjun Iyer'), findsOneWidget);
       await demoTap(tester, 'Network');
       await demoTap(tester, 'Incoming');
       await demoTap(tester, 'Accept');
@@ -251,7 +248,7 @@ void main() {
     'Demo career creation is functional and shared across perspectives',
     (tester) async {
       final p = await enterDemo(tester, role: 'Alumni demo');
-      await demoTap(tester, 'Career Bridge');
+      await demoTap(tester, 'Opportunities');
       await demoTap(tester, 'Create opportunity');
       await tester.enterText(
         find.byKey(const Key('career-title')),
@@ -265,12 +262,13 @@ void main() {
       expect(find.text('Opportunity details'), findsOneWidget);
       expect((p.value?['posts'] as Map).length, 13);
       await chooseRole(tester, 'Student');
-      await demoTap(tester, 'Career Bridge');
+      await demoTap(tester, 'Opportunities');
       await tester.enterText(
         find.widgetWithText(TextField, 'Search opportunities'),
         'Fictional competition',
       );
-      await demoTap(tester, 'Search Career Bridge');
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      await tester.pumpAndSettle();
       expect(find.text('Fictional competition internship'), findsOneWidget);
     },
   );
@@ -284,7 +282,7 @@ void main() {
     await tester.pumpAndSettle();
     await demoTap(tester, 'Reset demo');
     await demoTap(tester, 'Reset demo');
-    expect(find.text('Welcome, Mira Rao (Demo)'), findsOneWidget);
+    expect(find.text('Welcome, Mira Rao'), findsOneWidget);
     expect((p.value?['profiles'] as Map)['demo-alumni-01']['mentoring'], true);
     expect((p.value?['posts'] as Map).length, 12);
   });
@@ -306,7 +304,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Welcome, Arjun Iyer (Demo)'), findsOneWidget);
+      expect(find.text('Welcome, Arjun Iyer'), findsOneWidget);
       await demoTap(tester, 'Profile');
       final toggle = tester.widget<SwitchListTile>(
         find.widgetWithText(SwitchListTile, 'Demo mentoring availability'),
@@ -323,7 +321,7 @@ void main() {
     await enterDemo(tester);
     await demoTap(tester, 'Find a mentor');
     await demoTap(tester, 'Home');
-    await demoTap(tester, 'Career Bridge');
+    await demoTap(tester, 'Opportunities');
     await demoTap(tester, 'Map');
     expect(http.requests, 0);
   });
@@ -397,6 +395,6 @@ void main() {
     final p = MemoryDemoPersistence()..fail = true;
     await enterDemo(tester, storage: p);
     expect(find.textContaining('This session stays in memory'), findsOneWidget);
-    expect(find.text('Welcome, Mira Rao (Demo)'), findsOneWidget);
+    expect(find.text('Welcome, Mira Rao'), findsOneWidget);
   });
 }

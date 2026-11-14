@@ -55,29 +55,78 @@ class PreviewBadge extends StatelessWidget {
 }
 
 class PageBody extends StatelessWidget {
-  const PageBody({required this.children, super.key});
+  const PageBody({
+    required this.children,
+    super.key,
+    this.itemCount = 0,
+    this.itemBuilder,
+    this.footer = const [],
+  });
   final List<Widget> children;
+  final int itemCount;
+  final IndexedWidgetBuilder? itemBuilder;
+  final List<Widget> footer;
   @override
-  Widget build(BuildContext context) => Material(
-    type: MaterialType.transparency,
-    child: SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: OneSpace.maxWidth),
-          child: Padding(
-            padding: EdgeInsets.all(
-              MediaQuery.sizeOf(context).width < 400 ? 16 : OneSpace.large,
+  Widget build(BuildContext context) {
+    if (itemBuilder != null) {
+      final horizontal = MediaQuery.sizeOf(context).width > OneSpace.maxWidth
+          ? (MediaQuery.sizeOf(context).width - OneSpace.maxWidth) / 2 + 16
+          : 16.0;
+      return Material(
+        type: MaterialType.transparency,
+        child: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.fromLTRB(horizontal, 16, horizontal, 0),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children,
+                ),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children,
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: horizontal),
+              sliver: SliverList.builder(
+                itemCount: itemCount,
+                itemBuilder: itemBuilder!,
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.fromLTRB(horizontal, 0, horizontal, 24),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: footer,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Material(
+      type: MaterialType.transparency,
+      child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: OneSpace.maxWidth),
+            child: Padding(
+              padding: EdgeInsets.all(
+                MediaQuery.sizeOf(context).width < 400 ? 16 : OneSpace.large,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class SectionHeading extends StatelessWidget {
@@ -87,7 +136,7 @@ class SectionHeading extends StatelessWidget {
   final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 28, bottom: 14),
+    padding: const EdgeInsets.only(top: 20, bottom: 12),
     child: Row(
       children: [
         Expanded(
@@ -283,14 +332,18 @@ class ProfileAvatar extends StatelessWidget {
         height: size,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color(0xFFE8EFF9),
+          gradient: const LinearGradient(
+            colors: [OneColors.navy, OneColors.blue],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(size * .32),
         ),
         child: Text(
           initials.isEmpty ? 'M' : initials,
           textScaler: TextScaler.noScaling,
           style: TextStyle(
-            color: OneColors.blue,
+            color: Colors.white,
             fontSize: size * .34,
             fontWeight: FontWeight.w800,
           ),

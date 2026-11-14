@@ -44,7 +44,8 @@ Future<void> pumpCareers(
         initialLocationProvider.overrideWithValue(path),
       ],
       child: MediaQuery(
-        data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+        data: MediaQueryData.fromView(tester.view)
+            .copyWith(textScaler: TextScaler.linear(scale)),
         child: const OneApp(),
       ),
     ),
@@ -55,10 +56,39 @@ Future<void> pumpCareers(
 Future<void> pressCareer(WidgetTester tester, String text) async {
   FocusManager.instance.primaryFocus?.unfocus();
   await tester.pumpAndSettle();
-  final f = find.text(text).first;
-  await tester.ensureVisible(f);
+  final f = find.text(text);
+  FocusManager.instance.primaryFocus?.unfocus();
   await tester.pumpAndSettle();
-  await tester.tap(f);
+  if (f.evaluate().isEmpty) {
+    tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+  }
+  if (f.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      f,
+      500,
+      scrollable: find.byType(Scrollable).first,
+      maxScrolls: 100,
+    );
+  }
+  await Scrollable.ensureVisible(tester.element(f.first), alignment: .5);
+  await tester.pumpAndSettle();
+  await tester.pumpAndSettle();
+  for (
+    var attempt = 0;
+    attempt < 8 && f.hitTestable().evaluate().isEmpty;
+    attempt++
+  ) {
+    final scroll = find
+        .ancestor(of: f.first, matching: find.byType(Scrollable))
+        .first;
+    await tester.drag(scroll, const Offset(0, -120));
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(f.first);
   await tester.pumpAndSettle();
 }
 
@@ -120,6 +150,11 @@ void main() {
     expect(find.text('SAMPLE PREVIEW'), findsNothing);
     await pressCareer(tester, 'Load more opportunities');
     expect(repo.lastAfter?.id, 'post-019');
+    await tester.scrollUntilVisible(
+      find.text('Synthetic role 24'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Synthetic role 24'), findsOneWidget);
     await pressCareer(tester, 'Internships');
     expect(repo.lastFilters?['kind'], 'internship');
@@ -296,6 +331,6 @@ void main() {
       FakeCareerRepository(),
       membership: MembershipState.pending,
     );
-    expect(find.text('Career opportunities'), findsNothing);
+    expect(find.text('Opportunities'), findsNothing);
   });
 }

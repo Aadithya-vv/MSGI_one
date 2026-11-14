@@ -102,6 +102,8 @@ void main() {
     expect(find.textContaining('Map data unavailable'), findsOneWidget);
     map.fail = false;
     map.rows = [];
+    await tester.tap(find.byTooltip('Expand city list'));
+    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Retry map'));
     await tester.tap(find.text('Retry map'));
     await tester.pumpAndSettle();
@@ -112,16 +114,12 @@ void main() {
     (tester) async {
       final map = FakeAlumniMapRepository();
       await pumpNetworking(tester, AppRoutes.map, map: map);
-      await tester.tap(find.text('Map filters'));
+      await tester.tap(find.byTooltip('Filters'));
       await tester.pumpAndSettle();
       await tester.enterText(
         find.widgetWithText(TextField, 'Professional domain'),
         'Research',
       );
-      final marker = find.byTooltip('Synthetic test city');
-      await tester.ensureVisible(marker);
-      await tester.tap(marker);
-      await tester.pumpAndSettle();
       expect(map.domains.last, '');
       await tester.ensureVisible(find.text('Filter map'));
       await tester.tap(find.text('Filter map'));
