@@ -22,6 +22,12 @@ not evidence that the owner's later external attempt did not occur.
 See [the recovery incident report](task11b5c-deployment-incident.md) for exact
 evidence, diagnostic fixes, uncertainty limits and the new approval boundary.
 
+Task 11B.5D follow-up: the local host-network/CA-pinned connection plan passes
+hosted verify-full TLS and reaches authentication. Direct read-only SQL acceptance
+is still blocked by the missing process password. See
+[the secure connection review](task11b5d-secure-connection-review.md) for the new
+plan hash. No hosted catalog retry or write is authorized or performed.
+
 ## Source and intended scope
 
 HEAD: `503c5268c8a1faf8548a79c675af3af946a784ad`.

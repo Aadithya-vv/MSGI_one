@@ -2,6 +2,7 @@
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { summarize, persist } = require('./msec_session_diagnostics.cjs');
+const { CA_RELATIVE, CA_SHA256, CA_DER_SHA256, CA_SOURCE, pinnedCa } = require('./msec_tls_policy.cjs');
 const REF = 'sbgshejyvkptmrffiwvd';
 const PAYLOAD_SHA256 = '153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428';
 const IMAGE = 'public.ecr.aws/supabase/postgres:17.11.0.019';
@@ -22,7 +23,11 @@ function psqlOperations() {
 }
 function executionPlan() {
   const plan = { project_ref: REF, direct_host: `db.${REF}.supabase.co`, port: 5432,
-    database: 'postgres', role: 'postgres', image: IMAGE, tls: 'verify-full/system',
+    database: 'postgres', role: 'postgres', image: IMAGE, network_mode: 'host', tls: 'verify-full',
+    ca_file: CA_RELATIVE, ca_pem_sha256: CA_SHA256, ca_der_sha256: CA_DER_SHA256, ca_source: CA_SOURCE,
+    ca_mount_target: '/run/msgi-ca.crt', ca_mount_readonly: true, hostname_verification: true,
+    tls_fallback: false, connect_timeout_seconds: 8, client_timeout_seconds: 120,
+    credential_handoff: 'private-process-SUPABASE_DB_PASSWORD-to-child-PGPASSWORD', automatic_retry: false,
     operations: [CONTROLS.assertClean, CONTROLS.set, CONTROLS.verify,
       { stdin_file_sha256: PAYLOAD_SHA256 }, CONTROLS.reset, CONTROLS.verifyReset],
     session: 'dedicated-direct-backend-closed-on-success-or-error' };
@@ -35,10 +40,12 @@ function executeDedicated({ payload, project, host, password, spawn = cp.spawnSy
   // Password is inherited only through the child environment; never argv, SQL,
   // a credential file, repository output or logs. Docker daemon must be trusted.
   // No ports/volumes are published. The short-lived client is removed on exit.
+  const ca = pinnedCa();
   const client = 'msgi-catalog-client-' + crypto.randomUUID();
-  const args = ['run','--name',client,'--rm','--pull','never','-i','--network','bridge','--read-only',
+  const args = ['run','--name',client,'--rm','--pull','never','-i','--network','host','--read-only',
     '--cap-drop','ALL','--security-opt','no-new-privileges','--user','postgres',
-    '--env','PGPASSWORD','--env','PGSSLMODE','--env','PGSSLROOTCERT',
+    '--mount',`type=bind,source=${ca.path},target=/run/msgi-ca.crt,readonly`,
+    '--env','PGPASSWORD','--env','PGSSLMODE','--env','PGSSLROOTCERT','--env','PGCONNECT_TIMEOUT',
     '--entrypoint','psql',IMAGE,'--host',host,'--port','5432','--username','postgres',
     '--dbname','postgres',...psqlOperations()];
   try {
@@ -46,7 +53,7 @@ function executeDedicated({ payload, project, host, password, spawn = cp.spawnSy
     try {
       result = spawn('docker', args, { input: payload, encoding: 'utf8', windowsHide: true,
         maxBuffer: 8 * 1024 * 1024, timeout: 120000,
-        env: { ...process.env, PGPASSWORD: password, PGSSLMODE: 'verify-full', PGSSLROOTCERT: 'system' } });
+        env: { ...process.env, PGPASSWORD: password, PGSSLMODE: 'verify-full', PGSSLROOTCERT: '/run/msgi-ca.crt', PGCONNECT_TIMEOUT: '8' } });
     } catch (error) { result = { status: null, error }; }
     const diagnostic = summarize(result);
     const evidence = persist(client, diagnostic);

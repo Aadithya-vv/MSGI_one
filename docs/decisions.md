@@ -357,3 +357,12 @@ credentials. A missing acknowledgement never authorizes a retry. The observed
 Docker bridge IPv6 failure and host-network CA-verification failure require an
 amended, independently reviewed network/trust plan; diagnostics do not silently
 change routing or weaken verify-full to obtain connectivity.
+
+Task 11B.5D changes the local connection plan to Docker host networking and a
+fingerprint-pinned public Supabase root CA obtained from the official Studio
+distribution source over authenticated HTTPS. The public CA is mounted read-only;
+verify-full continues to check the exact database hostname. The new plan binds
+network mode and CA bytes explicitly. A separate fixed read-only entrypoint can
+validate connectivity without importing the deployment function. Missing private
+credentials leave hosted authenticated acceptance pending; no previous approval
+is reused for this changed plan.

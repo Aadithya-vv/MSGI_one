@@ -1,5 +1,11 @@
 # Task 11B.5C recovery: deployment incident investigation
 
+Follow-up: [Task 11B.5D](task11b5d-secure-connection-review.md) implements host
+networking and an official-source pinned CA. Hosted verify-full now reaches the
+password challenge; direct authenticated SQL remains pending because the process
+credential is unavailable. The incident observations/hashes below are historical.
+No retry has been made and no deployment is authorized by the follow-up.
+
 Date: 2026-11-15 (Asia/Calcutta). Source baseline:
 `752d8096755d78ebf219516108a53e51dc090ba3`, with the reviewed CLI-response fix
 already in the working tree. **No deployment retry or hosted write was performed.**

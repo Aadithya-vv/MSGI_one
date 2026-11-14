@@ -11,6 +11,7 @@ const cases=[
  ['blocked/refused port',{status:2,stderr:'Connection refused '+secret},'connection_refused'],
  ['connect timeout',{status:2,stderr:'connection timed out '+secret},'connection_timeout'],
  ['TLS',{status:2,stderr:'certificate verify failed '+secret},'tls_validation_failure'],
+ ['TLS hostname',{status:2,stderr:'server certificate does not match host name '+secret},'tls_validation_failure'],
  ['missing password',{status:2,stderr:'fe_sendauth: no password supplied '+secret},'password_unavailable'],
  ['bad authentication',{status:2,stderr:'password authentication failed '+secret},'authentication_rejected'],
  ['SQL',{status:3,stderr:'ERROR: synthetic statement '+secret},'sql_statement_failure'],

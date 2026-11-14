@@ -1,0 +1,2 @@
+# Preserve the authenticated distribution bytes used by the runtime SHA-256 pin.
+*.crt -text

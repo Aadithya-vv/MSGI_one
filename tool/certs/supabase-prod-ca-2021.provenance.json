@@ -1,0 +1,11 @@
+{
+  "source_url": "https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt",
+  "source_definition": "https://github.com/supabase/supabase/blob/master/apps/studio/hooks/custom-content/custom-content.json",
+  "source_ui": "https://github.com/supabase/supabase/blob/master/apps/studio/components/interfaces/Settings/Database/SSLConfiguration.tsx",
+  "retrieval": "official source through authenticated GitHub connector; distribution over default-validated HTTPS; never from database peer",
+  "pem_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+  "der_sha256": "807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa",
+  "subject": "C=US\nST=Delware\nL=New Castle\nO=Supabase Inc\nCN=Supabase Root 2021 CA",
+  "valid_from": "Apr 28 10:56:53 2021 GMT",
+  "valid_to": "Apr 26 10:56:53 2031 GMT"
+}

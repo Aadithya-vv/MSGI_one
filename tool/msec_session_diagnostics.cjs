@@ -16,7 +16,7 @@ function summarize(result = {}) {
   else if (/network is unreachable|network unreachable|ENETUNREACH/i.test(stderr)) classification = 'network_unreachable';
   else if (/connection refused/i.test(stderr)) classification = 'connection_refused';
   else if (/timeout expired|connection timed out/i.test(stderr)) classification = 'connection_timeout';
-  else if (/certificate verify failed|root certificate file|SSL error|hostname.*does not match|self.signed certificate/i.test(stderr)) classification = 'tls_validation_failure';
+  else if (/certificate verify failed|root certificate file|SSL error|hostname.*does not match|does not match host name|self.signed certificate/i.test(stderr)) classification = 'tls_validation_failure';
   else if (/no password supplied|fe_sendauth/i.test(stderr)) classification = 'password_unavailable';
   else if (/password authentication failed|SASL authentication failed/i.test(stderr)) classification = 'authentication_rejected';
   else if (status === 3 || /\bERROR:/i.test(stderr)) classification = 'sql_statement_failure';
