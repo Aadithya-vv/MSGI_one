@@ -18,12 +18,13 @@ class DirectoryFilter {
     this.institution,
     this.department,
     this.year,
+    this.programme,
     this.profession = '',
     this.skill,
     this.city,
   });
   final String search, profession;
-  final String? institution, department, skill, city;
+  final String? institution, department, skill, city, programme;
   final int? year;
   Map<String, dynamic> params({String? after, int limit = 21, String? user}) =>
       {

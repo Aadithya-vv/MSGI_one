@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import '../domain/demo_store.dart';
+import '../../catalog/domain/academic_catalog.dart';
 import '../../auth/domain/onboarding.dart';
 import '../../catalog/domain/catalog_repository.dart';
 import '../../profile/domain/profile_repository.dart';
@@ -16,6 +17,7 @@ List<String> _ids(Map<String, dynamic> p) =>
 bool _visible(Map<String, dynamic> p) => p['directory_visible'] == true;
 Map<String, dynamic> demoPublicProfile(Map<String, dynamic> p) => {
   ...p,
+  'institution_short': MsecCatalog.catalog.shortName,
   'skills': _ids(p).map(DemoStore.skillName).toList(),
   'city': p['map_opt_in'] == true
       ? DemoStore.cities[int.parse((p['city_id'] as String).split('-').last)].$1
@@ -35,26 +37,11 @@ class DemoCatalogRepository implements CatalogRepository {
   }) async {
     final rows = switch (kind) {
       CatalogKind.institutions => [
-        const CatalogEntry(
-          id: 'demo-campus-a',
-          name: 'Sample Engineering Institute A',
-        ),
-        const CatalogEntry(
-          id: 'demo-campus-b',
-          name: 'Sample Engineering Institute B',
-        ),
+        const CatalogEntry(id: MsecCatalog.id, name: MsecCatalog.name),
       ],
       CatalogKind.departments => [
-        const CatalogEntry(
-          id: 'demo-dept-a',
-          name: 'Sample Engineering Department A',
-          institutionId: 'demo-campus-a',
-        ),
-        const CatalogEntry(
-          id: 'demo-dept-b',
-          name: 'Sample Engineering Department B',
-          institutionId: 'demo-campus-b',
-        ),
+        for (final d in MsecCatalog.catalog.departments)
+          CatalogEntry(id: d.id, name: d.name, institutionId: d.institutionId),
       ],
       CatalogKind.skills => [
         for (var i = 0; i < DemoStore.skillLabels.length; i++)
@@ -147,6 +134,7 @@ class DemoProfileRepository implements ProfileRepository {
                   (f.department == null ||
                       p['department_id'] == f.department) &&
                   (f.year == null || p['graduation_year'] == f.year) &&
+                  (f.programme == null || p['programme_id'] == f.programme) &&
                   (f.skill == null || _ids(p).contains(f.skill)) &&
                   (f.city == null ||
                       (p['map_opt_in'] == true && p['city_id'] == f.city)) &&
@@ -500,8 +488,9 @@ class DemoCareerRepository implements CareerRepository {
               (store.profiles[p['author_id']]!['institution_id'] ==
                       store.person['institution_id'] &&
                   (p['audience'] == 'institution' ||
-                      store.profiles[p['author_id']]!['department_id'] ==
-                          store.person['department_id']))));
+                      ((store.person['department_id'] as String).isNotEmpty &&
+                          store.profiles[p['author_id']]!['department_id'] ==
+                              store.person['department_id'])))));
   CareerPost _row(Map<String, dynamic> p, String sort) {
     final author = store.profiles[p['author_id']]!,
         skills = (p['skill_ids'] as List).cast<String>(),

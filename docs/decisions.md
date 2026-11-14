@@ -263,3 +263,16 @@ pagination, not full-directory downloads. Shared compact search, status, person 
 skeleton components unify feeds. The map uses its content viewport with floating
 filters, draggable authorized city results and fixed attribution. No location data,
 consent or backend contracts change. See task08c-consumer-experience.md.
+
+## Task 09 - programmes are not authorization departments
+
+Represent supplied MSEC programmes independently from academic departments. Expose
+the local programme catalog only through explicit demo composition; do not reuse
+the existing departments table/RPC parameter for degrees or silently ignore an
+unsupported hosted programme filter. Keep identifiers stable and document their
+internal scope. Preserve existing demo graph state during academic-catalog upgrade.
+Only Science and Humanities is supplied as a department; no alumni mapping is
+inferred. Empty affiliations do not grant department-scoped demo visibility.
+Use pushed detail routes with pop/fallback return behavior and explicit save results
+to preserve parents without duplicate opportunity editors/details. Existing server
+authorization remains unchanged. See task09-msec-integration.md.

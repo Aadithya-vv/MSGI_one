@@ -1,3 +1,5 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,78 +109,85 @@ class AlumniDetailScreen extends ConsumerWidget {
   final String userId;
   final String title, eyebrow;
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(
-      title: Text(title),
-      leading: BackButton(onPressed: () => context.go(AppRoutes.discover)),
-    ),
-    body: SafeArea(
-      child: PageBody(
-        children: [
-          ref
-              .watch(alumniDetailProvider(userId))
-              .when(
-                loading: () => const LoadingState(),
-                error: (_, _) => ErrorState(
-                  message: 'Profile unavailable or access changed.',
-                  onRetry: () => ref.invalidate(alumniDetailProvider(userId)),
-                ),
-                data: (p) => p == null
-                    ? const EmptyState(
-                        title: 'Profile unavailable',
-                        message: 'This member may no longer be discoverable.',
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              ProfileAvatar(p.name, size: 64),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  'Professional profile',
-                                  style: Theme.of(context).textTheme.labelLarge,
+  Widget build(BuildContext context, WidgetRef ref) => CommunityReturnScope(
+    fallback: AppRoutes.discover,
+    child: Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        leading: BackButton(
+          onPressed: () => returnToCommunityParent(context, AppRoutes.discover),
+        ),
+      ),
+      body: SafeArea(
+        child: PageBody(
+          children: [
+            ref
+                .watch(alumniDetailProvider(userId))
+                .when(
+                  loading: () => const LoadingState(),
+                  error: (_, _) => ErrorState(
+                    message: 'Profile unavailable or access changed.',
+                    onRetry: () => ref.invalidate(alumniDetailProvider(userId)),
+                  ),
+                  data: (p) => p == null
+                      ? const EmptyState(
+                          title: 'Profile unavailable',
+                          message: 'This member may no longer be discoverable.',
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              children: [
+                                ProfileAvatar(p.name, size: 64),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Professional profile',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          FeatureHeader(
-                            eyebrow: eyebrow,
-                            title: p.name,
-                            description:
-                                '${p.text('institution')} · ${p.text('department')} · ${p.text('graduation_year')}',
-                          ),
-                          const SectionHeading('Career and education'),
-                          Text(
-                            [
-                              p.text('degree'),
-                              p.text('designation'),
-                              p.text('company'),
-                              p.text('professional_domain'),
-                              p.text('biography'),
-                            ].where((s) => s.isNotEmpty).join('\n'),
-                          ),
-                          const SectionHeading('Skills and expertise'),
-                          Wrap(
-                            spacing: 8,
-                            children: p.skills
-                                .map((s) => Chip(label: Text(s)))
-                                .toList(),
-                          ),
-                          if (p.mentoring)
-                            const Text('Available for mentoring'),
-                          if (p.text('city').isNotEmpty)
-                            Text(
-                              '${p.text('city')}, ${p.text('country_code')}',
+                              ],
                             ),
-                          const SizedBox(height: 16),
-                          ConnectionControls(peer: p.id),
-                        ],
-                      ),
-              ),
-        ],
+                            const SizedBox(height: 16),
+                            FeatureHeader(
+                              eyebrow: eyebrow,
+                              title: p.name,
+                              description:
+                                  '${p.text('institution')} · ${p.text('programme').isNotEmpty ? p.text('programme') : p.text('department')} · ${p.text('graduation_year')}',
+                            ),
+                            const SectionHeading('Career and education'),
+                            Text(
+                              [
+                                p.text('degree'),
+                                p.text('designation'),
+                                p.text('company'),
+                                p.text('professional_domain'),
+                                p.text('biography'),
+                              ].where((s) => s.isNotEmpty).join('\n'),
+                            ),
+                            const SectionHeading('Skills and expertise'),
+                            Wrap(
+                              spacing: 8,
+                              children: p.skills
+                                  .map((s) => Chip(label: Text(s)))
+                                  .toList(),
+                            ),
+                            if (p.mentoring)
+                              const Text('Available for mentoring'),
+                            if (p.text('city').isNotEmpty)
+                              Text(
+                                '${p.text('city')}, ${p.text('country_code')}',
+                              ),
+                            const SizedBox(height: 16),
+                            ConnectionControls(peer: p.id),
+                          ],
+                        ),
+                ),
+          ],
+        ),
       ),
     ),
   );

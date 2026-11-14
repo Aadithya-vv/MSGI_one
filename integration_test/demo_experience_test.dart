@@ -5,6 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:msgi_one/main.dart' as app;
+import 'package:msgi_one/features/mentorship/presentation/mentorship_screen.dart';
 import 'package:msgi_one/features/demo/domain/demo_store.dart';
 import 'package:msgi_one/features/demo/data/demo_persistence.dart';
 import 'package:msgi_one/features/demo/presentation/demo_experience.dart';
@@ -70,13 +71,27 @@ void main() {
     expect(find.text('Demo'), findsOneWidget);
     await tester.pumpAndSettle();
     await binding.takeScreenshot('01_student_home');
+    await tap(find.text('Profile'));
+    await tap(find.text('Edit demo profile'));
+    await tap(find.byKey(const Key('demo-programme')));
+    await tap(find.text('B.Tech. Information Technology').last);
+    await tap(find.text('Save demo profile'));
+    await binding.takeScreenshot('01_msec_student_programme');
+    await tap(find.text('Home'));
     await tap(find.text('Discover alumni'));
     await tester.enterText(find.byKey(const Key('alumni-search')), 'Anika');
     await tap(find.text('Search alumni'));
     await binding.takeScreenshot('01_alumni_discovery');
     await tap(find.text('Filter alumni'));
+    await tap(find.text('Degree programmes'));
+    await tap(
+      find.widgetWithText(DropdownButtonFormField<String>, 'Programme filter'),
+    );
+    await tap(
+      find.text('B.E. Computer Science & Engineering (Cybersecurity)').last,
+    );
     await binding.takeScreenshot('01_alumni_filters');
-    await tap(find.byTooltip('Close filters'));
+    await tap(find.text('Apply alumni filters'));
     await tap(find.text('Anika Bose'));
     await ready(find.text('FICTIONAL DEMONSTRATION PROFILE'));
     expect(find.text('VERIFIED ALUMNI'), findsNothing);
@@ -99,6 +114,12 @@ void main() {
     );
     await tester.pumpAndSettle();
     await binding.takeScreenshot('03_mentor_recommendations');
+    await tap(find.text('View mentor profile'));
+    await tap(find.byTooltip('Back'));
+    await ready(find.byType(MentorshipScreen));
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    await ready(find.text('Welcome, Mira Rao'));
     await tap(find.text('Home'));
     await tap(find.text('Opportunities'));
     await tap(find.text('Internships'));
@@ -113,6 +134,9 @@ void main() {
     await tap(find.byTooltip('London'));
     await ready(find.textContaining('London alumni'));
     await binding.takeScreenshot('04_offline_map');
+    await tap(find.text('Leela Menon'));
+    await tap(find.byTooltip('Back'));
+    await ready(find.text('London alumni'));
 
     await role('Alumni');
     await ready(find.text('Welcome, Arjun Iyer'));

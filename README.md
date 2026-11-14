@@ -143,3 +143,10 @@ Task 08C adds compact result feeds, retained demo tabs, a full-viewport offline 
 and named fictional professional identities. Existing saved demo activity upgrades
 without affecting real authentication storage. See the
 [consumer experience audit](docs/task08c-consumer-experience.md).
+
+## MSEC competition demo
+
+The isolated demo now uses the supplied MSEC institution and programme catalog,
+with fictional people and affiliations. Degree programmes remain separate from
+academic departments. Hosted catalogs were not populated or changed. See
+[MSEC implementation and acceptance limits](docs/task09-msec-integration.md).

@@ -614,3 +614,39 @@ backend moderation; no new moderation dashboard was added.
   or hosted acceptance claimed. Secret scan and git diff --check passed.
 - Final ordinary APK installed and launched on emulator-5554. Running process and
   expected demo interface confirmed through Android UI hierarchy inspection.
+
+## Task 09 - MSEC demo and navigation verification
+
+- Baseline ce651da3358dd1fc226eb0551f03c7b3e839eb52 confirmed; existing AGENTS.md
+  modification preserved. No hosted catalogs, schema, permissions or Android ID
+  changed. Official seed and all migrations remain untouched.
+- Final formatter completed. flutter analyze: no issues. flutter test: 174 passed
+  (158 previous cases plus 16 MSEC/catalog/navigation/isolation regressions).
+- Tests verify the exact 9 UG + 4 PG programmes and separate Science and Humanities
+  department; coherent fictional academic profiles; student selection/persistence;
+  staff restrictions; institution/programme filtering; 200% long labels; snapshot
+  upgrades; actual incoming/outgoing/accepted connection actions; profile and
+  opportunity return history; direct-entry Android Back fallback; and rejecting
+  unsupported hosted programme filters before an RPC is issued.
+- Added a demo-triggered profile revision signal so retained directory filters,
+  mentor/map/opportunity screens and cached profile/highlight data refresh after
+  local profile changes. A regression verifies programme changes update retained
+  filtered results without losing the active filter or role.
+- No database/API infrastructure suite rerun: there are no SQL, grants or RPC
+  contract changes. Production onboarding retains its reviewed department model;
+  hosted degree-programme support needs a separate reviewed backend extension.
+- First native attempt failed an assertion looking for the off-screen mentor
+  header after returning to its retained scroll position. Updated it to verify
+  the actual screen before checking Back-to-Home. Failed attempts are not passes.
+  Native completion, screenshots and final APK results are recorded below.
+- Final checks: formatting completed, analyzer clean and all 174 Flutter tests
+  passed. The corrected offline emulator acceptance run passed Student, Alumni
+  and Staff journeys, programme editing/filtering, mentor/profile/system Back,
+  map navigation, opportunity interactions, restoration and reset. Its HTTP
+  client sentinel reported no network client creation; sampled logs contained
+  no token, overflow or unhandled exception patterns. Prior network settings
+  were restored. Seventeen screenshots were captured under
+  `build/task08/screenshots`; MSEC programme and mentor captures were inspected.
+- The ordinary unconfigured Android debug APK built successfully and was
+  installed and launched on emulator-5554. Physical-device, TalkBack and real
+  keyboard acceptance remain pending; no hosted testing or changes were made.

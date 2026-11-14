@@ -1,3 +1,6 @@
+import '../../profile/data/profile_providers.dart';
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -250,178 +253,195 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
     ),
   );
 
+  Future<void> _detail(String id) async {
+    await context.push<void>('/opportunities/$id');
+    if (mounted) _load();
+  }
+
   @override
-  Widget build(BuildContext context) => PageBody(
-    itemCount: _posts.length,
-    itemBuilder: (context, index) {
-      final p = _posts[index];
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
+  Widget build(BuildContext context) {
+    ref.listen(profileRevisionProvider, (_, _) => _load());
+    return CommunityReturnScope(
+      fallback: '/home',
+      child: PageBody(
+        itemCount: _posts.length,
+        itemBuilder: (context, index) {
+          final p = _posts[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    StatusPill(
-                      careerKindLabel(p.data['kind'] as String),
-                      icon: p.data['kind'] == 'collaboration'
-                          ? Icons.groups_outlined
-                          : Icons.work_outline,
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      children: [
+                        StatusPill(
+                          careerKindLabel(p.data['kind'] as String),
+                          icon: p.data['kind'] == 'collaboration'
+                              ? Icons.groups_outlined
+                              : Icons.work_outline,
+                        ),
+                        StatusPill(
+                          p.archived ? 'Archived' : careerStatusLabel(p.status),
+                          color: p.status == 'published'
+                              ? OneColors.success
+                              : OneColors.muted,
+                        ),
+                      ],
                     ),
-                    StatusPill(
-                      p.archived ? 'Archived' : careerStatusLabel(p.status),
-                      color: p.status == 'published'
-                          ? OneColors.success
-                          : OneColors.muted,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  p.title,
-                  style: Theme.of(context).textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  p.data['organization'] as String? ?? '',
-                  style: const TextStyle(color: OneColors.muted, fontSize: 13),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 6,
-                  children: [
+                    const SizedBox(height: 10),
                     Text(
-                      p.data['remote'] == true
-                          ? 'Remote'
-                          : p.data['location_text'] as String? ?? '',
+                      p.title,
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      p.data['organization'] as String? ?? '',
                       style: const TextStyle(
                         color: OneColors.muted,
-                        fontSize: 12,
+                        fontSize: 13,
                       ),
                     ),
-                    if (p.data['referral'] == true)
-                      const Text(
-                        'Referral available',
-                        style: TextStyle(color: OneColors.blue, fontSize: 12),
-                      ),
-                    if ((p.data['shared_count'] as num? ?? 0) > 0)
-                      Text(
-                        '${p.data['shared_count']} skills in common',
-                        style: const TextStyle(
-                          color: OneColors.blue,
-                          fontSize: 12,
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 6,
+                      children: [
+                        Text(
+                          p.data['remote'] == true
+                              ? 'Remote'
+                              : p.data['location_text'] as String? ?? '',
+                          style: const TextStyle(
+                            color: OneColors.muted,
+                            fontSize: 12,
+                          ),
                         ),
+                        if (p.data['referral'] == true)
+                          const Text(
+                            'Referral available',
+                            style: TextStyle(
+                              color: OneColors.blue,
+                              fontSize: 12,
+                            ),
+                          ),
+                        if ((p.data['shared_count'] as num? ?? 0) > 0)
+                          Text(
+                            '${p.data['shared_count']} skills in common',
+                            style: const TextStyle(
+                              color: OneColors.blue,
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (p.skills.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: SkillTags(p.skills.take(3).toList()),
                       ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () => _detail(p.id),
+                        icon: const Icon(Icons.arrow_forward, size: 16),
+                        label: const Text('View opportunity'),
+                      ),
+                    ),
                   ],
                 ),
-                if (p.skills.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SkillTags(p.skills.take(3).toList()),
-                  ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton.icon(
-                    onPressed: () => context.go('/opportunities/${p.id}'),
-                    icon: const Icon(Icons.arrow_forward, size: 16),
-                    label: const Text('View opportunity'),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      );
-    },
-    footer: [
-      if (_busy && _posts.isNotEmpty) const LinearProgressIndicator(),
-      if (_more)
-        OutlinedButton(
-          onPressed: _busy ? null : () => _load(next: true),
-          child: const Text('Load more opportunities'),
-        ),
-    ],
-    children: [
-      FeedHeading(
-        'Opportunities',
-        subtitle: widget.simulated
-            ? 'Fictional openings. Real possibilities to explore.'
-            : 'Find your next role, project or referral.',
-      ),
-      CompactSearch(
-        controller: _search,
-        label: 'Search opportunities',
-        onSearch: () => _load(),
-        onFilters: _filters,
-        filterCount:
-            (_remote ? 1 : 0) +
-            (_referrals ? 1 : 0) +
-            (_mine ? 1 : 0) +
-            (_skill == null ? 0 : 1) +
-            (_domain.text.isEmpty ? 0 : 1) +
-            (_location.text.isEmpty ? 0 : 1),
-      ),
-      const SizedBox(height: 8),
-      QuickFilters(
+          );
+        },
+        footer: [
+          if (_busy && _posts.isNotEmpty) const LinearProgressIndicator(),
+          if (_more)
+            OutlinedButton(
+              onPressed: _busy ? null : () => _load(next: true),
+              child: const Text('Load more opportunities'),
+            ),
+        ],
         children: [
-          for (final e in const {
-            'all': 'All types',
-            'job': 'Jobs',
-            'internship': 'Internships',
-            'collaboration': 'Projects',
-          }.entries)
-            ChoiceChip(
-              label: Text(e.value),
-              selected: _kind == e.key,
-              onSelected: (_) {
-                setState(() => _kind = e.key);
-                _load();
-              },
+          FeedHeading(
+            'Opportunities',
+            subtitle: widget.simulated
+                ? 'Fictional openings. Real possibilities to explore.'
+                : 'Find your next role, project or referral.',
+          ),
+          CompactSearch(
+            controller: _search,
+            label: 'Search opportunities',
+            onSearch: () => _load(),
+            onFilters: _filters,
+            filterCount:
+                (_remote ? 1 : 0) +
+                (_referrals ? 1 : 0) +
+                (_mine ? 1 : 0) +
+                (_skill == null ? 0 : 1) +
+                (_domain.text.isEmpty ? 0 : 1) +
+                (_location.text.isEmpty ? 0 : 1),
+          ),
+          const SizedBox(height: 8),
+          QuickFilters(
+            children: [
+              for (final e in const {
+                'all': 'All types',
+                'job': 'Jobs',
+                'internship': 'Internships',
+                'collaboration': 'Projects',
+              }.entries)
+                ChoiceChip(
+                  label: Text(e.value),
+                  selected: _kind == e.key,
+                  onSelected: (_) {
+                    setState(() => _kind = e.key);
+                    _load();
+                  },
+                ),
+              FilterChip(
+                label: const Text('Referrals'),
+                selected: _referrals,
+                onSelected: (v) {
+                  setState(() => _referrals = v);
+                  _load();
+                },
+              ),
+              ActionChip(
+                label: const Text('Status and sorting'),
+                onPressed: _filters,
+              ),
+              if (_canPublish)
+                ActionChip(
+                  avatar: const Icon(Icons.add, size: 16),
+                  label: const Text('Create opportunity'),
+                  onPressed: () => context.push<void>('/opportunities/new'),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (_busy && _posts.isEmpty) const FeedSkeleton(),
+          if (_error != null) ...[
+            StatusNotice(_error),
+            TextButton(
+              onPressed: () => _load(),
+              child: const Text('Retry careers'),
             ),
-          FilterChip(
-            label: const Text('Referrals'),
-            selected: _referrals,
-            onSelected: (v) {
-              setState(() => _referrals = v);
-              _load();
-            },
-          ),
-          ActionChip(
-            label: const Text('Status and sorting'),
-            onPressed: _filters,
-          ),
-          if (_canPublish)
-            ActionChip(
-              avatar: const Icon(Icons.add, size: 16),
-              label: const Text('Create opportunity'),
-              onPressed: () => context.go('/opportunities/new'),
+          ],
+          if (!_busy && _error == null && _posts.isEmpty)
+            const EmptyState(
+              title: 'No opportunities found',
+              message: 'Try fewer filters or return later.',
             ),
         ],
       ),
-      const SizedBox(height: 12),
-      if (_busy && _posts.isEmpty) const FeedSkeleton(),
-      if (_error != null) ...[
-        StatusNotice(_error),
-        TextButton(
-          onPressed: () => _load(),
-          child: const Text('Retry careers'),
-        ),
-      ],
-      if (!_busy && _error == null && _posts.isEmpty)
-        const EmptyState(
-          title: 'No opportunities found',
-          message: 'Try fewer filters or return later.',
-        ),
-    ],
-  );
+    );
+  }
 }
 
 class OpportunityCard extends StatelessWidget {

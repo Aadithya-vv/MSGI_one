@@ -1,3 +1,6 @@
+import '../../profile/data/profile_providers.dart';
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -11,15 +14,19 @@ import '../../opportunities/data/career_providers.dart';
 import '../../opportunities/domain/career_repository.dart';
 
 final featuredMentorsProvider =
-    FutureProvider.autoDispose<List<MentorRecommendation>>(
-      (ref) => ref.watch(mentorRepositoryProvider).recommend(),
-    );
-final recentCareersProvider = FutureProvider.autoDispose<List<CareerPost>>(
-  (ref) => ref.watch(careerRepositoryProvider).list({
+    FutureProvider.autoDispose<List<MentorRecommendation>>((ref) {
+      ref.watch(profileRevisionProvider);
+      return ref.watch(mentorRepositoryProvider).recommend();
+    });
+final recentCareersProvider = FutureProvider.autoDispose<List<CareerPost>>((
+  ref,
+) {
+  ref.watch(profileRevisionProvider);
+  return ref.watch(careerRepositoryProvider).list({
     'status': 'published',
     'sort': 'recent',
-  }),
-);
+  });
+});
 
 class CommunityQuickLinks extends StatelessWidget {
   const CommunityQuickLinks({super.key});
@@ -36,7 +43,7 @@ class CommunityQuickLinks extends StatelessWidget {
           width: MediaQuery.textScalerOf(context).scale(88).clamp(88, 140),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
-            onTap: () => context.go(item.$1),
+            onTap: () => openCommunityDestination(context, item.$1),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: Column(
@@ -77,7 +84,7 @@ class CommunityHighlights extends ConsumerWidget {
       SectionHeading(
         'Featured mentor',
         action: 'View all',
-        onPressed: () => context.go('/mentors'),
+        onPressed: () => openCommunityDestination(context, '/mentors'),
       ),
       ref
           .watch(featuredMentorsProvider)
@@ -110,7 +117,8 @@ class CommunityHighlights extends ConsumerWidget {
                             .where((s) => s.isNotEmpty)
                             .join(' · '),
                     trailing: TextButton(
-                      onPressed: () => context.go('/alumni/${rows.first.id}'),
+                      onPressed: () =>
+                          openMemberProfile(context, rows.first.id),
                       child: const Text('Meet this mentor'),
                     ),
                   ),
@@ -118,7 +126,7 @@ class CommunityHighlights extends ConsumerWidget {
       SectionHeading(
         'Recent opportunities',
         action: 'View all',
-        onPressed: () => context.go('/opportunities'),
+        onPressed: () => openCommunityDestination(context, '/opportunities'),
       ),
       ref
           .watch(recentCareersProvider)
@@ -150,8 +158,14 @@ class CommunityHighlights extends ConsumerWidget {
                             description:
                                 '${p.data['organization'] ?? ''} · ${p.data['remote'] == true ? 'Remote' : p.data['location_text'] ?? ''}',
                             trailing: TextButton(
-                              onPressed: () =>
-                                  context.go('/opportunities/${p.id}'),
+                              onPressed: () async {
+                                await context.push<void>(
+                                  '/opportunities/${p.id}',
+                                );
+                                if (context.mounted) {
+                                  ref.invalidate(recentCareersProvider);
+                                }
+                              },
                               child: const Text('View opportunity'),
                             ),
                           ),

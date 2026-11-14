@@ -1,6 +1,7 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
 import '../../../core/widgets/consumer_widgets.dart';
@@ -9,8 +10,10 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/errors/error_state.dart';
 import '../../profile/domain/profile_repository.dart';
 import '../../catalog/domain/catalog_repository.dart';
+import '../../catalog/data/academic_catalog_provider.dart';
 import '../../catalog/presentation/catalog_picker.dart';
 import '../application/directory_controller.dart';
+import '../../profile/data/profile_providers.dart';
 
 class DiscoveryScreen extends ConsumerStatefulWidget {
   const DiscoveryScreen({
@@ -26,7 +29,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
   final _query = TextEditingController(),
       _profession = TextEditingController(),
       _year = TextEditingController();
-  String? _institution, _department, _skill, _city;
+  String? _institution, _department, _skill, _city, _programme;
   final _labels = <String, String>{};
   String? _yearError;
   VoidCallback? _refreshSheet;
@@ -47,6 +50,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
       _department = null;
       _skill = null;
       _city = null;
+      _programme = null;
       _labels.clear();
       _yearError = null;
     });
@@ -60,6 +64,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
       _department,
       _skill,
       _city,
+      _programme,
     ];
     final labels = Map<String, String>.from(_labels);
     var applied = false;
@@ -99,6 +104,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         _department = saved[3];
         _skill = saved[4];
         _city = saved[5];
+        _programme = saved[6];
         _labels
           ..clear()
           ..addAll(labels);
@@ -130,6 +136,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
             search: _query.text,
             institution: _institution,
             department: _department,
+            programme: _programme,
             year: int.tryParse(_year.text),
             profession: _profession.text,
             skill: _skill,
@@ -165,6 +172,8 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         _department = null;
         _labels['institution'] = e.name;
         _labels.remove('department');
+        _programme = null;
+        _labels.remove('programme');
       }),
     ),
     if (_institution != null)
@@ -174,12 +183,15 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
         compact: true,
         selectedLabel: _labels['department'],
         institutionId: _institution,
-        label: 'Departments',
+        label: ref.read(academicCatalogsProvider).isEmpty
+            ? 'Departments'
+            : 'Academic departments',
         onSelected: (e) => _change(() {
           _department = e.id;
           _labels['department'] = e.name;
         }),
       ),
+    if (ref.read(academicCatalogsProvider).isNotEmpty) _programmeField(),
     CatalogPicker(
       kind: CatalogKind.skills,
       compact: true,
@@ -202,8 +214,66 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
     ),
   ];
 
+  Widget _programmeField() {
+    final programmes = ref
+        .read(academicCatalogsProvider)
+        .where((c) => _institution == null || c.id == _institution)
+        .expand((c) => c.programmes)
+        .toList();
+    if (programmes.isEmpty) return const SizedBox.shrink();
+    return Material(
+      color: Colors.transparent,
+      child: ExpansionTile(
+        title: const Text('Degree programmes'),
+        subtitle: _labels['programme'] == null
+            ? null
+            : Text(_labels['programme']!),
+        childrenPadding: const EdgeInsets.only(bottom: 16),
+        children: [
+          DropdownButtonFormField<String>(
+            key: ValueKey('programme-$_institution'),
+            initialValue: _programme,
+            isExpanded: true,
+            itemHeight: null,
+            decoration: const InputDecoration(labelText: 'Programme filter'),
+            items: [
+              const DropdownMenuItem<String>(
+                value: null,
+                child: Text('Any programme'),
+              ),
+              for (final p in programmes)
+                DropdownMenuItem(
+                  value: p.id,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(p.name),
+                  ),
+                ),
+            ],
+            selectedItemBuilder: (_) => [
+              const Text('Any programme'),
+              for (final p in programmes)
+                Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis),
+            ],
+            onChanged: (id) => _change(() {
+              _programme = id;
+              if (id == null) {
+                _labels.remove('programme');
+              } else {
+                _labels['programme'] = programmes
+                    .firstWhere((p) => p.id == id)
+                    .name;
+              }
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(profileRevisionProvider, (_, _) => _search());
     final result = ref.watch(directoryProvider), page = result.asData?.value;
     return PageBody(
       itemCount: page?.people.length ?? 0,
@@ -219,12 +289,16 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
               person.text('company'),
             ].where((s) => s.isNotEmpty).join(' | '),
             education: [
-              person.text('department'),
+              person.text('programme').isNotEmpty
+                  ? person.text('programme')
+                  : person.text('department'),
               person.text('graduation_year'),
-              person.text('institution'),
+              person.text('institution_short').isNotEmpty
+                  ? person.text('institution_short')
+                  : person.text('institution'),
             ].where((s) => s.isNotEmpty).join(' / '),
             skills: person.skills,
-            onProfile: () => context.go('/alumni/${person.id}'),
+            onProfile: () => openMemberProfile(context, person.id),
             indicator: person.mentoring
                 ? const StatusPill(
                     'Open to mentoring',
@@ -236,7 +310,7 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextButton(
-                  onPressed: () => context.go('/alumni/${person.id}'),
+                  onPressed: () => openMemberProfile(context, person.id),
                   child: const Text('View profile'),
                 ),
                 ConnectionControls(peer: person.id, compact: true),

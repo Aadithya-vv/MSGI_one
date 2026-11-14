@@ -1,6 +1,8 @@
+import '../../profile/data/profile_providers.dart';
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
 import '../../../core/widgets/consumer_widgets.dart';
@@ -172,160 +174,175 @@ class _MentorshipScreenState extends ConsumerState<MentorshipScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(profileRevisionProvider, (_, _) => _load());
     ref.listen(networkRevisionProvider, (_, _) => _load());
-    return PageBody(
-      itemCount: _rows.length,
-      itemBuilder: (context, index) {
-        final mentor = _rows[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: PersonCard(
-            key: ValueKey(mentor.id),
-            name: mentor.name,
-            headline: [
-              mentor.data['designation'],
-              mentor.data['company'],
-            ].whereType<String>().where((s) => s.isNotEmpty).join(' | '),
-            onProfile: () => context.go('/alumni/${mentor.id}'),
-            skills: mentor.skills,
-            indicator: Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: [
-                StatusPill('${mentor.score} / 100 relevance'),
-                const StatusPill(
-                  'Open to mentorship',
-                  icon: Icons.school_outlined,
-                  color: OneColors.success,
-                ),
-              ],
-            ),
-            footer: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  mentor.score == 0
-                      ? 'Explore: no shared signals yet'
-                      : mentor.evidence < 3
-                      ? 'Limited evidence: ${mentor.evidence} of 3 personal signals'
-                      : 'Based on 3 personal signals',
-                  style: const TextStyle(color: OneColors.muted, fontSize: 12),
-                ),
-                if (mentor.domains.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      'Works in your target domain: ${mentor.domains.join(', ')}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
+    return CommunityReturnScope(
+      fallback: '/home',
+      child: PageBody(
+        itemCount: _rows.length,
+        itemBuilder: (context, index) {
+          final mentor = _rows[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: PersonCard(
+              key: ValueKey(mentor.id),
+              name: mentor.name,
+              headline: [
+                mentor.data['designation'],
+                mentor.data['company'],
+              ].whereType<String>().where((s) => s.isNotEmpty).join(' | '),
+              onProfile: () => openMemberProfile(context, mentor.id),
+              skills: mentor.skills,
+              indicator: Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                children: [
+                  StatusPill('${mentor.score} / 100 relevance'),
+                  const StatusPill(
+                    'Open to mentorship',
+                    icon: Icons.school_outlined,
+                    color: OneColors.success,
+                  ),
+                ],
+              ),
+              footer: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    mentor.score == 0
+                        ? 'Explore: no shared signals yet'
+                        : mentor.evidence < 3
+                        ? 'Limited evidence: ${mentor.evidence} of 3 personal signals'
+                        : 'Based on 3 personal signals',
+                    style: const TextStyle(
+                      color: OneColors.muted,
+                      fontSize: 12,
                     ),
                   ),
-                ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  title: const Text(
-                    'Why this mentor',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  children: [
-                    for (final reason in mentor.reasons)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            reason,
-                            style: const TextStyle(fontSize: 13),
-                          ),
+                  if (mentor.domains.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        'Works in your target domain: ${mentor.domains.join(', ')}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () => context.go('/alumni/${mentor.id}'),
-                  child: const Text('View mentor profile'),
-                ),
-                ConnectionControls(peer: mentor.id, compact: true),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PopupMenuButton<String>(
-                    tooltip: 'Mentor options',
-                    itemBuilder: (_) => const [
-                      PopupMenuItem(
-                        value: 'hide',
-                        child: Text('Hide this mentor'),
+                    ),
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    title: const Text(
+                      'Why this mentor',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    children: [
+                      for (final reason in mentor.reasons)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              reason,
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 8,
+                    children: [
+                      FilledButton.tonal(
+                        onPressed: () => openMemberProfile(context, mentor.id),
+                        child: const Text('View mentor profile'),
+                      ),
+                      PopupMenuButton<String>(
+                        tooltip: 'Mentor options',
+                        itemBuilder: (_) => const [
+                          PopupMenuItem(
+                            value: 'hide',
+                            child: Text('Hide this mentor'),
+                          ),
+                        ],
+                        onSelected: (_) => _hide(mentor),
                       ),
                     ],
-                    onSelected: (_) => _hide(mentor),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      footer: [
-        if (_busy && _rows.isNotEmpty) const LinearProgressIndicator(),
-        if (_more)
-          OutlinedButton(
-            onPressed: _busy ? null : () => _load(next: true),
-            child: const Text('Load more mentors'),
-          ),
-      ],
-      children: [
-        const FeedHeading(
-          'Mentor recommendations',
-          subtitle: 'Experience aligned with your next chapter.',
-        ),
-        QuickFilters(
-          children: [
-            ActionChip(
-              avatar: const Icon(Icons.tune, size: 16),
-              label: const Text('Personalize your goals'),
-              onPressed: _goals,
-            ),
-            ActionChip(
-              avatar: const Icon(Icons.filter_list, size: 16),
-              label: const Text('Refine recommendations'),
-              onPressed: _filters,
-            ),
-            ActionChip(
-              label: const Text('How matching works'),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Relevance, explained'),
-                  content: const Text(
-                    'Skills 40%, domain 30%, mentoring opt-in 20%, interests 10%. Missing signals are omitted and limited evidence caps scores. Points measure relevance, not success probability or AI confidence.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Got it'),
-                    ),
-                  ],
-                ),
+                  const SizedBox(height: 8),
+                  ConnectionControls(peer: mentor.id, compact: true),
+                ],
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (_busy && _rows.isEmpty) const FeedSkeleton(),
-        if (_error != null) ...[
-          StatusNotice(_error),
-          TextButton(
-            onPressed: () => _load(),
-            child: const Text('Retry recommendations'),
-          ),
+          );
+        },
+        footer: [
+          if (_busy && _rows.isNotEmpty) const LinearProgressIndicator(),
+          if (_more)
+            OutlinedButton(
+              onPressed: _busy ? null : () => _load(next: true),
+              child: const Text('Load more mentors'),
+            ),
         ],
-        if (!_busy && _error == null && _rows.isEmpty)
-          const EmptyState(
-            title: 'No eligible mentors yet',
-            message: 'Try fewer filters or update your goals.',
-            icon: Icons.school_outlined,
+        children: [
+          FeedHeading(
+            'Mentor recommendations',
+            leading: BackButton(
+              onPressed: () => returnToCommunityParent(context, '/home'),
+            ),
+            subtitle: 'Experience aligned with your next chapter.',
           ),
-      ],
+          QuickFilters(
+            children: [
+              ActionChip(
+                avatar: const Icon(Icons.tune, size: 16),
+                label: const Text('Personalize your goals'),
+                onPressed: _goals,
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.filter_list, size: 16),
+                label: const Text('Refine recommendations'),
+                onPressed: _filters,
+              ),
+              ActionChip(
+                label: const Text('How matching works'),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Relevance, explained'),
+                    content: const Text(
+                      'Skills 40%, domain 30%, mentoring opt-in 20%, interests 10%. Missing signals are omitted and limited evidence caps scores. Points measure relevance, not success probability or AI confidence.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Got it'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (_busy && _rows.isEmpty) const FeedSkeleton(),
+          if (_error != null) ...[
+            StatusNotice(_error),
+            TextButton(
+              onPressed: () => _load(),
+              child: const Text('Retry recommendations'),
+            ),
+          ],
+          if (!_busy && _error == null && _rows.isEmpty)
+            const EmptyState(
+              title: 'No eligible mentors yet',
+              message: 'Try fewer filters or update your goals.',
+              icon: Icons.school_outlined,
+            ),
+        ],
+      ),
     );
   }
 }

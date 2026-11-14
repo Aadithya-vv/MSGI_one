@@ -21,6 +21,8 @@ import '../../opportunities/presentation/career_detail_screen.dart';
 import '../../opportunities/presentation/career_editor_screen.dart';
 import '../../profile/domain/profile_repository.dart';
 import '../domain/demo_store.dart';
+import '../../catalog/domain/academic_catalog.dart';
+import '../../catalog/data/academic_catalog_provider.dart';
 import '../data/demo_repositories.dart';
 import 'demo_screens.dart';
 
@@ -38,6 +40,7 @@ class DemoDirectoryController extends DirectoryController {
 /// into this experience. Production route guards/providers remain unchanged.
 ProviderContainer createDemoContainer(DemoStore store) => ProviderContainer(
   overrides: [
+    academicCatalogsProvider.overrideWithValue(const [MsecCatalog.catalog]),
     supabaseClientProvider.overrideWithValue(null),
     authRepositoryProvider.overrideWithValue(null),
     communityUserIdProvider.overrideWithValue(store.actor),
@@ -77,13 +80,24 @@ class DemoExperience extends StatefulWidget {
 class _DemoExperienceState extends State<DemoExperience> {
   late ProviderContainer _container;
   late GoRouter _router;
+  int _lastProfileRevision = 0;
   @override
   void initState() {
     super.initState();
     _configure();
+    widget.store.addListener(_profileChanged);
+  }
+
+  void _profileChanged() {
+    if (widget.store.profileRevision == _lastProfileRevision) return;
+    _lastProfileRevision = widget.store.profileRevision;
+    _container.invalidate(ownProfileProvider);
+    _container.invalidate(alumniDetailProvider);
+    _container.read(profileRevisionProvider.notifier).refresh();
   }
 
   void _configure() {
+    _lastProfileRevision = widget.store.profileRevision;
     _container = createDemoContainer(widget.store);
     _router = GoRouter(
       initialLocation: '/home',
@@ -219,7 +233,7 @@ class _DemoExperienceState extends State<DemoExperience> {
     builder: (context) => AlertDialog(
       title: const Text('All activity is simulated'),
       content: const Text(
-        'All people, institutions, organizations and opportunities are fictional. Changes stay only on this device. No real accounts, approvals, vacancies or administrator privileges.',
+        'MSEC programme names use supplied institutional information. All people, affiliations, employers and activities are fictional: no actual MSEC graduates, staff identities, approvals or endorsements are represented. Changes stay on this device.',
       ),
       actions: [
         TextButton(
@@ -255,6 +269,7 @@ class _DemoExperienceState extends State<DemoExperience> {
 
   @override
   void dispose() {
+    widget.store.removeListener(_profileChanged);
     _router.dispose();
     _container.dispose();
     super.dispose();
@@ -345,7 +360,7 @@ class _DemoExperienceState extends State<DemoExperience> {
                         builder: (ctx) => AlertDialog(
                           title: const Text('All activity is simulated'),
                           content: const Text(
-                            'Fictional profiles, institutions, organizations and opportunities. No real authentication, approval, jobs or administrator privileges. Reset affects only local demo state.',
+                            'MSEC catalogue names use supplied institutional information. People, affiliations, employers and activity are fictional, with no actual MSEC graduates, staff identities or endorsement represented. Reset affects only local demo state.',
                           ),
                           actions: [
                             TextButton(

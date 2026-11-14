@@ -31,7 +31,7 @@ void main() {
     );
     expect(upgraded.role, DemoRole.alumni);
     expect(upgraded.active, true);
-    expect(upgraded.snapshot()['version'], 2);
+    expect(upgraded.snapshot()['version'], DemoStore.version);
   });
 
   testWidgets(

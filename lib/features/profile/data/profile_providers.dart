@@ -44,3 +44,14 @@ final alumniDetailProvider = FutureProvider.autoDispose
     .family<AlumniProfile?, String>(
       (ref, id) => ref.watch(profileRepositoryProvider).detail(id),
     );
+
+/// A local presentation refresh signal; it grants no backend permissions.
+final profileRevisionProvider = NotifierProvider<ProfileRevision, int>(
+  ProfileRevision.new,
+);
+
+class ProfileRevision extends Notifier<int> {
+  @override
+  int build() => 0;
+  void refresh() => state++;
+}

@@ -1,9 +1,11 @@
+import '../../profile/data/profile_providers.dart';
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
 import '../../../core/widgets/consumer_widgets.dart';
@@ -194,6 +196,7 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(profileRevisionProvider, (_, _) => _load());
     final land = ref.watch(landPolygonsProvider),
         groups = groupCities(_cities, _zoom);
     return Material(
@@ -528,7 +531,8 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
                               '${p['designation'] ?? ''} / ${p['company'] ?? ''}',
                             ),
                             trailing: const Icon(Icons.chevron_right),
-                            onTap: () => context.go('/alumni/${p['user_id']}'),
+                            onTap: () =>
+                                openMemberProfile(context, p['user_id']),
                           );
                         },
                       ),

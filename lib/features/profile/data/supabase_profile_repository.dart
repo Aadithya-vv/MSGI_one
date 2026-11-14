@@ -79,6 +79,11 @@ class SupabaseProfileRepository implements ProfileRepository {
     DirectoryFilter filter, {
     String? after,
   }) async {
+    if (filter.programme != null) {
+      throw UnsupportedError(
+        'Hosted programme filtering requires a reviewed backend contract.',
+      );
+    }
     final rows = await client
         .rpc('discover_alumni', params: filter.params(after: after))
         .timeout(const Duration(seconds: 20));

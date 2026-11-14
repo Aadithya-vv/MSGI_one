@@ -1,3 +1,5 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -139,97 +141,109 @@ class _CareerDetailScreenState extends ConsumerState<CareerDetailScreen> {
   Widget build(BuildContext context) {
     final p = _post;
     final own = p?.authorId == ref.watch(communityUserIdProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Opportunity details'),
-        leading: BackButton(onPressed: () => context.go('/opportunities')),
-      ),
-      body: PageBody(
-        children: [
-          if (_loading) const LinearProgressIndicator(),
-          if (_error != null) ...[
-            Semantics(liveRegion: true, child: Text(_error!)),
-            TextButton(
-              onPressed: _load,
-              child: const Text('Retry opportunity'),
-            ),
-          ],
-          if (!_loading && p == null && _error == null)
-            const EmptyState(
-              title: 'Post no longer available',
-              message: 'It may be private, closed, archived or outside your audience.',
-            ),
-          if (p != null) ...[
-            Text(p.title, style: Theme.of(context).textTheme.headlineMedium),
-            Wrap(
-              spacing: 8,
-              children: [
-                Chip(
-                  label: Text(
-                    p.archived ? 'Archived' : careerStatusLabel(p.status),
-                  ),
-                ),
-                Chip(label: Text(careerKindLabel(p.data['kind'] as String))),
-                if (own) const Chip(label: Text('Your post')),
-                if (p.data['remote'] == true) const Chip(label: Text('Remote')),
-                if (p.data['referral'] == true)
-                  const Chip(label: Text('Referral')),
-              ],
-            ),
-            Text(
-              '${p.data['organization']} | ${p.data['professional_domain']}',
-            ),
-            Text(p.data['location_text'] as String? ?? ''),
-            const SectionHeading('About the opportunity'),
-            Text(p.data['description'] as String),
-            const SectionHeading('Required skills'),
-            if (p.skills.isEmpty)
-              const Text('No skill criteria specified')
-            else
-              SkillTags(p.skills),
-            const SizedBox(height: 20),
-            Text('Audience: ${p.data['audience']}'),
-            Text(
-              'Author: ${own ? 'You' : p.data['author_name'] ?? 'Verified community member'}',
-            ),
-            if (p.data['author_available'] == true)
+    return CommunityReturnScope(
+      fallback: '/opportunities',
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Opportunity details'),
+          leading: BackButton(
+            onPressed: () => returnToCommunityParent(context, '/opportunities'),
+          ),
+        ),
+        body: PageBody(
+          children: [
+            if (_loading) const LinearProgressIndicator(),
+            if (_error != null) ...[
+              Semantics(liveRegion: true, child: Text(_error!)),
               TextButton(
-                onPressed: () => context.go('/alumni/${p.authorId}'),
-                child: const Text('View author profile'),
-              ),
-            if (p.status == 'published' &&
-                !p.archived &&
-                safeCareerUrl(p.data['external_url'] as String? ?? '') != null)
-              FilledButton(
-                onPressed: () => _open(p.data['external_url'] as String),
-                child: const Text('Apply externally'),
-              ),
-            if (p.status != 'published' || p.archived)
-              const Text('This post is not accepting applications.'),
-            if (own && !p.archived) ...[
-              OutlinedButton(
-                onPressed: _busy
-                    ? null
-                    : () => context.go('/opportunities/${p.id}/edit'),
-                child: const Text('Edit opportunity'),
-              ),
-              if (p.status != 'closed')
-                OutlinedButton(
-                  onPressed: _busy ? null : () => _transition('close'),
-                  child: const Text('Close opportunity'),
-                ),
-              TextButton(
-                onPressed: _busy ? null : () => _transition('archive'),
-                child: const Text('Archive opportunity'),
+                onPressed: _load,
+                child: const Text('Retry opportunity'),
               ),
             ],
-            if (!own && p.status == 'published')
-              TextButton(
-                onPressed: _report,
-                child: const Text('Report opportunity'),
+            if (!_loading && p == null && _error == null)
+              const EmptyState(
+                title: 'Post no longer available',
+                message: 'It may be private, closed, archived or outside your audience.',
               ),
+            if (p != null) ...[
+              Text(p.title, style: Theme.of(context).textTheme.headlineMedium),
+              Wrap(
+                spacing: 8,
+                children: [
+                  Chip(
+                    label: Text(
+                      p.archived ? 'Archived' : careerStatusLabel(p.status),
+                    ),
+                  ),
+                  Chip(label: Text(careerKindLabel(p.data['kind'] as String))),
+                  if (own) const Chip(label: Text('Your post')),
+                  if (p.data['remote'] == true)
+                    const Chip(label: Text('Remote')),
+                  if (p.data['referral'] == true)
+                    const Chip(label: Text('Referral')),
+                ],
+              ),
+              Text(
+                '${p.data['organization']} | ${p.data['professional_domain']}',
+              ),
+              Text(p.data['location_text'] as String? ?? ''),
+              const SectionHeading('About the opportunity'),
+              Text(p.data['description'] as String),
+              const SectionHeading('Required skills'),
+              if (p.skills.isEmpty)
+                const Text('No skill criteria specified')
+              else
+                SkillTags(p.skills),
+              const SizedBox(height: 20),
+              Text('Audience: ${p.data['audience']}'),
+              Text(
+                'Author: ${own ? 'You' : p.data['author_name'] ?? 'Verified community member'}',
+              ),
+              if (p.data['author_available'] == true)
+                TextButton(
+                  onPressed: () => openMemberProfile(context, p.authorId),
+                  child: const Text('View author profile'),
+                ),
+              if (p.status == 'published' &&
+                  !p.archived &&
+                  safeCareerUrl(p.data['external_url'] as String? ?? '') !=
+                      null)
+                FilledButton(
+                  onPressed: () => _open(p.data['external_url'] as String),
+                  child: const Text('Apply externally'),
+                ),
+              if (p.status != 'published' || p.archived)
+                const Text('This post is not accepting applications.'),
+              if (own && !p.archived) ...[
+                OutlinedButton(
+                  onPressed: _busy
+                      ? null
+                      : () async {
+                          final saved = await context.push<bool>(
+                            '/opportunities/${p.id}/edit',
+                          );
+                          if (mounted && saved == true) _load();
+                        },
+                  child: const Text('Edit opportunity'),
+                ),
+                if (p.status != 'closed')
+                  OutlinedButton(
+                    onPressed: _busy ? null : () => _transition('close'),
+                    child: const Text('Close opportunity'),
+                  ),
+                TextButton(
+                  onPressed: _busy ? null : () => _transition('archive'),
+                  child: const Text('Archive opportunity'),
+                ),
+              ],
+              if (!own && p.status == 'published')
+                TextButton(
+                  onPressed: _report,
+                  child: const Text('Report opportunity'),
+                ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -188,10 +188,16 @@ class PersonCard extends StatelessWidget {
 }
 
 class FeedHeading extends StatelessWidget {
-  const FeedHeading(this.title, {super.key, this.subtitle, this.action});
+  const FeedHeading(
+    this.title, {
+    super.key,
+    this.subtitle,
+    this.action,
+    this.leading,
+  });
   final String title;
   final String? subtitle;
-  final Widget? action;
+  final Widget? action, leading;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
@@ -201,6 +207,7 @@ class FeedHeading extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ?leading,
             Expanded(
               child: Text(
                 title,

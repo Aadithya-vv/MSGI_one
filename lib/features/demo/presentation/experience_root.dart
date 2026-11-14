@@ -262,7 +262,7 @@ class _ExperienceRootState extends State<ExperienceRoot> {
                 const FeatureHeader(
                   eyebrow: 'Explore Demo',
                   title: 'Choose a perspective',
-                  description: 'Every profile, institution, employer and activity is fictional. Staff is a community role, not an administrator.',
+                  description: 'MSEC programme names use supplied institutional information. People, affiliations and activity are fictional. Staff is a community role, not an administrator.',
                 ),
                 for (final role in DemoRole.values)
                   Padding(

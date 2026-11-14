@@ -1,3 +1,5 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -118,7 +120,13 @@ class _CareerEditorScreenState extends ConsumerState<CareerEditorScreen> {
         'referral': _referral,
         'skill_ids': _skills.toList(),
       }, expected: _expected);
-      if (mounted) context.go('/opportunities/$_id');
+      if (mounted) {
+        if (widget.id != null && context.canPop()) {
+          context.pop(true);
+        } else {
+          context.replace('/opportunities/$_id');
+        }
+      }
     } catch (_) {
       if (mounted) {
         setState(
@@ -136,7 +144,9 @@ class _CareerEditorScreenState extends ConsumerState<CareerEditorScreen> {
       title: Text(
         widget.id == null ? 'Create opportunity' : 'Edit opportunity',
       ),
-      leading: BackButton(onPressed: () => context.go('/opportunities')),
+      leading: BackButton(
+        onPressed: () => returnToCommunityParent(context, '/opportunities'),
+      ),
     ),
     body: PageBody(
       children: [

@@ -1,3 +1,5 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,7 +149,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
                       Text(person.company!),
                     if (person.available)
                       TextButton(
-                        onPressed: () => context.go('/alumni/${person.peerId}'),
+                        onPressed: () =>
+                            openMemberProfile(context, person.peerId),
                         child: const Text('View profile'),
                       ),
                     if (person.name == null)

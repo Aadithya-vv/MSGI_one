@@ -1,9 +1,12 @@
+import '../../../core/routing/community_navigation.dart';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../domain/demo_store.dart';
+import '../../catalog/domain/academic_catalog.dart';
 import '../../home/presentation/community_highlights.dart';
 
 class DemoHomeScreen extends StatelessWidget {
@@ -27,7 +30,7 @@ class DemoHomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${store.role.label} perspective',
+                    'MSEC / ${store.role.label} demo',
                     style: const TextStyle(
                       color: OneColors.muted,
                       fontSize: 12,
@@ -100,7 +103,7 @@ class DemoHomeScreen extends StatelessWidget {
               ('/community', 'Students and faculty', Icons.groups_outlined),
             ])
               OutlinedButton.icon(
-                onPressed: () => context.go(item.$1),
+                onPressed: () => openCommunityDestination(context, item.$1),
                 icon: Icon(item.$3),
                 label: Text(item.$2),
               ),
@@ -130,13 +133,18 @@ class DemoOwnProfileScreen extends StatelessWidget {
           FeatureHeader(
             eyebrow: 'Fictional ${store.role.label} profile',
             title: p['display_name'] as String,
-            description: '${p['institution']}\n${p['department']}',
+            description:
+                '${p['institution']}\n${p['role'] == 'staff' ? p['department'] : p['programme']}',
           ),
           Text(
             p['designation'] as String,
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          Text('${p['company']}\n${p['professional_domain']}\n${p['degree']}'),
+          Text('${p['company']}\n${p['professional_domain']}'),
+          const Text(
+            'Fictional MSEC affiliation for demonstration only.',
+            style: TextStyle(fontSize: 12, color: OneColors.muted),
+          ),
           const SectionHeading('Professional story'),
           Text(p['biography'] as String),
           const SectionHeading('Skills'),
@@ -189,7 +197,7 @@ class DemoOwnProfileScreen extends StatelessWidget {
             ),
           const SizedBox(height: 16),
           FilledButton(
-            onPressed: () => context.go('/mentors'),
+            onPressed: () => context.push<void>('/mentors'),
             child: const Text('Explore mentorship'),
           ),
         ],
@@ -264,7 +272,7 @@ class _DemoCommunityScreenState extends State<DemoCommunityScreen> {
               title: p['display_name'] as String,
               description: '${p['designation']}\n${p['institution']}',
               trailing: TextButton(
-                onPressed: () => context.go('/alumni/${p['user_id']}'),
+                onPressed: () => openMemberProfile(context, p['user_id']),
                 child: const Text('View sample profile'),
               ),
             ),
@@ -289,6 +297,7 @@ class _DemoProfileEditDialogState extends State<_DemoProfileEditDialog> {
         text: widget.store.person['biography'] as String,
       );
   final _form = GlobalKey<FormState>();
+  late String? _programme = widget.store.person['programme_id'] as String?;
   @override
   void dispose() {
     _name.dispose();
@@ -313,6 +322,43 @@ class _DemoProfileEditDialogState extends State<_DemoProfileEditDialog> {
                   ? 'Enter at least two characters.'
                   : null,
             ),
+            if (widget.store.role != DemoRole.staff) ...[
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                key: const Key('demo-programme'),
+                initialValue: _programme,
+                isExpanded: true,
+                itemHeight: null,
+                decoration: const InputDecoration(
+                  labelText: 'Degree programme',
+                ),
+                items: [
+                  for (final p in MsecCatalog.catalog.programmes)
+                    DropdownMenuItem(
+                      value: p.id,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(p.name, softWrap: true),
+                      ),
+                    ),
+                ],
+                selectedItemBuilder: (_) => [
+                  for (final p in MsecCatalog.catalog.programmes)
+                    Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis),
+                ],
+                validator: (id) => MsecCatalog.catalog.programme(id) == null
+                    ? 'Select your programme.'
+                    : null,
+                onChanged: (id) => setState(() => _programme = id),
+              ),
+              const SizedBox(height: 12),
+            ] else
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'Academic department: Science and Humanities. Staff is not an administrator.',
+                ),
+              ),
             TextFormField(
               controller: _bio,
               decoration: const InputDecoration(
@@ -337,6 +383,7 @@ class _DemoProfileEditDialogState extends State<_DemoProfileEditDialog> {
           final name = _name.text.trim();
           widget.store.updatePerson({
             'display_name': name,
+            if (widget.store.role != DemoRole.staff) 'programme_id': _programme,
             'biography': _bio.text.trim(),
           });
           Navigator.pop(context);

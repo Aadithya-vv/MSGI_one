@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../../catalog/domain/academic_catalog.dart';
+
 enum DemoRole { student, alumni, staff }
 
 extension DemoRoleLabel on DemoRole {
@@ -23,7 +25,43 @@ class DemoStore extends ChangeNotifier {
   DemoStore() {
     _seed();
   }
-  static const version = 2;
+  static const version = 3;
+  static const alumniProgrammes = [
+    'msec-pg-embedded',
+    'msec-ug-cse',
+    'msec-ug-ai-ds',
+    'msec-ug-it',
+    'msec-ug-civil',
+    'msec-ug-ai-ml',
+    'msec-ug-ece',
+    'msec-ug-cse-cybersecurity',
+    'msec-pg-cs',
+    'msec-ug-eee',
+    'msec-pg-construction',
+    'msec-ug-mechanical',
+    'msec-pg-energy',
+    'msec-ug-it',
+    'msec-ug-ai-ml',
+    'msec-ug-cse',
+    'msec-ug-civil',
+    'msec-ug-ai-ds',
+    'msec-ug-ece',
+    'msec-ug-cse-cybersecurity',
+    'msec-pg-cs',
+    'msec-ug-eee',
+    'msec-pg-construction',
+    'msec-ug-mechanical',
+  ];
+  static const studentProgrammes = [
+    'msec-ug-cse',
+    'msec-ug-ai-ds',
+    'msec-ug-ai-ml',
+    'msec-ug-civil',
+    'msec-ug-ece',
+    'msec-ug-eee',
+    'msec-ug-it',
+    'msec-ug-mechanical',
+  ];
   static const alumniNames = [
     'Arjun Iyer',
     'Leela Menon',
@@ -107,6 +145,7 @@ class DemoStore extends ChangeNotifier {
   DemoRole role = DemoRole.student;
   bool active = false;
   int tick = 1000;
+  int profileRevision = 0;
   final profiles = <String, Map<String, dynamic>>{},
       connections = <String, Map<String, dynamic>>{},
       posts = <String, Map<String, dynamic>>{},
@@ -195,12 +234,26 @@ class DemoStore extends ChangeNotifier {
           'user_id': id,
           'display_name': named,
           'role': role.name,
-          'institution_id': i % 2 == 0 ? 'demo-campus-b' : 'demo-campus-a',
-          'department_id': i % 2 == 0 ? 'demo-dept-b' : 'demo-dept-a',
-          'institution': i % 2 == 0
-              ? 'Sample Engineering Institute B'
-              : 'Sample Engineering Institute A',
-          'department': 'Sample Engineering Department',
+          'institution_id': MsecCatalog.id,
+          'institution': MsecCatalog.name,
+          'department_id': role == DemoRole.staff
+              ? MsecCatalog.scienceHumanitiesId
+              : '',
+          'department': role == DemoRole.staff ? 'Science and Humanities' : '',
+          'programme_id': role == DemoRole.staff
+              ? null
+              : role == DemoRole.student
+              ? studentProgrammes[i - 1]
+              : alumniProgrammes[i - 1],
+          'programme': role == DemoRole.staff
+              ? ''
+              : MsecCatalog.catalog
+                    .programme(
+                      role == DemoRole.student
+                          ? studentProgrammes[i - 1]
+                          : alumniProgrammes[i - 1],
+                    )!
+                    .name,
           'graduation_year': role == DemoRole.student ? 2028 : 2010 + i % 14,
           'joining_year': role == DemoRole.student ? 2024 : 2006 + i % 14,
           'designation': role == DemoRole.staff
@@ -222,8 +275,14 @@ class DemoStore extends ChangeNotifier {
               ? 'Exploring ${domains[d].toLowerCase()} through student projects, practical learning and guidance from the alumni community.'
               : 'Supports student projects, interdisciplinary learning and thoughtful career exploration across the community.',
           'degree': role == DemoRole.staff
-              ? 'Postgraduate Engineering'
-              : 'Bachelor of Engineering',
+              ? ''
+              : MsecCatalog.catalog
+                    .programme(
+                      role == DemoRole.student
+                          ? studentProgrammes[i - 1]
+                          : alumniProgrammes[i - 1],
+                    )!
+                    .name,
           'skill_ids': id == 'demo-student-01'
               ? [skillId(2), skillId(3)]
               : skills.toSet().toList(),
@@ -295,6 +354,7 @@ class DemoStore extends ChangeNotifier {
     for (final key in input.keys) {
       if (![
         'display_name',
+        'programme_id',
         'biography',
         'mentoring',
         'directory_visible',
@@ -308,9 +368,25 @@ class DemoStore extends ChangeNotifier {
         .isEmpty) {
       throw StateError('Name required');
     }
-    person.addAll(input);
+    final changes = Map<String, dynamic>.from(input);
+    if (changes.containsKey('programme_id')) {
+      final programme = MsecCatalog.catalog.programme(
+        changes['programme_id'] as String?,
+      );
+      if (role == DemoRole.staff ||
+          programme == null ||
+          programme.institutionId != person['institution_id']) {
+        throw ArgumentError(
+          'Select a valid programme for this demo institution.',
+        );
+      }
+      changes['programme'] = programme.name;
+      changes['degree'] = programme.name;
+    }
+    person.addAll(changes);
     if (person['directory_visible'] != true) person['map_opt_in'] = false;
     if (role != DemoRole.alumni) person['mentoring'] = false;
+    profileRevision++;
     changed();
   }
 
@@ -330,7 +406,7 @@ class DemoStore extends ChangeNotifier {
     final result = DemoStore();
     if (value == null) return result;
     try {
-      if (value['version'] != 1 && value['version'] != version) {
+      if (![1, 2, version].contains(value['version'])) {
         throw StateError('Unknown demo format');
       }
       final restored = jsonDecode(jsonEncode(value)) as Map<String, dynamic>;
@@ -406,6 +482,24 @@ class DemoStore extends ChangeNotifier {
             data[entry.key] = old;
           }
         }
+        if ((value['version'] as int) < 3 && field == 'profiles') {
+          for (final entry in data.entries) {
+            final old = Map<String, dynamic>.from(entry.value as Map),
+                fresh = target[entry.key]!;
+            for (final key in [
+              'institution_id',
+              'institution',
+              'department_id',
+              'department',
+              'programme_id',
+              'programme',
+              'degree',
+            ]) {
+              old[key] = fresh[key];
+            }
+            data[entry.key] = old;
+          }
+        }
         target.clear();
         target.addAll(
           data.map((k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map))),
@@ -434,6 +528,25 @@ class DemoStore extends ChangeNotifier {
           p[key] as String;
         }
         DemoRole.values.byName(p['role'] as String);
+        if (p['institution_id'] != MsecCatalog.id) {
+          throw StateError('Unknown demo institution');
+        }
+        if (p['role'] == 'staff') {
+          if (p['programme_id'] != null ||
+              p['department_id'] != MsecCatalog.scienceHumanitiesId) {
+            throw StateError('Invalid staff academic affiliation');
+          }
+        } else {
+          final programme = MsecCatalog.catalog.programme(
+            p['programme_id'] as String?,
+          );
+          if (programme == null ||
+              p['programme'] != programme.name ||
+              p['degree'] != programme.name ||
+              p['department_id'] != '') {
+            throw StateError('Invalid programme affiliation');
+          }
+        }
         for (final key in ['mentoring', 'directory_visible', 'map_opt_in']) {
           p[key] as bool;
         }

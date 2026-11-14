@@ -49,7 +49,7 @@ void main() {
         expect(p['display_name'], isNot(contains('Alumni 0')));
         expect(p.containsKey('verified'), false);
         expect(p.containsKey('email'), false);
-        expect((p['institution'] as String).startsWith('Sample'), true);
+        expect(p['institution_id'], 'msec');
       }
       for (final p in s.posts.values) {
         expect(s.profiles.containsKey(p['author_id']), true);
