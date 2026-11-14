@@ -1,0 +1,173 @@
+﻿[
+    {
+        "arguments":  "",
+        "body_hash":  "a5f8d58a9032779dd3fe85b72395b313",
+        "function_name":  "private.account_allowed",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "",
+        "body_hash":  "509fc277912b13a36e2d8fafea2d581a",
+        "function_name":  "private.can_publish",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "",
+        "body_hash":  "0171ab23f08b100a9210c361ac429d2f",
+        "function_name":  "private.is_admin",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "",
+        "body_hash":  "4265611831a6f0550bb977325165e431",
+        "function_name":  "private.is_verified",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "subject uuid",
+        "body_hash":  "0e304ba7cffeea5567640c2faecd6517",
+        "function_name":  "private.member_verified",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "",
+        "body_hash":  "727866738d9aa5007301b5b92d112fce",
+        "function_name":  "private.touch_updated_at",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  false
+    },
+    {
+        "arguments":  "items text[], max_items integer, max_length integer",
+        "body_hash":  "450129f0cc7103f3220aa3038eb7a132",
+        "function_name":  "private.valid_text_list",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  false
+    },
+    {
+        "arguments":  "p_search text, p_limit integer",
+        "body_hash":  "944fbdc86460f49e621b234a64547c63",
+        "function_name":  "public.directory_profiles",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_search text, p_institution uuid, p_department uuid, p_year integer, p_profession text, p_skill uuid, p_city uuid, p_after uuid, p_limit integer, p_user uuid",
+        "body_hash":  "928a186dbf7739b0cb939d2caf5ebe8e",
+        "function_name":  "public.discover_alumni",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_limit integer",
+        "body_hash":  "26495dbcb731f3842c2448efa6c77943",
+        "function_name":  "public.map_profiles",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_id uuid, p_status text",
+        "body_hash":  "4097b8519232555c2afa03a9ebe9b5dc",
+        "function_name":  "public.moderate_report",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "",
+        "body_hash":  "218e3d05f868c06b0f699dc292cb96f3",
+        "function_name":  "public.my_membership",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_limit integer",
+        "body_hash":  "37d9d47463dd68193e7718952d532eaf",
+        "function_name":  "public.pending_memberships",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_user_id uuid, p_status membership_status, p_verified_kind account_kind, p_reason text",
+        "body_hash":  "82585fdd472784cd9ecd64c0d1228375",
+        "function_name":  "public.review_membership",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_input jsonb",
+        "body_hash":  "17dad2ccb6138afb2095b59bd89f1439",
+        "function_name":  "public.save_member_profile",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_recipient uuid",
+        "body_hash":  "e80ebc65f40ad302a3e80cfc500a9bb3",
+        "function_name":  "public.send_connection",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_display_name text, p_kind account_kind, p_institution uuid, p_department uuid, p_joining_year integer, p_graduation_year integer, p_designation text, p_interests text[], p_skills uuid[], p_city uuid, p_directory_visible boolean, p_map_opt_in boolean",
+        "body_hash":  "9028ab9ec7518eabf99de04539fe143e",
+        "function_name":  "public.submit_onboarding",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_id uuid, p_action text",
+        "body_hash":  "59eef3d277b0f74b13d96d46253bbd41",
+        "function_name":  "public.transition_connection",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    },
+    {
+        "arguments":  "p_user_id uuid",
+        "body_hash":  "d14c61e8f17224f16d37b4123fb3f2c1",
+        "function_name":  "public.verification_history",
+        "proconfig":  [
+                          "search_path=\"\""
+                      ],
+        "prosecdef":  true
+    }
+]
