@@ -4,6 +4,7 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const crypto = require('node:crypto');
 const { REF, hash, normalize, render, preflight } = require('./render_msec_reference.cjs');
+const { sha256, executeDedicated, executionPlan, PAYLOAD_SHA256 } = require('./msec_catalog_session.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const FILES = ['msec_reference_manifest.json', 'msec.sql', 'starter_skills_proposed.sql', 'msec_reference_atomic.sql'];
 const OVERRIDES = ['PGHOST', 'PGHOSTADDR', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD', 'PGSERVICE', 'PGSERVICEFILE', 'PGOPTIONS', 'PGPASSFILE', 'PGSSLMODE', 'DATABASE_URL', 'SUPABASE_DB_URL', 'SUPABASE_DB_HOST', 'SUPABASE_DB_PORT', 'SUPABASE_DB_NAME', 'SUPABASE_DB_USER', 'SUPABASE_PROJECT_REF', 'SUPABASE_PROJECT_ID', 'SUPABASE_API_HOST', 'SUPABASE_API_URL', 'SUPABASE_API_ENDPOINT', 'SUPABASE_URL', 'SUPABASE_WORKDIR', 'SUPABASE_PROFILE'];
@@ -41,11 +42,12 @@ function run(args, io = {}) {
   const read = io.read || (p => fs.readFileSync(path.join(ROOT, p), 'utf8'));
   const cli = io.cli || invoke;
   const env = io.env || process.env;
-  let execute = false, checkOnly = false, approval, project = REF;
+  let execute = false, checkOnly = false, approval, planApproval, project = REF;
   for (const arg of args) {
     if (arg === '--execute') execute = true;
     else if (arg === '--check') checkOnly = true;
     else if (arg.startsWith('--approve-sha256=')) approval = arg.slice(17);
+    else if (arg.startsWith('--approve-execution-plan-sha256=')) planApproval = arg.slice('--approve-execution-plan-sha256='.length);
     else if (arg.startsWith('--project-ref=')) project = arg.slice(14);
     else throw Error('Unexpected runner argument; connection overrides are not accepted');
   }
@@ -72,7 +74,11 @@ function run(args, io = {}) {
   const generated = render(manifest);
   if (generated.msec !== texts['msec.sql'] || generated.skills !== texts['starter_skills_proposed.sql'] || generated.bundle !== texts['msec_reference_atomic.sql']) throw Error('Manifest and generated SQL differ');
   const digest = lock.hashes['msec_reference_atomic.sql'];
+  // The approved deployment file is byte-identified, not normalized for execution.
+  const payload = Buffer.from(read('supabase/catalogs/msec_reference_atomic.sql'), 'utf8');
+  if (sha256(payload) !== PAYLOAD_SHA256 || digest !== PAYLOAD_SHA256) throw Error('Raw payload byte identity mismatch');
   if (execute && approval !== digest) throw Error('Explicit approval must equal the exact reviewed bundle SHA-256');
+  if (execute && planApproval !== executionPlan().execution_plan_sha256) throw Error('Separate approval of the dedicated-session execution plan is required');
   const projects = cli(['projects', 'list', '--workdir', ROOT]).projects;
   const metadata = projects?.find(p => p.id === REF && p.ref === REF);
   if (!metadata || !metadata.linked || metadata.database?.host !== `db.${REF}.supabase.co` || metadata.region !== 'ap-northeast-2') throw Error('Authenticated project/database metadata mismatch');
@@ -87,15 +93,16 @@ function run(args, io = {}) {
   const p = result.rows?.[0]?.catalog_preflight;
   if (!p || p.read_only !== 'on' || p.database !== 'postgres' || p.version !== 17 || p.rls_tables !== 4 || JSON.stringify(p.history) !== JSON.stringify(versions) || ['institutions','departments','programmes','skills'].some(t => p[t+'_conflict'])) throw Error('Catalog preflight failed: unexpected records, schema or identity');
   if (execute) {
-    // Execute the verified in-memory snapshot, never a caller-supplied SQL file.
-    const sql = "set msgi.catalog_payload_approved='msec-reference-v1';\n" + texts['msec_reference_atomic.sql'];
-    cli(['db', 'query', `--remote=${REF}`, '--yes', '--workdir', ROOT, sql]);
+    if (['institutions','departments','programmes','skills'].some(t => p[t+'_count'] !== 0)) throw Error('Hosted first-deployment catalogs must be empty');
+    // The API CLI is used only for read-only checks. Write transport is a fresh
+    // direct psql session, with separate control operations and exact stdin bytes.
+    (io.session || executeDedicated)({ payload, project: REF, host: metadata.database.host, password: env.SUPABASE_DB_PASSWORD });
     // Multi-statement response shapes vary; verify persisted tuples through a
     // separate read-only request instead of assuming COMMIT returns SELECT rows.
     const post = cli(['db', 'query', `--remote=${REF}`, '--read-only', '--workdir', ROOT, preflight(manifest)]).rows?.[0]?.catalog_preflight;
     if (!post || post.read_only !== 'on' || post.institutions_count !== 1 || post.departments_count !== 1 || post.programmes_count !== 13 || post.skills_count !== 36 || ['institutions','departments','programmes','skills'].some(t => post[t+'_conflict'])) throw Error('Post-write verification unexpected: STOP and inspect read-only; do not retry');
   }
-  return { mode: execute ? 'executed' : 'read-only-check', project_ref: REF, database_host_verified: true, payload_sha256: digest,
+  return { mode: execute ? 'executed' : 'read-only-check', project_ref: REF, database_host_verified: true, payload_sha256: digest, execution_plan_sha256: executionPlan().execution_plan_sha256,
     observed_preflight_counts: Object.fromEntries(['institutions','departments','programmes','skills'].map(t => [t,p[t+'_count']])),
     expected: { institutions: 1, departments: 1, programmes: 13, skills: 36 } };
 }

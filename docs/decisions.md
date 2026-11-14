@@ -335,3 +335,12 @@ connection overrides. SQL session settings are intent guards, not identity proof
 Execution requires a separate owner approval bound to the exact LF-normalized
 payload SHA-256; default mode performs only read-only preflight. Direct fragment
 execution is unsupported. Local validation does not grant hosted-write approval.
+
+Task 11B.5C-FIX supersedes the original concatenated session-prefix transport.
+The write path uses a new dedicated direct TLS psql connection, separate fixed
+session controls and unchanged raw payload bytes. It rejects raw line-ending
+changes, requires approval of both the original payload and the new execution
+plan, and closes the backend after success/error so approval is not returned to a
+pool. The owner credential uses the existing private environment workflow; no
+credential is embedded or logged. Direct hosted connectivity and this different
+transport require new explicit approval; local tests authorize no hosted writes.

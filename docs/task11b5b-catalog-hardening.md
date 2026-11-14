@@ -1,5 +1,11 @@
 # Task 11B.5B: atomic MSEC reference-catalog hardening
 
+Historical transport note: the prefix-concatenating write runner and one-hash
+execution command below are superseded by the local Task 11B.5C-FIX correction in
+[the deployment gate report](task11b5c-hosted-catalog-deployment.md#task-11b5c-fix-validated-local-correction).
+The approved catalog file/manifest/hashes remain unchanged; future execution
+requires separate approval of the dedicated-session plan as well as the payload.
+
 Date: 2026-11-15 (Asia/Calcutta). Starting HEAD:
 `5e653d0ca5a14c025d753b3b67c05c847dcf0010`.
 **LOCAL IMPLEMENTATION VERIFIED; HOSTED INSERTION NOT APPROVED OR EXECUTED.**
