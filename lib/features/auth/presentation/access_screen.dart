@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/app_routes.dart';
+import '../../../core/config/experience_actions.dart';
 
 import '../../../core/widgets/one_widgets.dart';
 import '../application/auth_providers.dart';
@@ -42,6 +43,16 @@ class AccessScreen extends ConsumerWidget {
       body: SafeArea(
         child: PageBody(
           children: [
+            if (ref.watch(exploreDemoActionProvider) != null)
+              TextButton(
+                onPressed: ref.watch(exploreDemoActionProvider),
+                child: const Text('Explore Demo'),
+              ),
+            if (ref.watch(appEntryActionProvider) != null)
+              TextButton(
+                onPressed: ref.watch(appEntryActionProvider),
+                child: const Text('Back to app entry'),
+              ),
             if (access.phase == AccessPhase.loading)
               const LoadingState(
                 message: 'Checking your session and membership…',

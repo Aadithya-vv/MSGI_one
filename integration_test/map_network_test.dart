@@ -29,7 +29,7 @@ void main() {
         .hasMatch(fixture['email'] as String)) {
       throw StateError('Synthetic local account required');
     }
-    await app.main();
+    await app.startProduction();
     // The session is real local GoTrue authentication, with no repository fakes.
     await Supabase.instance.client.auth.signInWithPassword(
       email: fixture['email'] as String,

@@ -10,7 +10,11 @@ import '../../catalog/presentation/catalog_picker.dart';
 import '../application/directory_controller.dart';
 
 class DiscoveryScreen extends ConsumerStatefulWidget {
-  const DiscoveryScreen({super.key});
+  const DiscoveryScreen({
+    super.key,
+    this.description = 'Only verified alumni who opt into the directory appear here. Location is shown only with map consent.',
+  });
+  final String description;
   @override
   ConsumerState<DiscoveryScreen> createState() => _DiscoveryScreenState();
 }
@@ -57,10 +61,10 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      const FeatureHeader(
+      FeatureHeader(
         eyebrow: 'Your alumni community',
         title: 'Discover alumni',
-        description: 'Only verified alumni who opt into the directory appear here. Location is shown only with map consent.',
+        description: widget.description,
       ),
       TextField(
         key: const Key('alumni-search'),

@@ -509,3 +509,35 @@ Manual external-browser completion, physical-device and hosted acceptance remain
 unverified. Draft saving is explicit and requires valid title/description; closed
 and archived posts remain author-only. Report resolution uses existing protected
 backend moderation; no new moderation dashboard was added.
+
+## Task 08A - presentation demo verification
+
+- dart format lib test integration_test test_driver: completed.
+- flutter analyze: no issues. Full flutter test: 143 passed (117 existing plus
+  26 demo/gateway regression cases).
+- Existing isolated pgTAP suite: 237 assertions passed; no migration changes.
+- Existing isolated local Auth/PostgREST Career Bridge API checks: 46 passed.
+- Real local gateway emulator integration: passed login, real-to-demo disposal,
+  preserved real session restoration, cold recovery callback handoff, password
+  update and login with the new synthetic password. Callback transport scripted;
+  actual local SDK/Auth/Mailpit used. No hosted mail quota consumed. The first
+  test attempt exposed a route-animation locator race in the harness; corrected
+  with pumpAndSettle before the successful run.
+- Offline emulator scenario covers all three roles, connections, mentor settings,
+  careers, map, persistence/reset and isolation; eight screenshots captured.
+  HTTP client creation is rejected and emulator Wi-Fi/mobile data disabled for
+  this scenario, with prior settings restored afterward.
+- No hosted operations, schema changes, administrator grants or database resets.
+  The user's AGENTS.md change is excluded. Hosted email delivery and physical
+  device acceptance are not claimed. Final screenshot/APK details below.
+- Final rerun of the offline three-role scenario passed after header refinement;
+  eight updated screenshots were inspected. No major overflow was observed.
+  Filters and mentor cards remain text-heavy; visual refinement belongs to 08B.
+- Ordinary flutter build apk --debug passed with no backend defines.
+- After resuming, Docker Desktop was stopped, so a fresh read-only comparison of
+  the original database baseline was unavailable (not evidence of data changes).
+  Database/API results above were completed before pause; no SQL changes followed.
+- Changed-file secret-value scan and git diff --check passed. No dependency
+  versions changed; only two existing transitive dependencies became direct.
+- Final ordinary APK installed and launched on emulator-5554; process running and
+  expected demo UI confirmed via Android UI hierarchy inspection.

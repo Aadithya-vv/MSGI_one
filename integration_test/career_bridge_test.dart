@@ -28,7 +28,7 @@ void main() {
         .hasMatch(fixture['email'] as String)) {
       throw StateError('Synthetic local account required');
     }
-    await app.main();
+    await app.startProduction();
     // Avoid real Android IME overwriting tester-injected text. The SDK documents
     // this integration_test input race; only input transport is simulated.
     // Authentication, repositories, storage and RPCs remain real local services.

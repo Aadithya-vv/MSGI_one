@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../auth/application/auth_providers.dart';
+import '../../../core/community_identity.dart';
 import '../data/connections_providers.dart';
 import '../domain/connections_repository.dart';
 
@@ -123,7 +123,7 @@ class _ConnectionControlsState extends ConsumerState<ConnectionControls> {
   );
   @override
   Widget build(BuildContext context) {
-    if (widget.peer == ref.watch(authControllerProvider).userId) {
+    if (widget.peer == ref.watch(communityUserIdProvider)) {
       return const Text('This is your profile.');
     }
     if (widget.connection != null) return _buttons(widget.connection);

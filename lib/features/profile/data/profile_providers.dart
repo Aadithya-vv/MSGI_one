@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/application/auth_providers.dart';
+import '../../../core/community_identity.dart';
 import '../../catalog/domain/catalog_repository.dart';
 import '../../catalog/data/supabase_catalog_repository.dart';
 import '../domain/profile_repository.dart';
@@ -32,7 +33,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   return SupabaseProfileRepository(client);
 });
 final ownProfileProvider = FutureProvider<MemberProfile?>((ref) {
-  ref.watch(authControllerProvider.select((s) => s.userId));
+  ref.watch(communityUserIdProvider);
   return ref.watch(profileRepositoryProvider).own();
 });
 final profileDraftProvider = FutureProvider<Map<String, dynamic>?>((ref) {

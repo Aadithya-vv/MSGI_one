@@ -12,7 +12,13 @@ import '../data/map_providers.dart';
 import 'world_geography.dart';
 
 class AlumniMapScreen extends ConsumerStatefulWidget {
-  const AlumniMapScreen({super.key});
+  const AlumniMapScreen({
+    super.key,
+    this.enableNetworkTiles = true,
+    this.description = 'Explore consenting verified alumni by approximate city. Pan or pinch to explore; no live tracking or precise personal locations.',
+  });
+  final bool enableNetworkTiles;
+  final String description;
   @override
   ConsumerState<AlumniMapScreen> createState() => _AlumniMapScreenState();
 }
@@ -40,6 +46,7 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
     'MAPTILER_LOGO_EXEMPT_PLAN_APPROVED',
   );
   bool get _tiles =>
+      widget.enableNetworkTiles &&
       _approved &&
       RegExp(r'^[A-Za-z0-9_-]{10,100}$').hasMatch(_tileKey) &&
       !_tileError;
@@ -148,10 +155,10 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
     final groups = groupCities(_cities, _zoom);
     return PageBody(
       children: [
-        const FeatureHeader(
+        FeatureHeader(
           eyebrow: 'One World',
           title: 'Global alumni map',
-          description: 'Explore consenting verified alumni by approximate city. Pan or pinch to explore; no live tracking or precise personal locations.',
+          description: widget.description,
         ),
         TextField(
           controller: _location,

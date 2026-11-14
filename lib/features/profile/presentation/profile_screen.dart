@@ -97,12 +97,18 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 class AlumniDetailScreen extends ConsumerWidget {
-  const AlumniDetailScreen({super.key, required this.userId});
+  const AlumniDetailScreen({
+    super.key,
+    required this.userId,
+    this.title = 'Alumni profile',
+    this.eyebrow = 'Verified alumni',
+  });
   final String userId;
+  final String title, eyebrow;
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: AppBar(
-      title: const Text('Alumni profile'),
+      title: Text(title),
       leading: BackButton(onPressed: () => context.go(AppRoutes.discover)),
     ),
     body: SafeArea(
@@ -125,7 +131,7 @@ class AlumniDetailScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           FeatureHeader(
-                            eyebrow: 'Verified alumni',
+                            eyebrow: eyebrow,
                             title: p.name,
                             description:
                                 '${p.text('institution')} · ${p.text('department')} · ${p.text('graduation_year')}',

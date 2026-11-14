@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/one_widgets.dart';
-import '../../auth/application/auth_providers.dart';
+import '../../../core/community_identity.dart';
 import '../domain/career_repository.dart';
 import '../data/career_providers.dart';
 
@@ -137,7 +137,7 @@ class _CareerDetailScreenState extends ConsumerState<CareerDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final p = _post;
-    final own = p?.authorId == ref.watch(authControllerProvider).userId;
+    final own = p?.authorId == ref.watch(communityUserIdProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Opportunity details'),

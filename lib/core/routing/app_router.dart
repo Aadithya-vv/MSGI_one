@@ -24,10 +24,12 @@ import '../widgets/one_shell.dart';
 import 'app_routes.dart';
 
 final initialLocationProvider = Provider<String>((ref) => AppRoutes.startup);
+final ignorePlatformInitialRouteProvider = Provider<bool>((ref) => false);
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
   ref.listen(authControllerProvider, (_, _) => refresh.value++);
   final router = createAppRouter(
+    ignorePlatformInitialRoute: ref.watch(ignorePlatformInitialRouteProvider),
     initialLocation: ref.watch(initialLocationProvider),
     access: () => ref.read(authControllerProvider),
     refreshListenable: refresh,
@@ -41,12 +43,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 /// UI guards complement, and never replace, database authorization.
 GoRouter createAppRouter({
+  bool ignorePlatformInitialRoute = false,
   String initialLocation = AppRoutes.startup,
   required AccessState Function() access,
   Listenable? refreshListenable,
 }) {
   String? resumeLocation;
   return GoRouter(
+    overridePlatformDefaultLocation: ignorePlatformInitialRoute,
     refreshListenable: refreshListenable,
     redirect: (context, state) {
       final current = access();

@@ -85,3 +85,11 @@ with enlarged text. These are widget checks, not device or screen-reader sign-of
 Task 05 implements live map and professional connection repositories. See
 [map/network contracts and local validation](task05-map-network.md) for
 privacy, local fixtures, optional provider licensing and hosted prerequisites.
+
+## Competition demonstration boundary (Task 08A)
+
+main.dart now starts ExperienceRoot. Explore Demo composes a parentless Riverpod
+scope with local repositories, no Auth/client and a separate GoRouter. Shared
+features retain their real implementations and authorization. startProduction()
+is retained for direct local integration scenarios. The gateway owns callback
+handoff and lazy production initialization. See task08a-demo-experience.md.

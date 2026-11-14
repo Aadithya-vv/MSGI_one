@@ -1,5 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/config/experience_actions.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/routing/app_routes.dart';
@@ -56,14 +59,19 @@ class StartupScreen extends StatelessWidget {
   );
 }
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     body: SafeArea(
       child: PageBody(
         children: [
           const BrandMark(),
+          if (ref.watch(exploreDemoActionProvider) != null)
+            TextButton(
+              onPressed: ref.watch(exploreDemoActionProvider),
+              child: const Text('Explore Demo'),
+            ),
           const SizedBox(height: 48),
           const Icon(
             Icons.diversity_2_outlined,

@@ -77,6 +77,9 @@ class AuthController extends Notifier<AccessState> {
     state = AccessState(AccessPhase.error, userId: _session?.userId);
   }
 
+  /// Callback validation failures close protected UI without inventing a session.
+  void authLinkFailed() => _failClosed();
+
   Future<void> _onSession(AuthSession? session) async {
     if (_disposed) return;
     if (_logoutBlocked && session != null) {

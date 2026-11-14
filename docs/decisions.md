@@ -222,3 +222,16 @@ and tuple cursors; revalidate application URLs before a confirmed external launc
 Use existing catalog UI and SDK integration tests with simulated input only.
 Keep the applied base migration and its forward-only filter qualification fix.
 See task07-career-bridge.md for contracts, constraints and validation instructions.
+
+## Task 08A - explicit isolated competition demo
+
+Use a parentless repository scope rather than fake Auth sessions or relaxed real
+membership guards. A separate presentation identity supports shared ownership UI.
+Demo fixtures and persistent state never enter Supabase. Use one versioned demo
+preference; reset never clears real SDK storage. Defer real initialization to an
+explicit entry or validated callback. Dispose the real client before demo entry,
+without signing out, and hand callbacks to the real SDK with fail-closed handling.
+Reuse existing feature screens with small presentation parameters rather than
+scattered mode conditionals. Keep staff separate from administrator authorization.
+Existing locked app_links/shared_preferences are direct dependencies, unchanged
+in version. See task08a-demo-experience.md for boundaries and validation limits.

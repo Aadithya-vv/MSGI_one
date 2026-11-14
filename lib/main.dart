@@ -1,36 +1,28 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'core/config/backend_config.dart';
+import 'core/config/production_session.dart';
 import 'features/auth/application/auth_providers.dart';
 
 import 'app.dart';
+import 'features/demo/presentation/experience_root.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final config = BackendConfig.fromEnvironment();
-  SupabaseClient? client;
-  String? error;
-  if (config.problem == null) {
-    try {
-      await Supabase.initialize(
-        // Auth SDK diagnostics may include callback URLs and server details.
-        debug: false,
-        url: config.url,
-        publishableKey: config.publishableKey,
-      ).timeout(const Duration(seconds: 20));
-      client = Supabase.instance.client;
-    } catch (_) {
-      error = 'Backend initialization failed. Check the development setup and restart the app.';
-    }
-  }
+  runApp(const ExperienceRoot());
+}
+
+/// Explicit production entry for existing local backend integration scenarios.
+/// The presentation launcher never invokes it just to explore the demo.
+Future<void> startProduction() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final session = await ProductionSession.open();
   runApp(
     ProviderScope(
       overrides: [
-        backendConfigProvider.overrideWithValue(config),
-        backendInitializationErrorProvider.overrideWithValue(error),
-        supabaseClientProvider.overrideWithValue(client),
+        backendConfigProvider.overrideWithValue(session.config),
+        backendInitializationErrorProvider.overrideWithValue(session.error),
+        supabaseClientProvider.overrideWithValue(session.client),
       ],
       child: const OneApp(),
     ),

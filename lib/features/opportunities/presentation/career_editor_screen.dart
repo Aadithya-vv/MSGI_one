@@ -3,15 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/widgets/one_widgets.dart';
-import '../../auth/application/auth_providers.dart';
+import '../../../core/community_identity.dart';
 import '../../catalog/domain/catalog_repository.dart';
 import '../../catalog/presentation/catalog_picker.dart';
 import '../domain/career_repository.dart';
 import '../data/career_providers.dart';
 
 class CareerEditorScreen extends ConsumerStatefulWidget {
-  const CareerEditorScreen({super.key, this.id});
+  const CareerEditorScreen({
+    super.key,
+    this.id,
+    this.allowExternalLinks = true,
+  });
   final String? id;
+  final bool allowExternalLinks;
   @override
   ConsumerState<CareerEditorScreen> createState() => _CareerEditorScreenState();
 }
@@ -64,7 +69,7 @@ class _CareerEditorScreenState extends ConsumerState<CareerEditorScreen> {
       if (_allowed && widget.id != null) {
         final post = await repo.detail(_id);
         if (post == null ||
-            post.authorId != ref.read(authControllerProvider).userId ||
+            post.authorId != ref.read(communityUserIdProvider) ||
             post.archived) {
           throw StateError('Unavailable');
         }
@@ -162,14 +167,18 @@ class _CareerEditorScreenState extends ConsumerState<CareerEditorScreen> {
                   TextFormField(
                     key: Key('career-${e.key}'),
                     controller: _fields[e.key],
-                    enabled: !_busy,
+                    enabled:
+                        !_busy &&
+                        (e.key != 'external_url' || widget.allowExternalLinks),
                     maxLength: e.value.$2,
                     minLines: e.key == 'description' ? 4 : 1,
                     maxLines: e.key == 'description' ? 8 : 1,
                     decoration: InputDecoration(
                       labelText: e.value.$1,
                       helperText: e.key == 'external_url'
-                          ? 'Public HTTPS links only; no login credentials in URLs.'
+                          ? (widget.allowExternalLinks
+                                ? 'Public HTTPS links only; no login credentials in URLs.'
+                                : 'Simulated openings have no real application links.')
                           : null,
                     ),
                     validator: (v) {

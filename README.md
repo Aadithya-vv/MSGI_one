@@ -2,13 +2,15 @@
 
 **One Community. Infinite Connections.** Android-first alumni networking for MSGI.
 
-Task 04A adds repository-backed student/alumni onboarding, private saved progress,
-professional profiles and a filtered, paginated alumni directory. Authentication
-and membership guards remain separate: login never grants verified access.
-The profile/discovery migration is tested locally and awaits explicit hosted
-deployment approval and approved catalogs. Other community features retain their
-sample labels. Default builds without public configuration show development setup.
-See [Task 04A setup and limits](docs/task04a-profiles-discovery.md).
+Choose **Explore Demo** to try the isolated fictional Student, Alumni or Staff
+experience without accounts, backend configuration or internet. Simulated changes
+stay on the device. See the [presentation guide](docs/demo-presentation-guide.md)
+and [demo architecture](docs/task08a-demo-experience.md).
+
+Real community features retain Supabase authentication, membership verification,
+privacy and server authorization. Login never grants verified access. Real entry
+requires reviewed public build configuration; missing configuration shows setup.
+Official catalogs and pending hosted migrations require separate approval.
 
 ## Development
 
@@ -31,10 +33,9 @@ flutter devices
 flutter run -d <android-device-id>
 ```
 
-Enable USB debugging on your Android phone and personally authorize the computer.
-No Android device or working emulator was available for launch validation.
-Emulator acceleration requires separate hypervisor setup; the project does not
-change Windows security settings. Restart terminals/VS Code after PATH changes.
+Preferred development device: `MSGI_One_Pixel_4a_API_34` / `emulator-5554`.
+The offline demonstration is exercised on this emulator. Physical-device checks
+remain separate; the project does not change Windows security settings.
 
 Kotlin incremental compilation is disabled for this project to work around a
 reproduced Windows cache-registration failure; see the engineering decisions.
