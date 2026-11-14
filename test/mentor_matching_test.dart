@@ -113,6 +113,7 @@ void main() {
     await press(tester, 'Load more mentors');
     expect(repo.lastAfter, 'id-019');
     expect(find.text('Synthetic mentor 24'), findsOneWidget);
+    await press(tester, 'Refine recommendations');
     await tester.ensureVisible(find.text('Filter mentor domain'));
     await tester.enterText(
       find.widgetWithText(TextField, 'Filter mentor domain'),

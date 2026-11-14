@@ -168,10 +168,19 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
             prefixIcon: Icon(Icons.search),
           ),
         ),
-        TextField(
-          controller: _domain,
-          maxLength: 120,
-          decoration: const InputDecoration(labelText: 'Professional domain'),
+        ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          title: const Text('Map filters'),
+          leading: const Icon(Icons.tune),
+          children: [
+            TextField(
+              controller: _domain,
+              maxLength: 120,
+              decoration: const InputDecoration(
+                labelText: 'Professional domain',
+              ),
+            ),
+          ],
         ),
         FilledButton(
           onPressed: _busy ? null : _load,
@@ -186,7 +195,7 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
             ],
           ),
         SizedBox(
-          height: 380,
+          height: (MediaQuery.sizeOf(context).height * .44).clamp(280, 420),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Stack(
@@ -230,8 +239,8 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
                           .map(
                             (g) => Marker(
                               point: g.center,
-                              width: 64,
-                              height: 56,
+                              width: 52,
+                              height: 52,
                               child: Semantics(
                                 button: true,
                                 label: g.cities.length == 1
@@ -244,6 +253,8 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
                                   child: FilledButton(
                                     style: FilledButton.styleFrom(
                                       padding: EdgeInsets.zero,
+                                      minimumSize: const Size(48, 48),
+                                      shape: const CircleBorder(),
                                       backgroundColor: OneColors.gold,
                                       foregroundColor: OneColors.navy,
                                     ),
@@ -373,11 +384,22 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
             title: 'No map-visible alumni',
             message: 'Try fewer filters. Only approved alumni with directory and map consent in configured cities appear.',
           ),
+        const SectionHeading('Explore by city'),
+        const Text(
+          'A list alternative to map gestures. Locations are approximate.',
+          style: TextStyle(color: OneColors.muted, fontSize: 12),
+        ),
         // Accessible city list is also a non-gesture alternative to map markers.
         for (final c in _cities)
           ListTile(
+            selected: _selected?.id == c.id,
+            selectedTileColor: const Color(0xFFE8EFF9),
             title: Text('${c.name}, ${c.country}'),
             subtitle: Text('${c.count} alumni · approximate city center'),
+            leading: const Icon(
+              Icons.location_city_outlined,
+              color: OneColors.blue,
+            ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _select(c),
           ),
@@ -398,6 +420,8 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
             const Text('No members currently available for these filters.'),
           for (final p in _members)
             ListTile(
+              leading: ProfileAvatar(p['display_name'] as String),
+              trailing: const Icon(Icons.chevron_right),
               title: Text(p['display_name'] as String),
               subtitle: Text(
                 '${p['designation'] ?? ''} · ${p['company'] ?? ''}',

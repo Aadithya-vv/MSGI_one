@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/theme/app_theme.dart';
 import '../domain/opportunity_preview.dart';
 import '../domain/career_repository.dart';
 import '../data/career_providers.dart';
@@ -10,7 +11,8 @@ import '../../catalog/domain/catalog_repository.dart';
 import '../../catalog/presentation/catalog_picker.dart';
 
 class OpportunitiesScreen extends ConsumerStatefulWidget {
-  const OpportunitiesScreen({super.key});
+  const OpportunitiesScreen({super.key, this.simulated = false});
+  final bool simulated;
   @override
   ConsumerState<OpportunitiesScreen> createState() =>
       _OpportunitiesScreenState();
@@ -112,10 +114,12 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      const FeatureHeader(
+      FeatureHeader(
         eyebrow: 'Career Bridge',
         title: 'Career opportunities',
-        description: 'Find your next role, referral or project. Shared by eligible members of the verified MSGI community.',
+        description: widget.simulated
+            ? 'Fictional jobs, internships and projects. Explore possibilities; these are not real vacancies.'
+            : 'Find your next role, referral or project. Shared by eligible members of the verified MSGI community.',
       ),
       if (_canPublish)
         FilledButton.icon(
@@ -123,7 +127,7 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
           icon: const Icon(Icons.add),
           label: const Text('Create opportunity'),
         ),
-      if (!_busy && !_canPublish && _error == null)
+      if (!_busy && !_canPublish && _error == null && !widget.simulated)
         const Text(
           'Publishing is reserved for verified alumni and authorized administrators.',
         ),
@@ -131,7 +135,12 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
       TextField(
         controller: _search,
         maxLength: 100,
-        decoration: const InputDecoration(labelText: 'Search opportunities'),
+        onSubmitted: (_) => _load(),
+        decoration: const InputDecoration(
+          labelText: 'Search opportunities',
+          prefixIcon: Icon(Icons.search),
+          counterText: '',
+        ),
       ),
       Wrap(
         spacing: 8,
@@ -155,6 +164,8 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
       ),
       ExpansionTile(
         title: const Text('Filter opportunities'),
+        leading: const Icon(Icons.tune),
+        childrenPadding: const EdgeInsets.all(16),
         children: [
           TextField(
             controller: _domain,
@@ -176,6 +187,7 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
           ),
           DropdownButtonFormField<String>(
             initialValue: _scope,
+            isExpanded: true,
             decoration: const InputDecoration(labelText: 'Audience filter'),
             items: [
               for (final e in const {
@@ -215,57 +227,69 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
           ),
         ],
       ),
-      _check(
-        'My posts and drafts',
-        _mine,
-        (v) => setState(() {
-          _mine = v;
-          _state = v ? 'all' : 'published';
-        }),
-      ),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final e in const {
-            'published': 'Open posts',
-            'closed': 'Closed posts',
-            'draft': 'Drafts',
-            'all': 'Any status',
-          }.entries)
-            ChoiceChip(
-              label: Text(e.value),
-              selected: _state == e.key,
-              onSelected: (_) {
-                setState(() => _state = e.key);
-                _load();
-              },
+      Card(
+        child: ExpansionTile(
+          title: const Text('Status and sorting'),
+          subtitle: Text(
+            _mine ? 'Your posts and drafts' : 'Open community posts',
+          ),
+          childrenPadding: const EdgeInsets.all(16),
+          children: [
+            _check(
+              'My posts and drafts',
+              _mine,
+              (v) => setState(() {
+                _mine = v;
+                _state = v ? 'all' : 'published';
+              }),
             ),
-        ],
-      ),
-      const Text(
-        'Drafts, closed posts and archives are author-only. My posts includes your retained archives.',
-      ),
-      Wrap(
-        spacing: 8,
-        children: [
-          for (final e in const {
-            'recent': 'Most recent',
-            'relevance': 'Skill overlap',
-          }.entries)
-            ChoiceChip(
-              label: Text(e.value),
-              selected: _sort == e.key,
-              onSelected: (_) {
-                setState(() => _sort = e.key);
-                _load();
-              },
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final e in const {
+                  'published': 'Open posts',
+                  'closed': 'Closed posts',
+                  'draft': 'Drafts',
+                  'all': 'Any status',
+                }.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: _state == e.key,
+                    onSelected: (_) {
+                      setState(() => _state = e.key);
+                      _load();
+                    },
+                  ),
+              ],
             ),
-        ],
+            const Text(
+              'Drafts, closed posts and archives are author-only. My posts includes your retained archives.',
+            ),
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final e in const {
+                  'recent': 'Most recent',
+                  'relevance': 'Skill overlap',
+                }.entries)
+                  ChoiceChip(
+                    label: Text(e.value),
+                    selected: _sort == e.key,
+                    onSelected: (_) {
+                      setState(() => _sort = e.key);
+                      _load();
+                    },
+                  ),
+              ],
+            ),
+            const Text(
+              'Skill overlap uses your public profile skills against listed requirements. It is not an AI prediction or eligibility assessment.',
+            ),
+          ],
+        ),
       ),
-      const Text(
-        'Skill overlap uses your public profile skills against listed requirements. It is not an AI prediction or eligibility assessment.',
-      ),
+      const SizedBox(height: 8),
       OutlinedButton(
         onPressed: _busy ? null : () => _load(),
         child: const Text('Search Career Bridge'),
@@ -296,20 +320,46 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
                     spacing: 8,
                     runSpacing: 6,
                     children: [
-                      Chip(label: Text(p.data['kind'] as String)),
-                      Chip(label: Text(p.archived ? 'Archived' : p.status)),
+                      Chip(
+                        label: Text(careerKindLabel(p.data['kind'] as String)),
+                      ),
+                      Chip(
+                        label: Text(
+                          p.archived ? 'Archived' : careerStatusLabel(p.status),
+                        ),
+                      ),
                       if (p.data['remote'] == true)
                         const Chip(label: Text('Remote')),
                       if (p.data['referral'] == true)
                         const Chip(label: Text('Referral')),
                     ],
                   ),
-                  Text(p.title, style: Theme.of(context).textTheme.titleLarge),
+                  const SizedBox(height: 10),
                   Text(
-                    '${p.data['organization']} | ${p.data['professional_domain']}',
+                    p.title,
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
-                  Text(p.data['location_text'] as String? ?? ''),
-                  Text('${p.data['shared_count']} listed skills in common'),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${p.data['organization']} \u00b7 ${p.data['professional_domain']}',
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    p.data['location_text'] as String? ?? '',
+                    style: const TextStyle(
+                      color: OneColors.muted,
+                      fontSize: 13,
+                    ),
+                  ),
+                  if ((p.data['shared_count'] as num? ?? 0) > 0)
+                    Text(
+                      '${p.data['shared_count']} listed skills in common',
+                      style: const TextStyle(
+                        color: OneColors.blue,
+                        fontSize: 12,
+                      ),
+                    ),
                   TextButton(
                     onPressed: () => context.go('/opportunities/${p.id}'),
                     child: const Text('View opportunity'),
@@ -338,3 +388,16 @@ class OpportunityCard extends StatelessWidget {
     description: '${opportunity.type}\n${opportunity.location}',
   );
 }
+
+String careerKindLabel(String value) => switch (value) {
+  'job' => 'Job',
+  'internship' => 'Internship',
+  'collaboration' => 'Project',
+  _ => value,
+};
+String careerStatusLabel(String value) => switch (value) {
+  'published' => 'Open',
+  'closed' => 'Closed',
+  'draft' => 'Draft',
+  _ => value,
+};

@@ -102,6 +102,7 @@ class _DemoExperienceState extends State<DemoExperience> {
               builder: (_, s) => CareerEditorScreen(
                 id: s.pathParameters['id']!,
                 allowExternalLinks: false,
+                intro: 'Create a simulated opportunity. Save a draft to continue later; nothing is posted to the real community.',
               ),
             ),
             GoRoute(
@@ -159,7 +160,7 @@ class _DemoExperienceState extends State<DemoExperience> {
                 ),
                 GoRoute(
                   path: '/opportunities',
-                  builder: (_, _) => const OpportunitiesScreen(),
+                  builder: (_, _) => const OpportunitiesScreen(simulated: true),
                 ),
               ],
             ),

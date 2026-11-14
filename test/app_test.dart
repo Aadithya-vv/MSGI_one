@@ -129,7 +129,7 @@ void main() {
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Log in'));
     await tester.tap(find.widgetWithText(FilledButton, 'Log in'));
     await tester.pumpAndSettle();
-    expect(find.text('SAMPLE PREVIEW'), findsOneWidget);
+    expect(find.text('SAMPLE PREVIEW'), findsNothing);
     expect(find.byType(NavigationBar), findsOneWidget);
   });
 
@@ -184,7 +184,7 @@ void main() {
   testWidgets('home mentor and opportunity cards navigate', (tester) async {
     for (final destination in const {
       'Find a mentor': 'Mentor recommendations',
-      'Career opportunities': 'Career opportunities',
+      'Career Bridge': 'Career opportunities',
     }.entries) {
       await pumpRoute(tester, AppRoutes.home);
       await tester.ensureVisible(find.text(destination.key));

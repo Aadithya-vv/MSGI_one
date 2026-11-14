@@ -27,7 +27,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
-  bool _busy = false;
+  bool _busy = false, _showPassword = false;
   String? _notice;
   @override
   void dispose() {
@@ -141,11 +141,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       key: const Key('auth-password'),
                       controller: _password,
                       enabled: enabled,
-                      obscureText: true,
+                      obscureText: !_showPassword,
                       autocorrect: false,
                       enableSuggestions: false,
                       validator: AuthValidation.password,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          tooltip: _showPassword
+                              ? 'Hide password'
+                              : 'Show password',
+                          onPressed: () =>
+                              setState(() => _showPassword = !_showPassword),
+                          icon: Icon(
+                            _showPassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                        ),
                         labelText: 'Password',
                         helperText: 'Use 12–128 characters.',
                         prefixIcon: Icon(Icons.lock_outline),
@@ -157,7 +169,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       key: const Key('auth-confirm'),
                       controller: _confirm,
                       enabled: enabled,
-                      obscureText: true,
+                      obscureText: !_showPassword,
                       autocorrect: false,
                       enableSuggestions: false,
                       validator: (value) =>
@@ -184,11 +196,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           : 'Log in',
                     ),
                   ),
-                  if (_notice != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Semantics(liveRegion: true, child: Text(_notice!)),
-                    ),
+                  StatusNotice(_notice),
                 ],
               ),
             ),

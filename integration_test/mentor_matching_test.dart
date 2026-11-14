@@ -78,6 +78,7 @@ void main() {
         domain,
       );
       FocusManager.instance.primaryFocus?.unfocus();
+      await tap(find.text('Refine recommendations'));
       await tap(find.text('Refresh recommendations'));
       await ready(find.text(peer));
     }

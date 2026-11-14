@@ -541,3 +541,42 @@ backend moderation; no new moderation dashboard was added.
   versions changed; only two existing transitive dependencies became direct.
 - Final ordinary APK installed and launched on emulator-5554; process running and
   expected demo UI confirmed via Android UI hierarchy inspection.
+
+## Task 08B - UI refinement verification
+
+- Audited startup/welcome, auth forms, demo selection, both dashboards, discovery,
+  profiles/privacy, map, network, mentors and Career Bridge list/detail/editor.
+- Shared navy/blue/gold Material 3 theme refined; no new dependencies or upgrades.
+  Production sample highlights replaced with existing authorized repositories.
+- Full Flutter checks and final native acceptance results are recorded below.
+- Regression coverage adds repository-backed dashboard empty states, explicit
+  password visibility, reduced-motion notices, filter validation/cancellation,
+  320/390 phone layouts at 100%/200% text, long skill/catalog labels and navigation.
+- Existing route/layout matrix includes 320/390/840 widths at 100%/200% text;
+  production authorization/session/callback tests remain in the full suite.
+- Initial failures found obsolete test navigation assumptions, hidden Material
+  ink during route transitions, filter test focus/scroll timing and a missing
+  fixture import. These were corrected; failed attempts are not passes.
+- No database/API infrastructure suite rerun: no schema, repository contract,
+  authorization, hosted data or Android configuration changes were required.
+- Native text entry uses the existing Flutter integration input transport.
+  Physical-device IME, TalkBack and hosted acceptance are not claimed as tested.
+- Final dart format lib test and integration-test formatting completed.
+- Final flutter analyze: no issues. Full flutter test: 151 passed (143 baseline
+  plus 8 focused presentation/accessibility regression tests).
+- Final emulator-5554 offline multi-role integration passed: Student discovery,
+  profile/request, mentors, internships and map; Alumni acceptance, mentoring
+  toggle and opportunity publication; Staff community/profile navigation;
+  persistence, reset and independent-storage sentinel. Zero Dart HTTP client
+  creations; no sampled token/overflow/unhandled-exception patterns. Prior emulator
+  Wi-Fi/mobile-data settings restored. No hosted configuration supplied.
+- 16 screenshots captured in build/task08/screenshots, including entry, perspective
+  selection, filters, careers/editor, profiles and native 200% text home rendering.
+  Key screenshots inspected; no major layout overflow. At 200% text, header wraps
+  and cards require substantially more scrolling, intentionally preserving legibility.
+- flutter build apk --debug: passed without backend defines. Debug APK at
+  build/app/outputs/flutter-apk/app-debug.apk; not a release-signed submission.
+- Secret-value scan passed for all 33 intended files; git diff --check passed.
+  Existing AGENTS.md edit excluded; no push or publication.
+- Final ordinary APK installed and launched; process and expected demo UI confirmed
+  using Android's read-only UI hierarchy inspection.

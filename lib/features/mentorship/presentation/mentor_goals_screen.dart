@@ -105,38 +105,41 @@ class _MentorGoalsScreenState extends ConsumerState<MentorGoalsScreen> {
     }
   }
 
-  Widget _skills(String label, Set<String> chosen) => ExpansionTile(
-    title: Text(label),
-    children: [
-      Wrap(
-        spacing: 8,
-        children: [
-          for (final id in chosen)
-            InputChip(
-              label: Text(_names[id] ?? 'Saved skill'),
-              onDeleted: _saving
-                  ? null
-                  : () => setState(() => chosen.remove(id)),
-            ),
-        ],
-      ),
-      CatalogPicker(
-        kind: CatalogKind.skills,
-        label: label,
-        enabled: !_saving,
-        onSelected: (entry) {
-          if (chosen.length < 30) {
-            setState(() {
-              chosen.add(entry.id);
-              _names[entry.id] = entry.name;
-            });
-          }
-        },
-      ),
-      const Text(
-        'Choose up to 30 catalog skills. Selection does not change your public profile.',
-      ),
-    ],
+  Widget _skills(String label, Set<String> chosen) => Material(
+    color: Colors.transparent,
+    child: ExpansionTile(
+      title: Text(label),
+      children: [
+        Wrap(
+          spacing: 8,
+          children: [
+            for (final id in chosen)
+              InputChip(
+                label: Text(_names[id] ?? 'Saved skill'),
+                onDeleted: _saving
+                    ? null
+                    : () => setState(() => chosen.remove(id)),
+              ),
+          ],
+        ),
+        CatalogPicker(
+          kind: CatalogKind.skills,
+          label: label,
+          enabled: !_saving,
+          onSelected: (entry) {
+            if (chosen.length < 30) {
+              setState(() {
+                chosen.add(entry.id);
+                _names[entry.id] = entry.name;
+              });
+            }
+          },
+        ),
+        const Text(
+          'Choose up to 30 catalog skills. Selection does not change your public profile.',
+        ),
+      ],
+    ),
   );
   @override
   Widget build(BuildContext context) => Scaffold(

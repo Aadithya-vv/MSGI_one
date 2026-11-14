@@ -235,3 +235,16 @@ Reuse existing feature screens with small presentation parameters rather than
 scattered mode conditionals. Keep staff separate from administrator authorization.
 Existing locked app_links/shared_preferences are direct dependencies, unchanged
 in version. See task08a-demo-experience.md for boundaries and validation limits.
+
+## Task 08B - progressive disclosure and repository-backed dashboards
+
+Reuse feature repositories for dashboard highlights in both isolated and real
+scopes; remove production sample-preview labeling when content is now authorized
+repository data. Do not invent community metrics. Auto-disposed highlight queries
+fetch existing bounded pages and refresh when revisiting the dashboard. Separate
+presentation copy is injected at demo composition, not used for authorization.
+Use a keyboard-aware filter sheet and compact expandable details to prioritize
+results without removing controls. Retain actual score evidence and server filters.
+Provide an inner transparent Material in PageBody because navigator transitions
+can insert opaque backgrounds above the shell Material and hide ListTile ink.
+No packages, backend contracts or permissions change. See task08b-ui-polish.md.

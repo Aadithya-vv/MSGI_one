@@ -53,7 +53,8 @@ class ProfileScreen extends ConsumerWidget {
                         ].where((s) => s.isNotEmpty).join('\n'),
                       ),
                       const SectionHeading('Skills'),
-                      Text(profile.skills.join(', ')),
+                      SkillTags(profile.skills),
+                      const SizedBox(height: 12),
                       Text(
                         profile.input.mentoring
                             ? 'Available for mentoring'
@@ -130,6 +131,19 @@ class AlumniDetailScreen extends ConsumerWidget {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          Row(
+                            children: [
+                              ProfileAvatar(p.name, size: 64),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Professional profile',
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
                           FeatureHeader(
                             eyebrow: eyebrow,
                             title: p.name,

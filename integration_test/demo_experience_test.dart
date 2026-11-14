@@ -59,16 +59,24 @@ void main() {
       await tap(find.text(label).last);
     }
 
+    await ready(find.text('Explore Demo'));
+    await binding.convertFlutterSurfaceToImage();
+    await tester.pumpAndSettle();
+    await binding.takeScreenshot('00_app_entry');
     await tap(find.text('Explore Demo'));
+    await binding.takeScreenshot('00_demo_perspectives');
     await tap(find.text('Student demo'));
     await ready(find.text('Welcome, Mira Rao (Demo)'));
     expect(find.text('Demo'), findsOneWidget);
-    await binding.convertFlutterSurfaceToImage();
     await tester.pumpAndSettle();
     await binding.takeScreenshot('01_student_home');
     await tap(find.text('Discover alumni'));
     await tester.enterText(find.byKey(const Key('alumni-search')), 'Alumni 08');
     await tap(find.text('Search alumni'));
+    await binding.takeScreenshot('01_alumni_discovery');
+    await tap(find.text('Filter alumni'));
+    await binding.takeScreenshot('01_alumni_filters');
+    await tap(find.byTooltip('Close filters'));
     await tap(find.text('Alumni 08 (Demo)'));
     await ready(find.text('FICTIONAL DEMONSTRATION PROFILE'));
     expect(find.text('VERIFIED ALUMNI'), findsNothing);
@@ -81,13 +89,21 @@ void main() {
     await tap(find.text('Home'));
     await tap(find.text('Find a mentor'));
     await ready(find.text('100 / 100 relevance'));
-    await tester.ensureVisible(find.text('100 / 100 relevance').first);
+    await tester.ensureVisible(
+      find
+          .ancestor(
+            of: find.text('100 / 100 relevance').first,
+            matching: find.byType(Card),
+          )
+          .first,
+    );
     await tester.pumpAndSettle();
     await binding.takeScreenshot('03_mentor_recommendations');
     await tap(find.text('Home'));
     await tap(find.text('Career Bridge'));
     await tap(find.text('Internships'));
     await ready(find.textContaining('internship'));
+    await binding.takeScreenshot('03_career_opportunities');
     await tap(find.text('View opportunity'));
     await ready(find.text('Opportunity details'));
     expect(find.text('Apply externally'), findsNothing);
@@ -112,10 +128,12 @@ void main() {
       find.widgetWithText(SwitchListTile, 'Demo mentoring availability'),
     );
     expect(mentoring.value, false);
+    await binding.takeScreenshot('05_alumni_profile');
     await tap(find.text('Home'));
     await tap(find.text('Career Bridge'));
     await tap(find.text('Create opportunity'));
     await ready(find.byKey(const Key('career-title')));
+    await binding.takeScreenshot('05_opportunity_editor');
     await tester.enterText(
       find.byKey(const Key('career-title')),
       'Demo competition collaboration',
@@ -177,5 +195,10 @@ void main() {
     expect(http.attempts, 0);
     expect(tester.takeException(), isNull);
     await binding.takeScreenshot('08_reset_student_home');
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await binding.takeScreenshot('09_large_text_home');
   });
 }

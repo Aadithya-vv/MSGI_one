@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../domain/demo_store.dart';
+import '../../home/presentation/community_highlights.dart';
 
 class DemoHomeScreen extends StatelessWidget {
   const DemoHomeScreen({super.key, required this.store});
@@ -39,12 +40,16 @@ class DemoHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                '${store.role.label} perspective. Explore a fictional network with real interactive workflows.',
+                '${store.role.label} perspective. A fictional community, ready to explore.',
                 style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => context.go('/discover'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: OneColors.gold,
+                  foregroundColor: OneColors.navy,
+                ),
                 child: const Text('Discover alumni'),
               ),
             ],
@@ -55,30 +60,44 @@ class DemoHomeScreen extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            const Chip(label: Text('24 sample alumni')),
-            const Chip(label: Text('8 sample students')),
-            const Chip(label: Text('4 sample faculty')),
+            Chip(
+              label: Text(
+                '${store.profiles.values.where((p) => p['role'] == 'alumni').length} sample alumni',
+              ),
+            ),
+            Chip(
+              label: Text(
+                '${store.profiles.values.where((p) => p['role'] == 'student').length} sample students',
+              ),
+            ),
+            Chip(
+              label: Text(
+                '${store.profiles.values.where((p) => p['role'] == 'staff').length} sample faculty',
+              ),
+            ),
             Chip(label: Text('${store.posts.length} simulated opportunities')),
           ],
         ),
         const SectionHeading('Choose your next connection'),
-        for (final item in [
-          ('/discover', 'Discover alumni', Icons.search),
-          ('/mentors', 'Find a mentor', Icons.school_outlined),
-          ('/opportunities', 'Career Bridge', Icons.work_outline),
-          ('/map', 'Global alumni map', Icons.public),
-          ('/network', 'My network', Icons.people_outline),
-          ('/profile', 'My demo profile', Icons.person_outline),
-          ('/community', 'Students and faculty', Icons.groups_outlined),
-        ])
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: OutlinedButton.icon(
-              onPressed: () => context.go(item.$1),
-              icon: Icon(item.$3),
-              label: Text(item.$2),
-            ),
-          ),
+        const CommunityQuickLinks(),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final item in [
+              ('/network', 'My network', Icons.people_outline),
+              ('/profile', 'My demo profile', Icons.person_outline),
+              ('/community', 'Students and faculty', Icons.groups_outlined),
+            ])
+              OutlinedButton.icon(
+                onPressed: () => context.go(item.$1),
+                icon: Icon(item.$3),
+                label: Text(item.$2),
+              ),
+          ],
+        ),
+        const CommunityHighlights(),
         const SectionHeading('How the demo works'),
         const Text(
           'Every person, organization, institution and opportunity here is fictional. Requests, posts and preferences are saved only in this device\'s separate demo state. No real authentication, institutional approval or employer endorsement is implied.',

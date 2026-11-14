@@ -49,7 +49,10 @@ class StartupScreen extends StatelessWidget {
                   child: const Text('Get started'),
                 ),
                 const SizedBox(height: 24),
-                const PreviewBadge(),
+                const Text(
+                  'Your community, connected.',
+                  style: TextStyle(color: Colors.white),
+                ),
               ],
             ),
           ),
@@ -96,7 +99,7 @@ class WelcomeScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           const SizedBox(height: 24),
           const Text(
-            'Secure sign-in and institutional review protect our community. Feature content remains clearly labelled samples.',
+            'Secure sign-in and institutional review protect our community. Demo previews stay separate from your real account.',
             textAlign: TextAlign.center,
             style: TextStyle(color: OneColors.muted, height: 1.5),
           ),

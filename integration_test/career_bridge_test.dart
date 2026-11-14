@@ -160,6 +160,7 @@ void main() {
     await ready(find.text('Archived'));
     expect(find.text('Edit opportunity'), findsNothing);
     await tap(find.byTooltip('Back'));
+    await tap(find.text('Status and sorting'));
     await tap(find.text('My posts and drafts'));
     await search(keyword);
     await ready(find.text('Updated $title'));

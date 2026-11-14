@@ -16,11 +16,15 @@ class CatalogPicker extends ConsumerStatefulWidget {
     required this.onSelected,
     this.institutionId,
     this.enabled = true,
+    this.compact = false,
+    this.selectedLabel,
   });
   final CatalogKind kind;
   final String label;
   final String? institutionId;
   final bool enabled;
+  final bool compact;
+  final String? selectedLabel;
   final ValueChanged<CatalogEntry> onSelected;
   @override
   ConsumerState<CatalogPicker> createState() => _CatalogPickerState();
@@ -82,7 +86,21 @@ class _CatalogPickerState extends ConsumerState<CatalogPicker> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => widget.compact
+      ? Material(
+          color: Colors.transparent,
+          child: ExpansionTile(
+            title: Text(widget.label),
+            subtitle: widget.selectedLabel == null
+                ? null
+                : Text(widget.selectedLabel!, softWrap: true),
+            childrenPadding: const EdgeInsets.only(bottom: 16),
+            children: [_content()],
+          ),
+        )
+      : _content();
+
+  Widget _content() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       TextField(
@@ -101,20 +119,33 @@ class _CatalogPickerState extends ConsumerState<CatalogPicker> {
       if (_error != null) TextButton(onPressed: _load, child: Text(_error!)),
       if (!_busy && _items.isEmpty && _error == null)
         Text('No ${widget.label.toLowerCase()} found.'),
-      Wrap(
-        spacing: 6,
-        children: _items
-            .map(
-              (e) => ActionChip(
-                label: Text(
-                  e.countryCode == null
-                      ? e.name
-                      : '${e.name}, ${e.countryCode}',
+      const SizedBox(height: 8),
+      LayoutBuilder(
+        builder: (context, constraints) => Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: _items
+              .map(
+                (e) => ActionChip(
+                  label: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: (constraints.maxWidth - 64).clamp(
+                        1,
+                        double.infinity,
+                      ),
+                    ),
+                    child: Text(
+                      e.countryCode == null
+                          ? e.name
+                          : '${e.name}, ${e.countryCode}',
+                      softWrap: true,
+                    ),
+                  ),
+                  onPressed: widget.enabled ? () => widget.onSelected(e) : null,
                 ),
-                onPressed: widget.enabled ? () => widget.onSelected(e) : null,
-              ),
-            )
-            .toList(),
+              )
+              .toList(),
+        ),
       ),
       if (_more)
         TextButton(

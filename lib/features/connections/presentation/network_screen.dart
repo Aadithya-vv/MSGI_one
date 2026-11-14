@@ -120,29 +120,43 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen> {
             ),
           ),
         for (final person in _people)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    person.name ?? 'Member unavailable',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  if (person.company?.isNotEmpty ?? false)
-                    Text(person.company!),
-                  if (person.available)
-                    TextButton(
-                      onPressed: () => context.go('/alumni/${person.peerId}'),
-                      child: const Text('View profile'),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProfileAvatar(person.name ?? 'Member'),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            person.name ?? 'Member unavailable',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      ],
                     ),
-                  if (person.name == null)
-                    const Text(
-                      'This member is currently private or unavailable.',
-                    ),
-                  ConnectionControls(peer: person.peerId, connection: person),
-                ],
+                    const SizedBox(height: 8),
+                    if (person.company?.isNotEmpty ?? false)
+                      Text(person.company!),
+                    if (person.available)
+                      TextButton(
+                        onPressed: () => context.go('/alumni/${person.peerId}'),
+                        child: const Text('View profile'),
+                      ),
+                    if (person.name == null)
+                      const Text(
+                        'This member is currently private or unavailable.',
+                      ),
+                    ConnectionControls(peer: person.peerId, connection: person),
+                  ],
+                ),
               ),
             ),
           ),

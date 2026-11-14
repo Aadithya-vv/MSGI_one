@@ -128,3 +128,11 @@ Task 07 implements the live Career Bridge: jobs, internships, referral flags,
 project posts, scoped discovery, private drafts, author edits/closure/archive and
 moderation reports. See [Career Bridge](docs/task07-career-bridge.md) for publishing
 permissions, local test commands and hosted deployment requirements.
+
+## Competition UI
+
+Task 08B refines the shared theme, dashboard highlights, discovery filter sheet,
+mentor cards and Career Bridge controls. See
+[UI audit and validation limits](docs/task08b-ui-polish.md).
+Build without backend defines for the offline demo. Real community access retains
+all existing configuration, authentication and membership requirements.

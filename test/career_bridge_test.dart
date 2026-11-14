@@ -123,6 +123,7 @@ void main() {
     expect(find.text('Synthetic role 24'), findsOneWidget);
     await pressCareer(tester, 'Internships');
     expect(repo.lastFilters?['kind'], 'internship');
+    await pressCareer(tester, 'Status and sorting');
     await pressCareer(tester, 'My posts and drafts');
     expect(repo.lastFilters?['mine'], true);
     expect(repo.lastFilters?['status'], 'all');

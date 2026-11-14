@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import 'opportunities_screen.dart' show careerKindLabel, careerStatusLabel;
 import '../../../core/community_identity.dart';
 import '../domain/career_repository.dart';
 import '../data/career_providers.dart';
@@ -163,8 +164,12 @@ class _CareerDetailScreenState extends ConsumerState<CareerDetailScreen> {
             Wrap(
               spacing: 8,
               children: [
-                Chip(label: Text(p.archived ? 'Archived' : p.status)),
-                Chip(label: Text(p.data['kind'] as String)),
+                Chip(
+                  label: Text(
+                    p.archived ? 'Archived' : careerStatusLabel(p.status),
+                  ),
+                ),
+                Chip(label: Text(careerKindLabel(p.data['kind'] as String))),
                 if (own) const Chip(label: Text('Your post')),
                 if (p.data['remote'] == true) const Chip(label: Text('Remote')),
                 if (p.data['referral'] == true)
@@ -178,11 +183,11 @@ class _CareerDetailScreenState extends ConsumerState<CareerDetailScreen> {
             const SectionHeading('About the opportunity'),
             Text(p.data['description'] as String),
             const SectionHeading('Required skills'),
-            Text(
-              p.skills.isEmpty
-                  ? 'No skill criteria specified'
-                  : p.skills.join(', '),
-            ),
+            if (p.skills.isEmpty)
+              const Text('No skill criteria specified')
+            else
+              SkillTags(p.skills),
+            const SizedBox(height: 20),
             Text('Audience: ${p.data['audience']}'),
             Text(
               'Author: ${own ? 'You' : p.data['author_name'] ?? 'Verified community member'}',

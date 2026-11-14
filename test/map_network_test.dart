@@ -112,6 +112,8 @@ void main() {
     (tester) async {
       final map = FakeAlumniMapRepository();
       await pumpNetworking(tester, AppRoutes.map, map: map);
+      await tester.tap(find.text('Map filters'));
+      await tester.pumpAndSettle();
       await tester.enterText(
         find.widgetWithText(TextField, 'Professional domain'),
         'Research',
@@ -167,6 +169,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(network.sends, 1);
       expect(find.text('Request sent'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Cancel request'));
       await tester.tap(find.text('Cancel request'));
       await tester.pumpAndSettle();

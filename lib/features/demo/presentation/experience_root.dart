@@ -266,15 +266,61 @@ class _ExperienceRootState extends State<ExperienceRoot> {
                 ),
                 for (final role in DemoRole.values)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: FilledButton.icon(
-                      onPressed: () => _enter(role),
-                      icon: Icon(switch (role) {
-                        DemoRole.student => Icons.school_outlined,
-                        DemoRole.alumni => Icons.work_outline,
-                        DemoRole.staff => Icons.groups_outlined,
-                      }),
-                      label: Text('${role.label} demo'),
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Card(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () => _enter(role),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFF3CE),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Icon(switch (role) {
+                                  DemoRole.student => Icons.school_outlined,
+                                  DemoRole.alumni => Icons.work_outline,
+                                  DemoRole.staff => Icons.groups_outlined,
+                                }, color: OneColors.navy),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${role.label} demo',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      switch (role) {
+                                        DemoRole.student => 'Find mentors, explore careers and build your network.',
+                                        DemoRole.alumni => 'Share experience, connect and open new doors.',
+                                        DemoRole.staff => 'Explore students, alumni and the wider community.',
+                                      },
+                                      style: const TextStyle(
+                                        color: OneColors.muted,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 TextButton(
@@ -298,9 +344,19 @@ class _ExperienceRootState extends State<ExperienceRoot> {
                   'No account, email or internet required. Fictional profiles and simulated activities, stored separately on this device.',
                 ),
                 const SizedBox(height: 24),
-                OutlinedButton(
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.login),
                   onPressed: _real,
-                  child: const Text('Sign in to real community'),
+                  label: const Text('Sign in to real community'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await _real();
+                    if (mounted && _experience == _Experience.production) {
+                      _realScope?.read(appRouterProvider).go('/signup');
+                    }
+                  },
+                  child: const Text('Create an account'),
                 ),
                 const SizedBox(height: 8),
                 const Text(

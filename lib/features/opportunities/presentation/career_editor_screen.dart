@@ -14,9 +14,11 @@ class CareerEditorScreen extends ConsumerStatefulWidget {
     super.key,
     this.id,
     this.allowExternalLinks = true,
+    this.intro = 'Save a draft to continue later. Unsaved entries stay only on this screen. Publish only information intended for the selected verified audience.',
   });
   final String? id;
   final bool allowExternalLinks;
+  final String intro;
   @override
   ConsumerState<CareerEditorScreen> createState() => _CareerEditorScreenState();
 }
@@ -152,9 +154,7 @@ class _CareerEditorScreenState extends ConsumerState<CareerEditorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'Save a draft to continue later. Unsaved entries stay only on this screen. Publish only information intended for the selected verified audience.',
-                ),
+                Text(widget.intro),
                 const SizedBox(height: 16),
                 for (final e in const {
                   'title': ('Opportunity title', 160),

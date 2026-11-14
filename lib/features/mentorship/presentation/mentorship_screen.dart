@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/one_widgets.dart';
+import '../../../core/theme/app_theme.dart';
 import '../domain/mentor_preview.dart';
 import '../domain/mentor_repository.dart';
 import '../data/mentor_providers.dart';
@@ -130,51 +131,74 @@ class _MentorshipScreenState extends ConsumerState<MentorshipScreen> {
           label: const Text('Personalize your goals'),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Explainable matching: skills 40%, domain 30%, mentoring opt-in 20%, interests 10%. Missing signals are omitted and limited evidence caps scores. Scores measure relevance, not success probability or AI predictions.',
-        ),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _domain,
-          maxLength: 120,
-          decoration: const InputDecoration(labelText: 'Filter mentor domain'),
-          onSubmitted: (_) => _load(),
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final entry in const {
-              'relevance': 'Best relevance',
-              'skills': 'Skill alignment',
-              'domain': 'Domain alignment',
-            }.entries)
-              ChoiceChip(
-                label: Text(entry.value),
-                selected: _sort == entry.key,
-                onSelected: (_) {
-                  setState(() => _sort = entry.key);
-                  _load();
-                },
+        Card(
+          child: ExpansionTile(
+            title: const Text('Refine recommendations'),
+            leading: const Icon(Icons.tune),
+            subtitle: Text(
+              _appliedDomain.isEmpty
+                  ? 'Domain, sorting and connections'
+                  : _appliedDomain,
+            ),
+            childrenPadding: const EdgeInsets.all(16),
+            children: [
+              TextField(
+                controller: _domain,
+                maxLength: 120,
+                decoration: const InputDecoration(
+                  labelText: 'Filter mentor domain',
+                ),
+                onSubmitted: (_) => _load(),
               ),
-          ],
-        ),
-        Material(
-          color: Colors.transparent,
-          child: CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Only new connections'),
-            value: _unconnected,
-            onChanged: (v) {
-              setState(() => _unconnected = v ?? false);
-              _load();
-            },
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final entry in const {
+                    'relevance': 'Best relevance',
+                    'skills': 'Skill alignment',
+                    'domain': 'Domain alignment',
+                  }.entries)
+                    ChoiceChip(
+                      label: Text(entry.value),
+                      selected: _sort == entry.key,
+                      onSelected: (_) {
+                        setState(() => _sort = entry.key);
+                        _load();
+                      },
+                    ),
+                ],
+              ),
+              Material(
+                color: Colors.transparent,
+                child: CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Only new connections'),
+                  value: _unconnected,
+                  onChanged: (v) {
+                    setState(() => _unconnected = v ?? false);
+                    _load();
+                  },
+                ),
+              ),
+              OutlinedButton(
+                onPressed: _busy ? null : () => _load(),
+                child: const Text('Refresh recommendations'),
+              ),
+            ],
           ),
         ),
-        OutlinedButton(
-          onPressed: _busy ? null : () => _load(),
-          child: const Text('Refresh recommendations'),
+        const SizedBox(height: 12),
+        ExpansionTile(
+          title: const Text('How matching works'),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          children: const [
+            Text(
+              'Explainable matching: skills 40%, domain 30%, mentoring opt-in 20%, interests 10%. Missing signals are omitted and limited evidence caps scores. Scores measure relevance, not success probability or AI predictions.',
+            ),
+          ],
         ),
+        const SizedBox(height: 16),
         if (_busy) const LinearProgressIndicator(),
         if (_error != null)
           Column(
@@ -193,66 +217,120 @@ class _MentorshipScreenState extends ConsumerState<MentorshipScreen> {
             icon: Icons.school_outlined,
           ),
         for (final mentor in _rows)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    spacing: 12,
-                    runSpacing: 8,
-                    children: [
-                      Text(
-                        '${mentor.score} / 100 relevance',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const Chip(
-                        label: Text('Open to mentorship'),
-                        avatar: Icon(Icons.check_circle_outline, size: 18),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    mentor.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  Text(
-                    [
-                          mentor.data['designation'],
-                          mentor.data['company'],
-                          mentor.data['institution'],
-                        ]
-                        .whereType<String>()
-                        .where((s) => s.isNotEmpty)
-                        .join(' | '),
-                  ),
-                  Text(
-                    mentor.score == 0
-                        ? 'Explore: no shared signals yet'
-                        : mentor.evidence < 3
-                        ? 'Limited evidence: ${mentor.evidence} of 3 personal signals'
-                        : 'Based on 3 personal signals',
-                  ),
-                  const SizedBox(height: 12),
-                  for (final reason in mentor.reasons)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(reason),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ProfileAvatar(mentor.name),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                mentor.name,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                [
+                                      mentor.data['designation'],
+                                      mentor.data['company'],
+                                    ]
+                                    .whereType<String>()
+                                    .where((s) => s.isNotEmpty)
+                                    .join(' \u00b7 '),
+                                style: const TextStyle(
+                                  color: OneColors.muted,
+                                  fontSize: 13,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  if (mentor.connectionStatus != null)
-                    Text('Relationship: ${mentor.connectionStatus}'),
-                  TextButton(
-                    onPressed: () => context.go('/alumni/${mentor.id}'),
-                    child: const Text('View mentor profile'),
-                  ),
-                  ConnectionControls(peer: mentor.id),
-                  TextButton(
-                    onPressed: () => _hide(mentor),
-                    child: const Text('Hide this mentor'),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      children: [
+                        Chip(label: Text('${mentor.score} / 100 relevance')),
+                        const Chip(
+                          label: Text('Open to mentorship'),
+                          avatar: Icon(Icons.school_outlined, size: 18),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      mentor.score == 0
+                          ? 'Explore: no shared signals yet'
+                          : mentor.evidence < 3
+                          ? 'Limited evidence: ${mentor.evidence} of 3 personal signals'
+                          : 'Based on 3 personal signals',
+                      style: const TextStyle(
+                        color: OneColors.muted,
+                        fontSize: 12,
+                      ),
+                    ),
+                    if (mentor.domains.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Works in your target domain: ${mentor.domains.join(', ')}',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    if (mentor.skills.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      SkillTags(mentor.skills),
+                    ],
+                    ExpansionTile(
+                      tilePadding: EdgeInsets.zero,
+                      title: const Text('Why this mentor'),
+                      children: [
+                        for (final reason in mentor.reasons)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(reason),
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (mentor.connectionStatus != null)
+                      Text(
+                        'Relationship: ${mentor.connectionStatus}',
+                        style: const TextStyle(
+                          color: OneColors.muted,
+                          fontSize: 12,
+                        ),
+                      ),
+                    TextButton(
+                      onPressed: () => context.go('/alumni/${mentor.id}'),
+                      child: const Text('View mentor profile'),
+                    ),
+                    ConnectionControls(peer: mentor.id),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => _hide(mentor),
+                        child: const Text('Hide this mentor'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
