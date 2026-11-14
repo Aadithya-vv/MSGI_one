@@ -319,3 +319,19 @@ Versioned Auth defaults are hardened for future application, while existing live
 stack settings and all hosted settings remain untouched. Public invitations need
 institutional/SMTP/privacy/operational approval and an independently reviewed
 deployment, as documented in `real-user-launch-readiness.md`.
+
+## Task 11B.5B: atomic reference-catalog ownership
+
+The exact MSEC bootstrap and starter skills use one generated transaction rather
+than independently committed upserts. Table locks plus complete tuple checks
+permit only missing inserts or unchanged exact matches; unexpected reference
+records abort the transaction. Skill UUIDs remain database identities and are
+preserved on rerun; categories are documentation-only. This one-time 51-record
+bootstrap deliberately rejects unrelated catalog entries without deleting them.
+
+Project identity belongs to the guarded deployment runner: authenticated Supabase
+metadata, a pinned CLI reference, validated cached host/identity and rejected
+connection overrides. SQL session settings are intent guards, not identity proof.
+Execution requires a separate owner approval bound to the exact LF-normalized
+payload SHA-256; default mode performs only read-only preflight. Direct fragment
+execution is unsupported. Local validation does not grant hosted-write approval.

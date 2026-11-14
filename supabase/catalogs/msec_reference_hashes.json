@@ -1,0 +1,10 @@
+{
+  "project_ref": "sbgshejyvkptmrffiwvd",
+  "hash_format": "SHA-256 UTF-8 LF",
+  "hashes": {
+    "msec_reference_manifest.json": "17ebf65812b8a38c658a4c5426c9f9853a441b249e61f69d21c701f7c986d2e5",
+    "msec.sql": "63e716f3c364b6a378b271c18eda605a7ecea5cd61e6917d24efdcdebfac4566",
+    "starter_skills_proposed.sql": "516a3c49ac53ca28065125f25056ffe0b38725f43ca7af077414f3bce4300843",
+    "msec_reference_atomic.sql": "153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428"
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "project_ref": "sbgshejyvkptmrffiwvd",
+  "review_status": "REQUIRES_SEPARATE_HOSTED_APPROVAL",
+  "institution": {
+    "id": "a1100000-0000-4000-8000-000000000001",
+    "name": "Meenakshi Sundararajan Engineering College (MSEC)",
+    "catalog_key": "msec",
+    "active": true
+  },
+  "department": {
+    "id": "a1120000-0000-4000-8000-000000000001",
+    "institution_id": "a1100000-0000-4000-8000-000000000001",
+    "name": "Science and Humanities",
+    "active": true
+  },
+  "programmes": [
+    {
+      "id": "a1110000-0000-4000-8000-000000000001",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-ai-ds",
+      "name": "B.Tech. Artificial Intelligence & Data Science",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000002",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-ai-ml",
+      "name": "B.Tech. Artificial Intelligence & Machine Learning",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000003",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-civil",
+      "name": "B.E. Civil Engineering",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000004",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-cse",
+      "name": "B.E. Computer Science and Engineering",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000005",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-cse-cybersecurity",
+      "name": "B.E. Computer Science & Engineering (Cybersecurity)",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000006",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-eee",
+      "name": "B.E. Electrical and Electronics Engineering",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000007",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-ece",
+      "name": "B.E. Electronics and Communication Engineering",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000008",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-it",
+      "name": "B.Tech. Information Technology",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000009",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-ug-mechanical",
+      "name": "B.E. Mechanical Engineering",
+      "level": "undergraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000010",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-pg-cs",
+      "name": "M.E. Computer Science",
+      "level": "postgraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000011",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-pg-construction",
+      "name": "M.E. Construction Engineering and Management",
+      "level": "postgraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000012",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-pg-embedded",
+      "name": "M.E. Embedded Systems and Technologies",
+      "level": "postgraduate",
+      "active": true
+    },
+    {
+      "id": "a1110000-0000-4000-8000-000000000013",
+      "institution_id": "a1100000-0000-4000-8000-000000000001",
+      "application_key": "msec-pg-energy",
+      "name": "M.E. Energy Engineering",
+      "level": "postgraduate",
+      "active": true
+    }
+  ],
+  "skills": [
+    {
+      "name": "C",
+      "category": "Programming"
+    },
+    {
+      "name": "C++",
+      "category": "Programming"
+    },
+    {
+      "name": "Python",
+      "category": "Programming"
+    },
+    {
+      "name": "Java",
+      "category": "Programming"
+    },
+    {
+      "name": "Git",
+      "category": "Software development"
+    },
+    {
+      "name": "SQL",
+      "category": "Software development"
+    },
+    {
+      "name": "Flutter",
+      "category": "Software development"
+    },
+    {
+      "name": "Software Testing",
+      "category": "Software development"
+    },
+    {
+      "name": "Machine Learning",
+      "category": "Data and AI"
+    },
+    {
+      "name": "Data Analysis",
+      "category": "Data and AI"
+    },
+    {
+      "name": "Statistics",
+      "category": "Data and AI"
+    },
+    {
+      "name": "Data Visualization",
+      "category": "Data and AI"
+    },
+    {
+      "name": "Computer Networks",
+      "category": "Networks and systems"
+    },
+    {
+      "name": "Cybersecurity",
+      "category": "Networks and systems"
+    },
+    {
+      "name": "Linux",
+      "category": "Networks and systems"
+    },
+    {
+      "name": "Cloud Computing",
+      "category": "Networks and systems"
+    },
+    {
+      "name": "Embedded Systems",
+      "category": "Electronics and embedded"
+    },
+    {
+      "name": "Microcontrollers",
+      "category": "Electronics and embedded"
+    },
+    {
+      "name": "Digital Electronics",
+      "category": "Electronics and embedded"
+    },
+    {
+      "name": "PCB Design",
+      "category": "Electronics and embedded"
+    },
+    {
+      "name": "Circuit Analysis",
+      "category": "Electrical and energy"
+    },
+    {
+      "name": "Control Systems",
+      "category": "Electrical and energy"
+    },
+    {
+      "name": "Power Systems",
+      "category": "Electrical and energy"
+    },
+    {
+      "name": "Renewable Energy",
+      "category": "Electrical and energy"
+    },
+    {
+      "name": "Structural Analysis",
+      "category": "Civil and construction"
+    },
+    {
+      "name": "Surveying",
+      "category": "Civil and construction"
+    },
+    {
+      "name": "Construction Planning",
+      "category": "Civil and construction"
+    },
+    {
+      "name": "Building Information Modeling",
+      "category": "Civil and construction"
+    },
+    {
+      "name": "Computer-Aided Design",
+      "category": "Mechanical and manufacturing"
+    },
+    {
+      "name": "Engineering Drawing",
+      "category": "Mechanical and manufacturing"
+    },
+    {
+      "name": "Manufacturing Processes",
+      "category": "Mechanical and manufacturing"
+    },
+    {
+      "name": "Thermodynamics",
+      "category": "Mechanical and manufacturing"
+    },
+    {
+      "name": "Communication",
+      "category": "Professional practice"
+    },
+    {
+      "name": "Teamwork",
+      "category": "Professional practice"
+    },
+    {
+      "name": "Problem Solving",
+      "category": "Professional practice"
+    },
+    {
+      "name": "Project Management",
+      "category": "Professional practice"
+    }
+  ]
+}
