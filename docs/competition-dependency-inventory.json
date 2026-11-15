@@ -1,0 +1,601 @@
+{
+  "current_lock_lf_sha256": "cde36f5582634c05048b1719a16c131a750c6a1722c5185c97ebbcc05922598a",
+  "historical_release_lock_matches": true,
+  "packages": [
+    {
+      "name": "app_links",
+      "version": "7.2.2",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "app_links_linux",
+      "version": "1.0.5",
+      "dependency": "transitive"
+    },
+    {
+      "name": "app_links_platform_interface",
+      "version": "2.0.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "app_links_web",
+      "version": "1.0.5",
+      "dependency": "transitive"
+    },
+    {
+      "name": "archive",
+      "version": "4.7.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "args",
+      "version": "2.7.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "async",
+      "version": "2.13.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "boolean_selector",
+      "version": "2.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "characters",
+      "version": "1.4.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "clock",
+      "version": "1.1.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "code_assets",
+      "version": "2.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "collection",
+      "version": "1.19.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "convert",
+      "version": "3.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "crypto",
+      "version": "3.0.8",
+      "dependency": "transitive"
+    },
+    {
+      "name": "cupertino_ui",
+      "version": "1.1.6",
+      "dependency": "transitive"
+    },
+    {
+      "name": "dart_earcut",
+      "version": "1.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "dart_jsonwebtoken",
+      "version": "3.4.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "dart_polylabel2",
+      "version": "1.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "fake_async",
+      "version": "1.3.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "ffi",
+      "version": "2.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "file",
+      "version": "7.0.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "fixnum",
+      "version": "1.1.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "flutter",
+      "version": "0.0.0",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "flutter_driver",
+      "version": "0.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "flutter_lints",
+      "version": "6.0.0",
+      "dependency": "\"direct dev\""
+    },
+    {
+      "name": "flutter_localizations",
+      "version": "0.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "flutter_map",
+      "version": "8.3.2",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "flutter_riverpod",
+      "version": "3.5.0",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "flutter_test",
+      "version": "0.0.0",
+      "dependency": "\"direct dev\""
+    },
+    {
+      "name": "flutter_web_plugins",
+      "version": "0.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "fuchsia_remote_debug_protocol",
+      "version": "0.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "functions_client",
+      "version": "2.7.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "go_router",
+      "version": "18.1.4",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "gotrue",
+      "version": "2.27.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "hooks",
+      "version": "2.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "http",
+      "version": "1.6.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "http_parser",
+      "version": "4.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "integration_test",
+      "version": "0.0.0",
+      "dependency": "\"direct dev\""
+    },
+    {
+      "name": "intl",
+      "version": "0.20.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "jni",
+      "version": "1.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "jni_flutter",
+      "version": "1.0.4+1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "jni_util",
+      "version": "1.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "json_annotation",
+      "version": "4.12.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "latlong2",
+      "version": "0.9.1",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "leak_tracker",
+      "version": "11.0.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "leak_tracker_flutter_testing",
+      "version": "3.0.10",
+      "dependency": "transitive"
+    },
+    {
+      "name": "leak_tracker_testing",
+      "version": "3.0.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "lints",
+      "version": "6.1.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "listen",
+      "version": "1.0.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "logging",
+      "version": "1.3.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "matcher",
+      "version": "0.12.20",
+      "dependency": "transitive"
+    },
+    {
+      "name": "material_color_utilities",
+      "version": "0.13.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "material_ui",
+      "version": "1.11.0",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "meta",
+      "version": "1.19.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "mgrs_dart",
+      "version": "3.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "mime",
+      "version": "2.1.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "objective_c",
+      "version": "9.6.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "package_config",
+      "version": "3.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "passkeys_platform_interface",
+      "version": "2.11.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path",
+      "version": "1.9.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider",
+      "version": "2.1.6",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider_android",
+      "version": "2.3.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider_foundation",
+      "version": "2.6.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider_linux",
+      "version": "2.2.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider_platform_interface",
+      "version": "2.1.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "path_provider_windows",
+      "version": "2.3.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "platform",
+      "version": "3.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependency": "transitive"
+    },
+    {
+      "name": "pointycastle",
+      "version": "4.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "posix",
+      "version": "6.5.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "postgrest",
+      "version": "2.9.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "process",
+      "version": "5.0.6",
+      "dependency": "transitive"
+    },
+    {
+      "name": "proj4dart",
+      "version": "3.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "pub_semver",
+      "version": "2.2.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "realtime_client",
+      "version": "2.13.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "record_use",
+      "version": "1.1.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "riverpod",
+      "version": "3.5.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences",
+      "version": "2.5.6",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "shared_preferences_android",
+      "version": "2.5.5",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences_foundation",
+      "version": "2.6.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences_linux",
+      "version": "2.4.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "version": "2.4.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences_web",
+      "version": "2.4.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "shared_preferences_windows",
+      "version": "2.4.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "simple_sparse_list",
+      "version": "0.1.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "sky_engine",
+      "version": "0.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "source_span",
+      "version": "1.10.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "stack_trace",
+      "version": "1.12.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "state_notifier",
+      "version": "1.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "storage_client",
+      "version": "2.8.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "stream_channel",
+      "version": "2.1.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "string_scanner",
+      "version": "1.4.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "supabase",
+      "version": "2.16.5",
+      "dependency": "transitive"
+    },
+    {
+      "name": "supabase_common",
+      "version": "0.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "supabase_flutter",
+      "version": "2.18.3",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "sync_http",
+      "version": "0.3.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "term_glyph",
+      "version": "1.2.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "test_api",
+      "version": "0.7.14",
+      "dependency": "transitive"
+    },
+    {
+      "name": "typed_data",
+      "version": "1.4.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "unicode",
+      "version": "1.1.9",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher",
+      "version": "6.3.3",
+      "dependency": "\"direct main\""
+    },
+    {
+      "name": "url_launcher_android",
+      "version": "6.3.33",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_ios",
+      "version": "6.4.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_linux",
+      "version": "3.2.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_macos",
+      "version": "3.2.6",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "version": "2.3.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_web",
+      "version": "2.4.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "url_launcher_windows",
+      "version": "3.1.6",
+      "dependency": "transitive"
+    },
+    {
+      "name": "uuid",
+      "version": "4.6.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "vector_math",
+      "version": "2.4.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "vm_service",
+      "version": "15.4.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "web",
+      "version": "1.1.2",
+      "dependency": "transitive"
+    },
+    {
+      "name": "web_socket",
+      "version": "1.0.1",
+      "dependency": "transitive"
+    },
+    {
+      "name": "web_socket_channel",
+      "version": "3.0.3",
+      "dependency": "transitive"
+    },
+    {
+      "name": "webdriver",
+      "version": "3.2.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "wkt_parser",
+      "version": "2.0.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "xdg_directories",
+      "version": "1.1.0",
+      "dependency": "transitive"
+    },
+    {
+      "name": "yaml",
+      "version": "3.1.4",
+      "dependency": "transitive"
+    },
+    {
+      "name": "yet_another_json_isolate",
+      "version": "2.1.1",
+      "dependency": "transitive"
+    }
+  ]
+}

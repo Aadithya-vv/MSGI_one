@@ -1,5 +1,15 @@
 # Android competition release
 
+## Task 12A freeze
+
+The existing `MSGI-One-1.0.0-competition.apk` is frozen at SHA-256
+`aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+Do not run the historical build commands below to replace it. The wrapper now
+refuses an existing artifact/checksum before reading signing material, and its
+final copy cannot overwrite a concurrently created file. A new version/output
+destination needs separate owner approval. This does not authorize a new build.
+See [the release audit](task12a-competition-release-audit.md).
+
 The standalone demo uses the existing `com.msgi.nexus.msgi_nexus` application ID,
 `MSGI One` launcher label and `com.msgi.one.dev://auth-callback/` callback. Version
 is currently `1.0.0+1`; increase the build number for future distributed updates.

@@ -150,3 +150,16 @@ The isolated demo now uses the supplied MSEC institution and programme catalog,
 with fictional people and affiliations. Degree programmes remain separate from
 academic departments. Hosted catalogs were not populated or changed. See
 [MSEC implementation and acceptance limits](docs/task09-msec-integration.md).
+
+## Frozen competition demonstration
+
+Task 12A preserves the signed `1.0.0+1` offline competition APK. Its SHA-256 is
+`aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+The current source is later than that binary; locally implemented backend/admin
+features are not automatically features of the frozen APK. Do not rebuild over it.
+See the [release audit](docs/task12a-competition-release-audit.md),
+[demo scripts](docs/competition-demo-script.md),
+[submission checklist](docs/competition-submission-checklist.md) and
+[college handover inventory](docs/college-handover-inventory.md).
+Official competition requirements and college operational acceptance remain
+unverified. No submission, public launch or hosted change is authorized here.

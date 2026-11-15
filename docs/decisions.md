@@ -396,3 +396,12 @@ missing COMMIT acknowledgement or failed independent postflight never permits
 automatic retry, history repair or hosted restore. Synthetic recovery is distinct
 from current hosted/full-service recovery. See
 [the executor review](task11f-admin-executor-readiness.md).
+
+Task 12A freezes the existing signed competition APK by byte identity rather
+than equating current source HEAD with a released binary. Ordinary signed-APK
+acceptance and current-source debug integration are reported separately. Tests
+that may uninstall run only on a newly created, explicitly disposable AVD; no
+physical installation/data is touched. The release wrapper refuses existing
+artifact/checksum paths before private signing access and cannot overwrite its
+destination. Any later UI change, new signed version, hosted activation or formal
+submission requires a separate owner decision. The demo remains visibly fictional.

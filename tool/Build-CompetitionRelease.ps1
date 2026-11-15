@@ -3,6 +3,12 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $workspace = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$frozenApk = Join-Path $workspace 'build\competition-release\MSGI-One-1.0.0-competition.apk'
+# Stop before accessing signing material or invoking Flutter. A future release
+# needs a separately reviewed version/destination; never replace the frozen demo.
+if ((Test-Path -LiteralPath $frozenApk) -or (Test-Path -LiteralPath "$frozenApk.sha256")) {
+    throw 'Competition artifact is frozen. Preserve it; obtain approval for a new version and destination before building another release.'
+}
 $store = Join-Path $SigningDirectory 'msgi-one-competition.p12'
 $protectedFile = Join-Path $SigningDirectory 'password.dpapi'
 if (!(Test-Path -LiteralPath $store) -or !(Test-Path -LiteralPath $protectedFile)) { throw 'Dedicated signing material missing. Run New-CompetitionSigning.ps1 once.' }
@@ -25,7 +31,7 @@ try {
     $output = Join-Path $workspace 'build\competition-release'
     New-Item -ItemType Directory -Path $output -Force | Out-Null
     $apk = Join-Path $output 'MSGI-One-1.0.0-competition.apk'
-    Copy-Item -LiteralPath 'build\app\outputs\flutter-apk\app-release.apk' -Destination $apk
+    [IO.File]::Copy((Join-Path $workspace 'build\app\outputs\flutter-apk\app-release.apk'), $apk, $false)
     $hash = (Get-FileHash -LiteralPath $apk -Algorithm SHA256).Hash.ToLowerInvariant()
     [IO.File]::WriteAllText("$apk.sha256", "$hash  $([IO.Path]::GetFileName($apk))`n")
     Write-Output "Release APK: $apk"
