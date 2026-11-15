@@ -7,6 +7,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../domain/demo_store.dart';
 import '../../catalog/domain/academic_catalog.dart';
+import '../../catalog/presentation/msec_institution_identity.dart';
 import '../../home/presentation/community_highlights.dart';
 
 class DemoHomeScreen extends StatelessWidget {
@@ -43,6 +44,8 @@ class DemoHomeScreen extends StatelessWidget {
             ProfileAvatar(store.person['display_name'] as String),
           ],
         ),
+        const SizedBox(height: 12),
+        const MsecInstitutionIdentity(),
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(20),
@@ -145,6 +148,8 @@ class DemoOwnProfileScreen extends StatelessWidget {
             'Fictional MSEC affiliation for demonstration only.',
             style: TextStyle(fontSize: 12, color: OneColors.muted),
           ),
+          const SizedBox(height: 12),
+          const MsecInstitutionIdentity(),
           const SectionHeading('Professional story'),
           Text(p['biography'] as String),
           const SectionHeading('Skills'),

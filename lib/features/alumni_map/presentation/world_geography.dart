@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../domain/map_repository.dart';
+import 'single_world_map.dart';
 
 final landPolygonsProvider = FutureProvider<List<Polygon>>((ref) async {
   final json = jsonDecode(
@@ -47,7 +48,10 @@ class CityMarkerGroup {
   int get count => cities.fold(0, (n, c) => n + c.count);
   LatLng get center => LatLng(
     cities.map((c) => c.latitude).reduce((a, b) => a + b) / cities.length,
-    cities.map((c) => c.longitude).reduce((a, b) => a + b) / cities.length,
+    cities
+            .map((c) => singleWorldLongitude(c.longitude))
+            .reduce((a, b) => a + b) /
+        cities.length,
   );
 }
 
@@ -55,8 +59,13 @@ List<CityMarkerGroup> groupCities(List<CityCluster> cities, double zoom) {
   final buckets = <String, List<CityCluster>>{};
   final scale = 256 * math.pow(2, zoom);
   for (final c in cities) {
+    if (!c.latitude.isFinite ||
+        !c.longitude.isFinite ||
+        c.latitude.abs() > 90) {
+      continue;
+    }
     final sin = math.sin(c.latitude.clamp(-85, 85) * math.pi / 180);
-    final x = (c.longitude + 180) / 360 * scale;
+    final x = (singleWorldLongitude(c.longitude) + 180) / 360 * scale;
     final y = (0.5 - math.log((1 + sin) / (1 - sin)) / (4 * math.pi)) * scale;
     final key = '${(x / 64).floor()}:${(y / 64).floor()}';
     buckets.putIfAbsent(key, () => []).add(c);

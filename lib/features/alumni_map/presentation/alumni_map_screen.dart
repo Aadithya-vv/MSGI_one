@@ -13,6 +13,7 @@ import '../../../core/theme/app_theme.dart';
 import '../domain/map_repository.dart';
 import '../data/map_providers.dart';
 import 'world_geography.dart';
+import 'single_world_map.dart';
 
 class AlumniMapScreen extends ConsumerStatefulWidget {
   const AlumniMapScreen({
@@ -165,6 +166,16 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
     _controller.move(camera.center, (camera.zoom + delta).clamp(0, 8));
   }
 
+  void _containCamera() {
+    if (!mounted) return;
+    final camera = _controller.camera;
+    final bounded = const SingleWorldCameraConstraint().constrain(camera);
+    if (bounded != null &&
+        (bounded.center != camera.center || bounded.zoom != camera.zoom)) {
+      _controller.move(bounded.center, bounded.zoom);
+    }
+  }
+
   Future<void> _filters() => showFilterSheet<void>(
     context,
     title: 'Map filters',
@@ -203,113 +214,134 @@ class _AlumniMapScreenState extends ConsumerState<AlumniMapScreen> {
       child: LayoutBuilder(
         builder: (context, constraints) => Stack(
           children: [
-            FlutterMap(
-              mapController: _controller,
-              options: MapOptions(
-                initialCenter: const LatLng(20, 0),
-                initialZoom: 1,
-                minZoom: 0,
-                maxZoom: 8,
-                backgroundColor: const Color(0xFFDCEEF8),
-                interactionOptions: const InteractionOptions(
-                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-                ),
-                onPositionChanged: (camera, _) {
-                  if ((camera.zoom - _zoom).abs() > 0.1) {
-                    setState(() => _zoom = camera.zoom);
-                  }
-                },
+            Padding(
+              // Reserve the search header instead of hiding bounded-world
+              // markers beneath it when the camera's zoom floor changes.
+              padding: EdgeInsets.only(
+                top:
+                    (MediaQuery.textScalerOf(context).scale(1) > 1.5
+                            ? 220.0
+                            : 164.0)
+                        .clamp(0.0, constraints.maxHeight * .6),
               ),
-              children: [
-                if (land.asData != null)
-                  PolygonLayer(polygons: land.requireValue),
-                if (_tiles)
-                  TileLayer(
-                    urlTemplate:
-                        'https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=$_tileKey',
-                    userAgentPackageName: 'com.msgi.nexus.msgi_nexus',
-                    maxZoom: 8,
-                    errorTileCallback: (_, _, _) {
-                      if (mounted && !_tileError) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (mounted) setState(() => _tileError = true);
-                        });
-                      }
-                    },
+              child: FlutterMap(
+                mapController: _controller,
+                options: MapOptions(
+                  crs: const SingleWorldMercator(),
+                  cameraConstraint: const SingleWorldCameraConstraint(),
+                  initialCenter: const LatLng(20, 0),
+                  initialZoom: 1,
+                  minZoom: 0,
+                  maxZoom: 8,
+                  backgroundColor: const Color(0xFFDCEEF8),
+                  onMapReady: _containCamera,
+                  onMapEvent: (event) {
+                    if (event is MapEventNonRotatedSizeChange) _containCamera();
+                  },
+                  interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
-                MarkerLayer(
-                  markers: groups
-                      .map(
-                        (g) => Marker(
-                          point: g.center,
-                          width: 52,
-                          height: 52,
-                          child: Semantics(
-                            button: true,
-                            label: g.cities.length == 1
-                                ? '${g.cities.first.name}: ${g.count} alumni'
-                                : '${g.cities.length} cities: ${g.count} alumni',
-                            child: Tooltip(
-                              message: g.cities.length == 1
-                                  ? g.cities.first.name
-                                  : 'Zoom to ${g.cities.length} cities',
-                              child: FilledButton(
-                                style: FilledButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                  minimumSize: const Size(48, 48),
-                                  shape: const CircleBorder(),
-                                  backgroundColor: OneColors.gold,
-                                  foregroundColor: OneColors.navy,
-                                ),
-                                onPressed: () {
-                                  if (g.cities.length > 1) {
-                                    if (_zoom >= 7.9) {
-                                      showModalBottomSheet<void>(
-                                        context: context,
-                                        builder: (ctx) => SafeArea(
-                                          child: SizedBox(
-                                            height: 320,
-                                            child: ListView(
-                                              children: [
-                                                for (final city in g.cities)
-                                                  ListTile(
-                                                    title: Text(city.name),
-                                                    subtitle: Text(
-                                                      '${city.count} alumni',
+                  onPositionChanged: (camera, _) {
+                    if ((camera.zoom - _zoom).abs() > 0.1) {
+                      setState(() => _zoom = camera.zoom);
+                    }
+                  },
+                ),
+                children: [
+                  if (land.asData != null)
+                    PolygonLayer(
+                      polygons: land.requireValue,
+                      drawInSingleWorld: true,
+                    ),
+                  if (_tiles)
+                    TileLayer(
+                      urlTemplate:
+                          'https://api.maptiler.com/maps/streets-v4/256/{z}/{x}/{y}.png?key=$_tileKey',
+                      userAgentPackageName: 'com.msgi.nexus.msgi_nexus',
+                      maxZoom: 8,
+                      tileBounds: singleWorldBounds,
+                      errorTileCallback: (_, _, _) {
+                        if (mounted && !_tileError) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) setState(() => _tileError = true);
+                          });
+                        }
+                      },
+                    ),
+                  MarkerLayer(
+                    markers: groups
+                        .map(
+                          (g) => Marker(
+                            point: g.center,
+                            width: 52,
+                            height: 52,
+                            child: Semantics(
+                              button: true,
+                              label: g.cities.length == 1
+                                  ? '${g.cities.first.name}: ${g.count} alumni'
+                                  : '${g.cities.length} cities: ${g.count} alumni',
+                              child: Tooltip(
+                                message: g.cities.length == 1
+                                    ? g.cities.first.name
+                                    : 'Zoom to ${g.cities.length} cities',
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: const Size(48, 48),
+                                    shape: const CircleBorder(),
+                                    backgroundColor: OneColors.gold,
+                                    foregroundColor: OneColors.navy,
+                                  ),
+                                  onPressed: () {
+                                    if (g.cities.length > 1) {
+                                      if (_zoom >= 7.9) {
+                                        showModalBottomSheet<void>(
+                                          context: context,
+                                          builder: (ctx) => SafeArea(
+                                            child: SizedBox(
+                                              height: 320,
+                                              child: ListView(
+                                                children: [
+                                                  for (final city in g.cities)
+                                                    ListTile(
+                                                      title: Text(city.name),
+                                                      subtitle: Text(
+                                                        '${city.count} alumni',
+                                                      ),
+                                                      onTap: () {
+                                                        Navigator.pop(ctx);
+                                                        _select(city);
+                                                      },
                                                     ),
-                                                    onTap: () {
-                                                      Navigator.pop(ctx);
-                                                      _select(city);
-                                                    },
-                                                  ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      } else {
+                                        _controller.move(
+                                          g.center,
+                                          (_zoom + 2).clamp(0, 8),
+                                        );
+                                      }
                                     } else {
-                                      _controller.move(
-                                        g.center,
-                                        (_zoom + 2).clamp(0, 8),
-                                      );
+                                      _select(g.cities.first);
                                     }
-                                  } else {
-                                    _select(g.cities.first);
-                                  }
-                                },
-                                child: Text(
-                                  '${g.count}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                  },
+                                  child: Text(
+                                    '${g.count}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
+                        )
+                        .toList(),
+                  ),
+                ],
+              ),
             ),
 
             Positioned(

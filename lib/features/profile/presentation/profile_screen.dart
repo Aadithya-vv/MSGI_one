@@ -9,6 +9,8 @@ import '../../../core/routing/app_routes.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../../../core/errors/error_state.dart';
 import '../data/profile_providers.dart';
+import '../../catalog/domain/academic_catalog.dart';
+import '../../catalog/presentation/msec_institution_identity.dart';
 import '../../administration/data/administration_providers.dart';
 import '../../administration/presentation/membership_request_panel.dart';
 import '../../connections/presentation/connection_controls.dart';
@@ -55,6 +57,10 @@ class ProfileScreen extends ConsumerWidget {
                         ].join('\n'),
                       ),
                       const SectionHeading('Career and education'),
+                      if (profile.input.institutionId == MsecCatalog.id) ...[
+                        const MsecInstitutionIdentity(),
+                        const SizedBox(height: 12),
+                      ],
                       Text(
                         [
                           profile.input.degree,

@@ -1,0 +1,167 @@
+﻿{
+    "starting_commit":  "2036bb2c1289e64f7bf32c0d7270954780ef60f2",
+    "official_media_bundled":  false,
+    "official_media_permission":  "Not confirmed",
+    "flutter_tests_passed":  211,
+    "native_journeys_passed":  2,
+    "frozen_manifest_files_verified":  56,
+    "debug_sha256":  "374df651ae2854e105fa05f06ed8cc2ebbab04ad97cf0abb1c107c63ae693d54",
+    "screenshots":  [
+                        {
+                            "file":  "build/task12b/before/map-east-boundary.png",
+                            "sha256":  "1482ab6cc10c5a67a9992a332e1169178eab20f6282ccbaa97337b3cfe788aa5"
+                        },
+                        {
+                            "file":  "build/task12b/before/map-initial.png",
+                            "sha256":  "1fc8aefb11e41a3a15a61335176430484df995f65fb29e9b36d6b8a756ff2f7c"
+                        },
+                        {
+                            "file":  "build/task12b/before/map-minimum.png",
+                            "sha256":  "1e5a676b92ffb6e354344ab5c91107f447a93ffbf5b50ff1f97b27e9cced500a"
+                        },
+                        {
+                            "file":  "build/task12b/before/map-west-boundary.png",
+                            "sha256":  "4d6bd422a83df6c5dae426c4db3b5d9c12c19c90b4e330e9285921bfe68f3463"
+                        },
+                        {
+                            "file":  "build/task12b/before/map-zoom-in.png",
+                            "sha256":  "34517720e248537e81ec20759d8d1be39bf64386fe2fdaeacd6ddebe83bae560"
+                        },
+                        {
+                            "file":  "build/task12b/before/student-home.png",
+                            "sha256":  "9bd7a5bfc10dcf0c6b7844a3bda53e68835029fa1c011ec7ce68202bdf1eb1eb"
+                        },
+                        {
+                            "file":  "build/task12b/before/student-profile.png",
+                            "sha256":  "1f25e5128c70a4fc15cecf0b0ad57eaf0b9e63622bceba3e34eb5612e4e460a1"
+                        },
+                        {
+                            "file":  "build/task12b/before/welcome.png",
+                            "sha256":  "720813fdf6e10d03881b071981e8c7fc9dc1c807ec54ba9a069bc7452a264852"
+                        },
+                        {
+                            "file":  "build/task12b/after/alumni-home.png",
+                            "sha256":  "7f6238ea070490278283f7b6d2378d628f9a486ebe54fe622029fffa9a56eb27"
+                        },
+                        {
+                            "file":  "build/task12b/after/map-east-boundary.png",
+                            "sha256":  "34d627723370de948079dc74d6d750b8b65b1881f9fc2b7484ae1dc41ffb953a"
+                        },
+                        {
+                            "file":  "build/task12b/after/map-initial.png",
+                            "sha256":  "b75e6133fb7cf23a81672960de01b3e23aa3a628c43aa22fae1b86af99455f97"
+                        },
+                        {
+                            "file":  "build/task12b/after/map-minimum.png",
+                            "sha256":  "f337e48161029ad5635d9efe45d667fd562c1ea674b3d302f47923df49d74526"
+                        },
+                        {
+                            "file":  "build/task12b/after/map-west-boundary.png",
+                            "sha256":  "8a5790bb542361e90d98cbd62e09a15e08583339c3e49b2324918e91ef5de4d6"
+                        },
+                        {
+                            "file":  "build/task12b/after/map-zoom-in.png",
+                            "sha256":  "0ebd9ad703ba973eab54d6332176fe662336f470cec017a326cd6cbd82ef6509"
+                        },
+                        {
+                            "file":  "build/task12b/after/staff-home.png",
+                            "sha256":  "b65c9016195c3d5352f01a9615b17299500b53da647f93248d85ad7b32aa6aa4"
+                        },
+                        {
+                            "file":  "build/task12b/after/student-home.png",
+                            "sha256":  "9fa5472e76fbd74717bad31951ea4743f2a5bf8e336649376c136c69057089ca"
+                        },
+                        {
+                            "file":  "build/task12b/after/student-profile.png",
+                            "sha256":  "bcba6b0197fbef85df9be069d1ad0c11f966709b658bbfd1ee809a859cff7897"
+                        },
+                        {
+                            "file":  "build/task12b/after/welcome.png",
+                            "sha256":  "4ab61123e08be691f5482ec96397a18f3f9be0a23a9e5b16ab83409ac97d3b55"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/00_app_entry.png",
+                            "sha256":  "bcbea9b20698b46515a9d7618c26fd43b7c77489f7de4bce2a0a7f0f1bbc2146"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/00_demo_perspectives.png",
+                            "sha256":  "84bff2d07a215012a8fde9b73842669b750490fd723797548a7ee94400f4f6e1"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/01_alumni_discovery.png",
+                            "sha256":  "759ba6f5c1b9241516e1f2ab4547a34c1549fd9cb62b1188048fface4f68afea"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/01_alumni_filters.png",
+                            "sha256":  "303d660a1ec080d2d9a53d921834624e179a60b55d274cb215602fcfa9d3fc57"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/01_msec_student_programme.png",
+                            "sha256":  "95d74c4f35119ce0a78fdeaf1ac9c85d5bf6887ef8d985347c17b02fba01f6b8"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/01_student_home.png",
+                            "sha256":  "daf4c9d7f1c1c1e63dc29dc6fddbe0a8634047505d219a431370cb2a5f5f90c0"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/02_sample_alumni_profile.png",
+                            "sha256":  "acfc1c2efe6714254a9d842acb5135bbea2011c8bc6e8e99cb5571401a17e994"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/03_career_opportunities.png",
+                            "sha256":  "586c6e0496e6384c5d524abd424d564de3396651880fe1c21298cec441c10ca3"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/03_mentor_recommendations.png",
+                            "sha256":  "0dcdda372ebe98022919da7308c1eebdcbda9e9fc538d0181c4f6aca2daab027"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/04_offline_map.png",
+                            "sha256":  "701694eb7ca83d9ca2b0012c95505ad8f2832454d4fdbebac86eb16afb4b2028"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/05_alumni_connections.png",
+                            "sha256":  "15e788bba662f7613ab31654a5ab7ff66f07ad14563ebe0b5ab5534b8e87657b"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/05_alumni_profile.png",
+                            "sha256":  "3407a290e250c8f95cee5dca41f81ae5728e157c7abf1deff8b50d5698f337c5"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/05_opportunity_editor.png",
+                            "sha256":  "e3a03311feafaaff02e2f7e65f6c1086e96bc8cf494c414aae4e75249908c430"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/06_simulated_opportunity.png",
+                            "sha256":  "ac7aa2ff9b603029e5f7321e544e96e6bc5f568b5f42e9e8feefc14583fb2f89"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/07_staff_community.png",
+                            "sha256":  "8ad125e731aef7581fa36bec4e5d392c14971f86daef295ec7b309148d74fcf7"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/08_reset_student_home.png",
+                            "sha256":  "daf4c9d7f1c1c1e63dc29dc6fddbe0a8634047505d219a431370cb2a5f5f90c0"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/09_large_text_home.png",
+                            "sha256":  "5c0599f2aa13fc1c24ba500f88416fd68fb530fa670d562dc03b0f3cf53b5ce8"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/task12b_city_interaction.png",
+                            "sha256":  "9745a50de08e2ea986aeab94fd80792bd5f8247284e289465fde80991434ccfd"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/task12b_east_edge.png",
+                            "sha256":  "16672ed19d810819955d3eec528da6b85d8c560bf6a0d759315bf99b5eb503d8"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/task12b_welcome.png",
+                            "sha256":  "bcbea9b20698b46515a9d7618c26fd43b7c77489f7de4bce2a0a7f0f1bbc2146"
+                        },
+                        {
+                            "file":  "build/task12b/integration-screenshots/task12b_west_edge.png",
+                            "sha256":  "aaa51498ae106969ab7d80382c5795f66b77fb46a58159cc6522ebb222a94403"
+                        }
+                    ]
+}

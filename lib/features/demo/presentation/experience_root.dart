@@ -15,6 +15,7 @@ import '../../../core/routing/app_router.dart';
 import '../../auth/application/auth_providers.dart';
 import '../domain/demo_store.dart';
 import '../data/demo_persistence.dart';
+import '../../catalog/presentation/msec_institution_identity.dart';
 import 'demo_experience.dart';
 
 enum _Experience { loading, entry, chooseRole, demo, production }
@@ -256,9 +257,11 @@ class _ExperienceRootState extends State<ExperienceRoot> {
               const SizedBox(height: 24),
               const BrandMark(),
               const SizedBox(height: 24),
-              if (_experience == _Experience.loading)
-                const Center(child: CircularProgressIndicator())
-              else if (_experience == _Experience.chooseRole) ...[
+              if (_experience == _Experience.loading) ...[
+                const Center(child: CircularProgressIndicator()),
+                const SizedBox(height: 16),
+                const MsecInstitutionIdentity(),
+              ] else if (_experience == _Experience.chooseRole) ...[
                 const FeatureHeader(
                   eyebrow: 'Explore Demo',
                   title: 'Choose a perspective',
@@ -343,6 +346,8 @@ class _ExperienceRootState extends State<ExperienceRoot> {
                 const Text(
                   'No account, email or internet required. Fictional profiles and simulated activities, stored separately on this device.',
                 ),
+                const SizedBox(height: 16),
+                const MsecInstitutionIdentity(campusPreview: true),
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
                   icon: const Icon(Icons.login),

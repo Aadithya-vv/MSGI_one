@@ -163,3 +163,8 @@ See the [release audit](docs/task12a-competition-release-audit.md),
 [college handover inventory](docs/college-handover-inventory.md).
 Official competition requirements and college operational acceptance remain
 unverified. No submission, public launch or hosted change is authorized here.
+
+Task 12B adds a bounded single-world map and MSEC identity placeholders in a
+separate debug candidate. Official photos and crest are pending redistribution
+approval and are not bundled. The frozen competition APK is unchanged. See
+[the candidate review](docs/task12b-branding-map-polish.md).

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:msgi_one/core/widgets/one_widgets.dart';
+import 'package:msgi_one/core/widgets/consumer_widgets.dart';
 import 'package:msgi_one/features/demo/domain/demo_store.dart';
 import 'package:msgi_one/features/demo/presentation/demo_experience.dart';
 import 'package:msgi_one/core/theme/app_theme.dart';
@@ -63,7 +64,7 @@ void main() {
   );
 
   testWidgets(
-    'Map fills the content viewport and exposes a draggable accessible city list',
+    'Map fills the viewport below search and exposes a draggable accessible city list',
     (tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1;
@@ -75,7 +76,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Map'));
       await tester.pumpAndSettle();
-      expect(tester.getSize(find.byType(FlutterMap)).height, greaterThan(600));
+      final mapRect = tester.getRect(find.byType(FlutterMap));
+      final searchRect = tester.getRect(find.byType(CompactSearch));
+      expect(mapRect.width, 390);
+      expect(mapRect.height, greaterThan(844 * .55));
+      expect(mapRect.top, greaterThanOrEqualTo(searchRect.bottom));
       expect(find.byType(DraggableScrollableSheet), findsOneWidget);
       expect(find.byTooltip('World view'), findsOneWidget);
       expect(find.byType(TileLayer), findsNothing);

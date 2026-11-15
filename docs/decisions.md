@@ -405,3 +405,10 @@ physical installation/data is touched. The release wrapper refuses existing
 artifact/checksum paths before private signing access and cannot overwrite its
 destination. Any later UI change, new signed version, hosted activation or formal
 submission requires a separate owner decision. The demo remains visibly fictional.
+
+Task 12B uses a non-wrapping public-API Mercator adapter plus a viewport-aware
+camera constraint, rather than relying on polygon rendering flags to bound the
+map. Fractional Android sizes require a small projected-pixel interior margin.
+Official MSEC media remains outside bundled assets until redistribution approval
+is confirmed; explicit placeholders reserve proposed placements. See
+[the map and branding review](task12b-branding-map-polish.md).
