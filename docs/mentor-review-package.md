@@ -1,5 +1,10 @@
 # MSGI One: private mentor review preparation
 
+Status update, November 16, 2026: the separately authorized single Samsung update
+to RC1 succeeded. Read [physical acceptance](task12d-samsung-acceptance.md) before
+review; do not repeat the installation guidance as a new operation. Distribution
+and mentor delivery remain unauthorized.
+
 Prepared November 15, 2026. **Local preparation only: not sent, uploaded,
 published, submitted or approved for distribution.** Mentor name/contact and
 review appointment are not supplied. Presenter contact: **[owner to provide]**.
@@ -15,8 +20,9 @@ review appointment are not supplied. Presenter contact: **[owner to provide]**.
   `857fbe0fc6d3366bb46c59745fce24eb03cef23b78a6b030a24148fb0d995cc4`.
 - Minimum Android **7.0/API 24**; packaged ARM64, ARM32 and x86_64 libraries.
   Minimum-API hardware coverage is not established. Candidate was actually
-  exercised on Android 14/API 34 emulator; RC1 Samsung Android 13 acceptance is
-  still pending. A supported OS number is not a guarantee for every device.
+  exercised on Android 14/API 34 emulator and, subsequently, Samsung Android 13.
+  Samsung acceptance is PARTIAL for the reasons in the linked report. A supported
+  OS number is not a guarantee for every device.
 
 ## Scope to explain before review
 
@@ -35,11 +41,11 @@ notifications. No chat, appointment booking or public backend rollout is claimed
 
 ## Installation guidance — approval required
 
-Do not install this APK on the currently connected Samsung under Task 12D.
+Do not perform another installation on the currently connected Samsung.
 [The device-readiness report](task12d-physical-device-readiness.md) contains the
-exact proposed `adb -s RZ8RA1DN4YA install -r` operation and data risks for owner
-approval. The phone currently has the exact protected v1.0.0 APK, with a matching
-signer; code 2 appears eligible for an in-place update. Do not uninstall, clear
+historical `adb -s RZ8RA1DN4YA install -r` operation and data risks. The phone had
+the protected v1.0.0 APK at preflight; one separately authorized update has since
+installed verified 1.0.1/code 2 with the same signer. Do not uninstall, clear
 data, grant extra permissions or attempt a downgrade to resolve any rejection.
 
 After separate consent, an authorized operator should verify the APK hash, device,
@@ -105,8 +111,10 @@ hide private notifications and share the minimum window. No setting changed here
 - Prior Task 12C: analyzer clean, **212 Flutter tests**, two Android source
   integration journeys, ordinary signed candidate walkthrough, six map-edge pixel
   comparisons. These are not new Samsung results.
-- Pending: RC1 in-place update/data retention, physical touch/keyboard/Back,
-  TalkBack, Samsung projection, actual room readability and sustained performance.
+- Samsung update, exercised ADB-driven physical navigation/Back and map checks
+  passed subsequently; full pre-update data retention remains only partially
+  verifiable. Pending: human touch/keyboard ergonomics, TalkBack, Samsung
+  projection, actual room readability and sustained performance.
 - Known polish limits: horizontally scrollable controls, enlarged-label wrapping,
   and map semantics requiring further accessibility review. Some secondary text
   is too small for a room when the entire portrait image is reduced.

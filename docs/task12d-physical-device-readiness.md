@@ -1,5 +1,14 @@
 # Task 12D: physical device and presentation readiness
 
+**Update, November 16, 2026:** a separate owner authorization permitted exactly
+one Samsung in-place update. It succeeded; installed RC1 identity was verified.
+See [physical acceptance](task12d-samsung-acceptance.md) for actual results and
+limits: all exercised core UI paths and six map-edge comparisons passed; complete
+state preservation and projection acceptance remain unverified. The installation
+approval below is a historical pre-update gate, not
+permission or instructions for another attempt. That single-use approval is
+consumed. The remainder preserves the original readiness assessment.
+
 Reviewed November 15, 2026 (Asia/Calcutta), HEAD
 `50901e200e0d215445dba199057c6eefdf813f96`.
 **Read-only Samsung inspection completed. Installation and physical RC1

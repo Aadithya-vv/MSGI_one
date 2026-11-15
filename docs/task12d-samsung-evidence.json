@@ -1,0 +1,218 @@
+﻿{
+    "acceptance_date":  "2026-11-16",
+    "timezone":  "Asia/Calcutta",
+    "starting_commit":  "014fd27bc5a2ae6aa9dae06376a90a031c0adcc0",
+    "device":  "Samsung SM-M215G",
+    "serial":  "RZ8RA1DN4YA",
+    "api":  33,
+    "installed_version":  "1.0.1+2",
+    "installation_attempts":  1,
+    "installation_exit_code":  0,
+    "candidate_sha256":  "3b8d41351b554e3603c9e0d747357a359b3ec1651d4431e7e9643534ab9bc2e7",
+    "original_sha256":  "aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809",
+    "certificate_sha256":  "857fbe0fc6d3366bb46c59745fce24eb03cef23b78a6b030a24148fb0d995cc4",
+    "map_edge_comparisons_passed":  6,
+    "vertical_pan_pixels_changed":  true,
+    "programme_filter_passed":  true,
+    "temporary_filters_restored":  true,
+    "final_role":  "Staff / Faculty",
+    "visible_profile_unchanged_during_tests":  true,
+    "visible_network_unchanged_during_tests":  true,
+    "full_preinstallation_state_preservation_verified":  false,
+    "diagnostics":  {
+                        "crash_or_anr":  false,
+                        "render_or_unhandled_error":  false,
+                        "token_or_secret_pattern":  false
+                    },
+    "physical_acceptance":  "PARTIAL",
+    "projector_acceptance":  "PENDING",
+    "distribution_authorized":  false,
+    "hosted_operations":  0,
+    "resets":  0,
+    "logouts":  0,
+    "uninstalls":  0,
+    "raw_screenshots_or_private_ui_committed":  false,
+    "screenshot_count":  45,
+    "screenshots":  [
+                        {
+                            "file":  "build/task12d-samsung/00-post-update-startup.png",
+                            "sha256":  "ec0a06c04bfa820fd2c5466394aa9c7fea4c2135a3cda6c68c3eefb201bf1f5f"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/01-baseline-staff-profile.png",
+                            "sha256":  "681c0ce57224f46d3cb7b72b8266cda836910868ce7c0415b6d7e765ed7c2c08"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/02-baseline-staff-network.png",
+                            "sha256":  "33ac20c08078de77a2e3296e352c72752a1074bd5bd7421e1e5b8c768c476c5f"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/03-staff-home.png",
+                            "sha256":  "1e4ac11a5d1250ad0ad1539b201e95d3f3b6e822118d010c55d5c25df7f12681"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/04-student-home.png",
+                            "sha256":  "10aeff8f598f5f269f9726f739421582fadcce66119c0a2cdec96f4fb2646070"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/05-student-discovery.png",
+                            "sha256":  "4c802b6f3085df6e63b2197f2693229483df2522b48ecef167d493c1c1506fd0"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/06-discovery-filter-panel.png",
+                            "sha256":  "bafe57e7bf17e0e62f968aeaac3776e7cdf596426e2e22b131f1e0cdbcbe509c"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/07-alumni-profile.png",
+                            "sha256":  "4ea8f592b320372271d77705ee0007eb9eff18daf9dbba6313913275e5ec3ebc"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/08-student-mentors.png",
+                            "sha256":  "bb1b124a05bb8a786c046019a136e41d9ef9014637434caf8dcf2dab848c3c49"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/09-mentor-profile.png",
+                            "sha256":  "c6635d2a079c5d0976eab5775686f3549b0ca4619aa444b2e4ed082e767ab452"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/10-mentor-back.png",
+                            "sha256":  "e083b147425ac1488f77d963d00353e9592284912c637e4207cee1aa826d9d19"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/11-student-connections.png",
+                            "sha256":  "1e1e0abe2e52976fd12f94c69a6dc736063ed0816d5ac08f9376cbb46f35664d"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/12-student-careers.png",
+                            "sha256":  "55abf7ce605f69c4adf4320a020b2dad3d49bc3df9805fe28228a820a01aa710"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/13-student-profile.png",
+                            "sha256":  "36b2b24f57491b1f4a7e679bc587ffb0284a4e0fc9325395d77060bd8164b14d"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/14-alumni-home.png",
+                            "sha256":  "2175b35e7bcb5a5e94d61ebb2070c7b6a16d4fccc1ca093fbf501533a2dba08a"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/15-alumni-profile.png",
+                            "sha256":  "858793469dcfefbaae322747d04302bad908abd45077b06f94d815f81bf4d0ef"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/16-alumni-connections.png",
+                            "sha256":  "7215579c8f3bd962e1e12fd1b3634273f3a411c9f5d17b78ded18306765b41af"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/17-alumni-mentors.png",
+                            "sha256":  "a08b8e1dbb6a8bf3916204664670bf3b9617cdba68673f75c0c7e2add7cd25ee"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/18-alumni-careers.png",
+                            "sha256":  "77eb7ccb61b6a92827598d1ef1b82a715a37fe00cd9d4991c429a397082a8b59"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/19-restored-staff-home.png",
+                            "sha256":  "c9b72b3528eddad184c2307792bc10a11c872548626a83d78889b9293fa8fc4a"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/20-staff-discovery.png",
+                            "sha256":  "81d95fa330105ad33dfe164bee2c326b0fb06fc3353996cafcb4acac54200b64"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/21-staff-mentors.png",
+                            "sha256":  "7dd059cd5fc10cb41d379f472d6c2a9534f5ea0aa510b4eb8a146b875b10c8da"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/22-staff-careers.png",
+                            "sha256":  "fe583fdf43afdbe958f8d49aaa0549879e09dd3c3794f98cb89d842f5cd86e53"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/23-background-resume.png",
+                            "sha256":  "b4bbc47cc5dd42d8ceba3b28c13562519dca0d44b3d68616ab09f8e24724eb0a"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/24-samsung-map.png",
+                            "sha256":  "5cb2cd5fb5ef740bb17ec292b4906f7dc0e1596f56566e298136c4361aa48357"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/25-samsung-vertical-pan.png",
+                            "sha256":  "a98b289e59d07b90ade4fb3b342e6eeeb227deb2896465e6e8dd7faf9817a908"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/26-samsung-city-marker.png",
+                            "sha256":  "663bc51cf3864e16cbdc07c35d0ceb417ec1904bcf195542235f17fd193da3b3"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/27-final-staff-home.png",
+                            "sha256":  "f914e8f5a1f108a65ee4003975214e6d4d217be14e068edcea0dcabb93dad2e6"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/28-samsung-programme-choice.png",
+                            "sha256":  "0e423c1bbf970ccadb2b60dfa065daa7f8a327b0e07dce2cbdb086e460804191"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/29-samsung-filter-result.png",
+                            "sha256":  "17396d0d54ee2901c3c399a45040f4a0f6b5d4c77d79c04628b7faaba2cbcc16"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/30-restored-staff-home.png",
+                            "sha256":  "46b99bc5af2a1414e8b2ed9ad5d955d523377d842f168ad5d371bdc560ab8102"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/31-final-acceptance-staff-home.png",
+                            "sha256":  "ae3ce6f84cfcf8941e6fba822190f1c19cf1743d56a618958191e5e9792e9072"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-0-east.png",
+                            "sha256":  "646c1ace32f1bb5f05af9b696cfa566ef32be9d62da2ce74e773d6dd5fb29d22"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-0-east-repeat.png",
+                            "sha256":  "1baafdb050a9ebb683b3850990ae716309cdaa71c84cbfa2e81007526d34593f"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-0-west.png",
+                            "sha256":  "de1ed0ccb875d56d787c47287f05b3119dd233e12aa6e7ea9d395d71d73fb20c"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-0-west-repeat.png",
+                            "sha256":  "de1ed0ccb875d56d787c47287f05b3119dd233e12aa6e7ea9d395d71d73fb20c"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-1-east.png",
+                            "sha256":  "65cd44d8ca23b3f6f154b3ff4227264ae66efa2ac00b1e39b7a53c5656cd8cc5"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-1-east-repeat.png",
+                            "sha256":  "65cd44d8ca23b3f6f154b3ff4227264ae66efa2ac00b1e39b7a53c5656cd8cc5"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-1-west.png",
+                            "sha256":  "a14caa9bab3c88cbe7f5facdd9741323c8df222fc0aaf183e63b45e7ab641da3"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-1-west-repeat.png",
+                            "sha256":  "a14caa9bab3c88cbe7f5facdd9741323c8df222fc0aaf183e63b45e7ab641da3"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-2-east.png",
+                            "sha256":  "c9b86181b0b1506a0946e00d6a0a31138d270e798988250cf8f351b137c0345d"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-2-east-repeat.png",
+                            "sha256":  "691f754ef11a4acde969ff421905ed4d7af70d94a6c5c99e712cd514dca01bdc"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-2-west.png",
+                            "sha256":  "98a2eb6ef751552a7b0471ce655be009e0ccc8d9e3c786718834939d98876681"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-2-west-repeat.png",
+                            "sha256":  "98a2eb6ef751552a7b0471ce655be009e0ccc8d9e3c786718834939d98876681"
+                        },
+                        {
+                            "file":  "build/task12d-samsung/map-vertical-before.png",
+                            "sha256":  "e20730b4f26d3287c96ffac464b760448298291484c9c7176f9d1302e34c1140"
+                        }
+                    ]
+}
