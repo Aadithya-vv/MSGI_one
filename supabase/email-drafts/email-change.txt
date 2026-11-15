@@ -1,6 +1,7 @@
 Confirm email address change
 
 MSGI One — One Community. Infinite Connections.
+Development pilot — consenting testers only.
 
 An email address change was requested for your MSGI One account. You may need to confirm this change from both your current and new inboxes.
 

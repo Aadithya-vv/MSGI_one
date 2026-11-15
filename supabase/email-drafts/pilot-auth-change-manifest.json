@@ -1,0 +1,46 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_EXECUTABLE",
+  "target_project_ref": "sbgshejyvkptmrffiwvd",
+  "provider": "Resend proposed; owner approval required",
+  "unresolved": [
+    "Approved controlled sender domain and provider verification",
+    "Approved sender mailbox, support contact and HTTPS fallback",
+    "Private consented recipient allowlist and server-enforced restriction",
+    "Provider ownership, billing, verified quotas and credential handoff"
+  ],
+  "proposed_changes": {
+    "auth.minimum_password_length": {"observed": 6, "proposed": 12},
+    "auth.site_url": {"observed": "http://localhost:3000", "proposed": null},
+    "auth.rate_limit.email_sent": {"observed_projected": 2, "proposed": 30},
+    "auth.email.smtp.enabled": {"observed": "unverified", "proposed": true},
+    "auth.email.smtp.host": {"observed": "unverified", "proposed": "smtp.resend.com"},
+    "auth.email.smtp.port": {"observed": "unverified", "proposed": 465},
+    "auth.email.smtp.user": {"observed": "not retrieved", "proposed": "resend"},
+    "auth.email.smtp.sender_name": {"observed": "unverified", "proposed": "MSGI One Development"},
+    "auth.email.smtp.admin_email": {"observed": "not retrieved", "proposed": null},
+    "auth.enable_signup": {"observed": true, "initial_containment_proposal": false}
+  },
+  "preserve": {
+    "auth.email.enable_confirmations": true,
+    "auth.email.double_confirm_changes": true,
+    "auth.email.otp_expiry": 3600,
+    "auth.email.otp_length": 8,
+    "auth.email.max_frequency": "60s",
+    "auth.mfa.totp.enroll_enabled": true,
+    "auth.mfa.totp.verify_enabled": true,
+    "auth.additional_redirect_urls": ["com.msgi.one.dev://auth-callback/"],
+    "auth.rate_limit.sign_in_sign_ups": 30,
+    "auth.rate_limit.token_refresh": 150,
+    "auth.rate_limit.token_verifications": 30
+  },
+  "credential_input": "Owner-managed provider credential entered privately in hosted SMTP settings; never stored in this manifest",
+  "tls": "Implicit TLS at 465; verify supported provider/client configuration before approval; no insecure fallback",
+  "signup_reopening_gate": "Keep signup closed until a separately reviewed server-side exact-email allowlist is approved and tested; client gating is insufficient",
+  "templates": {
+    "confirmation": {"subject": "[DEV] Confirm your email — MSGI One", "html": "confirmation.html"},
+    "recovery": {"subject": "[DEV] Reset your password — MSGI One", "html": "recovery.html"},
+    "email_change": {"subject": "[DEV] Confirm email address change — MSGI One", "html": "email-change.html"}
+  },
+  "never_apply_as_full_config": true,
+  "hosted_mutations_performed": false
+}

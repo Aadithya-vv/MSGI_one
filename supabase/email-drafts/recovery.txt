@@ -1,6 +1,7 @@
 Reset your password
 
 MSGI One — One Community. Infinite Connections.
+Development pilot — consenting testers only.
 
 A password reset was requested for your MSGI One account.
 
