@@ -1,5 +1,9 @@
 # MSEC media approval record: pending
 
+Task 12C clarification: the new candidate uses a text-only institutional card.
+The Task 12B proposed image placements remain proposals, not shipped artwork.
+No permission status changed and no official image/crest was added to the APK.
+
 Reviewed 2026-11-15. **No permission to redistribute/bundle/commit the following
 photographs or crest has been confirmed.** The owner explicitly confirmed this
 during Task 12B and directed continued map/UI work with placeholders.

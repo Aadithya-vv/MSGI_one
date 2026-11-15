@@ -9,7 +9,7 @@ import 'helpers/demo_test_support.dart';
 
 void main() {
   testWidgets(
-    'Pending institutional imagery is explicit, local and not a crest',
+    'Institutional identity is text-only, local and has no missing media',
     (tester) async {
       final old = HttpOverrides.current, http = RejectDemoHttp();
       HttpOverrides.global = http;
@@ -20,11 +20,8 @@ void main() {
         ),
       );
       expect(find.text(MsecCatalog.name), findsOneWidget);
-      expect(find.textContaining('Campus image placeholder'), findsOneWidget);
-      expect(
-        find.textContaining('Official crest awaiting permission'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('placeholder'), findsNothing);
+      expect(find.byIcon(Icons.image_outlined), findsNothing);
       expect(find.byType(Image), findsNothing);
       expect(http.requests, 0);
       expect(tester.takeException(), isNull);

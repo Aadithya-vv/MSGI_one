@@ -48,7 +48,8 @@ void main() {
       }
 
       await ready(find.text('Explore Demo'));
-      expect(find.textContaining('Campus image placeholder'), findsOneWidget);
+      expect(find.textContaining('Meenakshi Sundararajan'), findsOneWidget);
+      expect(find.textContaining('placeholder'), findsNothing);
       await binding.convertFlutterSurfaceToImage();
       await tester.pumpAndSettle();
       await binding.takeScreenshot('task12b_welcome');

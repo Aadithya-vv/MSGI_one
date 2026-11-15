@@ -412,3 +412,12 @@ map. Fractional Android sizes require a small projected-pixel interior margin.
 Official MSEC media remains outside bundled assets until redistribution approval
 is confirmed; explicit placeholders reserve proposed placements. See
 [the map and branding review](task12b-branding-map-polish.md).
+
+Task 12C builds a separately versioned offline competition candidate with
+`MSGI_COMPETITION_ONLY=true`. The entry hides real-account actions and ignores
+authentication callbacks before backend initialization. Ordinary development
+authentication retains its existing default behavior. The candidate ships a
+clean text-only MSEC card instead of pending-photo/crest placeholders; no media
+permission is inferred. Its fixed signing wrapper refuses replacement paths,
+uses the existing process-only DPAPI handoff and requires the original signer
+fingerprint before copying. The v1.0.0 fallback remains frozen.

@@ -26,10 +26,14 @@ class ExperienceRoot extends StatefulWidget {
     this.persistence,
     this.links,
     this.openProduction = ProductionSession.fromGateway,
+    this.competitionOnly = const bool.fromEnvironment('MSGI_COMPETITION_ONLY'),
   });
   final DemoPersistence? persistence;
   final AuthEntryLinks? links;
   final Future<ProductionSession> Function() openProduction;
+
+  /// Release-only offline boundary; ordinary development auth stays unchanged.
+  final bool competitionOnly;
   @override
   State<ExperienceRoot> createState() => _ExperienceRootState();
 }
@@ -92,6 +96,7 @@ class _ExperienceRootState extends State<ExperienceRoot> {
   }
 
   void _acceptLink(Uri uri) {
+    if (widget.competitionOnly) return;
     if (!isProductionAuthEntry(uri)) return;
     final now = DateTime.now(), key = uri.toString();
     if (key == _lastLink &&
@@ -167,6 +172,7 @@ class _ExperienceRootState extends State<ExperienceRoot> {
   }
 
   Future<void> _real() async {
+    if (widget.competitionOnly) return;
     if (_openingProduction != null) return _openingProduction!;
     final future = _openReal();
     _openingProduction = future;
@@ -349,24 +355,30 @@ class _ExperienceRootState extends State<ExperienceRoot> {
                 const SizedBox(height: 16),
                 const MsecInstitutionIdentity(campusPreview: true),
                 const SizedBox(height: 24),
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.login),
-                  onPressed: _real,
-                  label: const Text('Sign in to real community'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await _real();
-                    if (mounted && _experience == _Experience.production) {
-                      _realScope?.read(appRouterProvider).go('/signup');
-                    }
-                  },
-                  child: const Text('Create an account'),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Real access keeps existing email confirmation, institutional verification and privacy rules.',
-                ),
+                if (widget.competitionOnly)
+                  const Text(
+                    'Offline competition demonstration · All people and activity are fictional.',
+                  )
+                else ...[
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.login),
+                    onPressed: _real,
+                    label: const Text('Sign in to real community'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await _real();
+                      if (mounted && _experience == _Experience.production) {
+                        _realScope?.read(appRouterProvider).go('/signup');
+                      }
+                    },
+                    child: const Text('Create an account'),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Real access keeps existing email confirmation, institutional verification and privacy rules.',
+                  ),
+                ],
                 if (_problem != null) Text(_problem!),
               ],
             ],

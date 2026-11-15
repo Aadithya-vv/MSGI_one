@@ -168,3 +168,9 @@ Task 12B adds a bounded single-world map and MSEC identity placeholders in a
 separate debug candidate. Official photos and crest are pending redistribution
 approval and are not bundled. The frozen competition APK is unchanged. See
 [the candidate review](docs/task12b-branding-map-polish.md).
+
+Task 12C prepares signed candidate `1.0.1+2` at a separate local output. It uses
+the same signing identity, the bounded map, text-only MSEC cards and offline-only
+entry. The v1.0.0 fallback remains frozen. See
+[signed candidate validation](docs/task12c-release-candidate-validation.md) before
+selecting a demonstration build. Distribution/submission requires owner approval.

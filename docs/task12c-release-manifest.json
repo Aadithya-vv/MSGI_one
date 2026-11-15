@@ -1,0 +1,396 @@
+﻿{
+    "date":  "2026-11-15",
+    "starting_commit":  "a1c299ba3298ce91fcbc7307d8bb22c4b4ae2804",
+    "candidate_version":  "1.0.1+2",
+    "certificate_sha256":  "857fbe0fc6d3366bb46c59745fce24eb03cef23b78a6b030a24148fb0d995cc4",
+    "flutter_tests_passed":  212,
+    "android_source_journeys_passed":  2,
+    "signed_unique_screenshots":  53,
+    "map_edge_comparisons_passed":  6,
+    "fallback_files_verified":  56,
+    "hosted_operations":  0,
+    "physical_device_operations":  0,
+    "distributed":  false,
+    "files":  [
+                  {
+                      "file":  "build/competition-release/MSGI-One-1.0.0-competition.apk",
+                      "bytes":  57966548,
+                      "sha256":  "aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809"
+                  },
+                  {
+                      "file":  "build/competition-release-candidate/MSGI-One-1.0.1-rc1.apk",
+                      "bytes":  56049560,
+                      "sha256":  "3b8d41351b554e3603c9e0d747357a359b3ec1651d4431e7e9643534ab9bc2e7"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/00-entry-offline.png",
+                      "bytes":  188921,
+                      "sha256":  "d9b0667c9635ef44484c35894a27fb2f0b8019813495ec717ffeb43864a4fb84"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/01-role-choice.png",
+                      "bytes":  175972,
+                      "sha256":  "2ef187ce1b95b002c5d1e55bf7f16d55436d26c6fcdfd7518bdb44309f9f9fbb"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/02-student-home.png",
+                      "bytes":  237651,
+                      "sha256":  "8ea96d4364cc4697cbda6edfbe668a41c5d90679ecb3b21353546760ba75f8a3"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/03-student-discovery.png",
+                      "bytes":  193634,
+                      "sha256":  "113b597cf5b8bd388972aad19dcc5f8ccf82323d746cbe724a2d7d8176e8da1d"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/04-student-map.png",
+                      "bytes":  158366,
+                      "sha256":  "b3c2b5671ebf31ed4554befa889eb2cc7af1705b75ab7e6200ba4303de97a6d7"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/05-student-network.png",
+                      "bytes":  155846,
+                      "sha256":  "16642abf23ed4a92235c0947f64865236d1fd864dfcba85960a6aed6cc25de6d"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/06-student-profile.png",
+                      "bytes":  230676,
+                      "sha256":  "21c375f14a097e450ef29d5e3027bb42827163810139070887c1b3b720ab140f"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/07-student-mentors.png",
+                      "bytes":  197127,
+                      "sha256":  "e392a9b5c3442828347a216538c62848a23c8896f159ad80b1fee0643a806365"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/08-mentor-android-back.png",
+                      "bytes":  236741,
+                      "sha256":  "ccc348fa1f6d326b88507d15ecf69512857f3221d858bdca0a2862a02ff72462"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/09-student-opportunities.png",
+                      "bytes":  191650,
+                      "sha256":  "98f724923e269a83c543a33e9fecaafb6e790b368ffdc83d2e73a9e977277b6b"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/10-alumni-home.png",
+                      "bytes":  236700,
+                      "sha256":  "838a0212dde9dc54ce1ed6b5607b3f3e36f30f84ac8e6ceb4b35fefad057c54d"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/11-alumni-profile.png",
+                      "bytes":  252698,
+                      "sha256":  "13b0ac86df6005de209c9e560543e4c40cad745fdaeb796857fe9f89593a515a"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/12-staff-home.png",
+                      "bytes":  244561,
+                      "sha256":  "b4a0ba42ef69bc12ef0eedd962b8c95b5394b634c768cad504c1d3f8825bf2a3"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/13-staff-discovery.png",
+                      "bytes":  194745,
+                      "sha256":  "80b0c3df3e039a83b3417b0423e65bf8364455c573b26915ff00f02849960323"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/14-staff-mentors.png",
+                      "bytes":  203979,
+                      "sha256":  "f223c04e3fd63f6bbfc27d9d8e7480c0b434c4c26f050fa84f30e7416d1924f9"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/15-staff-opportunities.png",
+                      "bytes":  202375,
+                      "sha256":  "7287f0cd2ae2be506faeb1f86778d95391202b9b28372c457da6e89b3ad50bb9"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/16-staff-profile.png",
+                      "bytes":  267779,
+                      "sha256":  "d7bcb7405fce326328d5daac68eaca726b3732f621df55f268bc8f63b7f68f00"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/17-staff-persisted-after-restart.png",
+                      "bytes":  244062,
+                      "sha256":  "2fd92668e89f40b2feeeb9fe0f90ff74a7bb42977d5a98165aa668fa077fee88"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/18-fictional-disclosure.png",
+                      "bytes":  236292,
+                      "sha256":  "ba91bc724be7af28d95a81d2874514e7ecafa4ec97470082206db8046cb53ce6"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/19-exit-demo.png",
+                      "bytes":  187660,
+                      "sha256":  "5e44e76d36b626cde4dfe20467f456564f87561b95a40352d9e1aa368c5c7347"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/20-offline-only-entry.png",
+                      "bytes":  187660,
+                      "sha256":  "5e44e76d36b626cde4dfe20467f456564f87561b95a40352d9e1aa368c5c7347"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/21-keyboard-search.png",
+                      "bytes":  209408,
+                      "sha256":  "5d1e4a06e76c241b310279231a77b0d64f86cade23c49901e39464921b38f6b9"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/22-search-result.png",
+                      "bytes":  164389,
+                      "sha256":  "babe51976c3a247e485ad8b037b0bc0e5999fdd757042cbbcb2d99c5e77fa954"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/23-fictional-alumni-detail.png",
+                      "bytes":  228968,
+                      "sha256":  "32b2b66475ee6f12bda78acd34f5cffe02a1f37fc7f1a4190b1bb0e309a5acad"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/24-local-connection-request.png",
+                      "bytes":  242359,
+                      "sha256":  "703b79e3f3c611c4c11096358a45e4d0cf3d359d95dd34fd52ea4d4f16188377"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/25-student-relaunch.png",
+                      "bytes":  236748,
+                      "sha256":  "f5ff3ba888f3bbc6ad29a0c1413a18b98e587cfd8040e917a3ffa4f416b47634"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/26-request-persists-after-relaunch.png",
+                      "bytes":  231524,
+                      "sha256":  "92ef1d9f72f44495368d823c300135754eb80f1b9797a60fd9ace48ea330e6bb"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/27-empty-search.png",
+                      "bytes":  114315,
+                      "sha256":  "31b13f4d670fbf7b3da17c38c550d000a5a1d10d72523d95a5313d6e705fcdaf"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/28-filter-controls.png",
+                      "bytes":  121761,
+                      "sha256":  "0269991bc398275809078caa19ab1e199b22e7757bac6e0bc24e05da1a8d1011"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/29-alumni-mentors.png",
+                      "bytes":  203724,
+                      "sha256":  "6d4b407c4600332a2d4032cfce07fecc786f40c283d4b50b7b41296bcfe23dff"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/30-alumni-publishing-action.png",
+                      "bytes":  198665,
+                      "sha256":  "c5474edcdfb10f11abac0838abd52a6fe9e7df107e696a362d250faae6af149b"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/31-incoming-request-actions.png",
+                      "bytes":  187556,
+                      "sha256":  "c3110b1d9cd967505a5cd7e531c75a6c676c58d2885fea411a73a2ad3ee7b451"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/32-simulated-acceptance.png",
+                      "bytes":  182056,
+                      "sha256":  "2b85589b5521e0163ee6997747ae5a2458062445e81db49aa4ccd4e73f017430"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/33-reset-confirmation.png",
+                      "bytes":  213815,
+                      "sha256":  "82abb51de268c94fe4046fe0c3ee09eb8bf1ec7e8cac0cb9bbe68d8b5bcd0741"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/34-reset-student-home.png",
+                      "bytes":  236995,
+                      "sha256":  "e9d67df5e0388db0887e26fdf790ecdf10242fd2186f755acaf1f0a3a75acb46"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/35-large-text-home.png",
+                      "bytes":  289001,
+                      "sha256":  "86370d94a4cfb75c0be4c84bd17195d09a653d57ce7cd4ed0d1253f3bb800898"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/candidate-background-resume.png",
+                      "bytes":  237124,
+                      "sha256":  "59fd3df7d8e3b241e7e6b2d1fb6e3effd450ba1bee11510364ca5f87616d7197"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/candidate-callback-ignored.png",
+                      "bytes":  237124,
+                      "sha256":  "59fd3df7d8e3b241e7e6b2d1fb6e3effd450ba1bee11510364ca5f87616d7197"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/candidate-exit.png",
+                      "bytes":  188317,
+                      "sha256":  "b9a5c4b5e42d31949ea448d242ce846f4b0b6b82038b1e462df357dfefe894ac"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/candidate-reentry.png",
+                      "bytes":  237124,
+                      "sha256":  "59fd3df7d8e3b241e7e6b2d1fb6e3effd450ba1bee11510364ca5f87616d7197"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-0-east-repeat.png",
+                      "bytes":  156577,
+                      "sha256":  "fa6e92409408b1621f69b4687ec3bb470e549ddc60e374ef70e7ccbd2966e650"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-0-east.png",
+                      "bytes":  156577,
+                      "sha256":  "fa6e92409408b1621f69b4687ec3bb470e549ddc60e374ef70e7ccbd2966e650"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-0-west-repeat.png",
+                      "bytes":  146376,
+                      "sha256":  "1510d6afd367a2fa6d928a3a7be24cbba6935021ee15f2da73389c6c264bc221"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-0-west.png",
+                      "bytes":  146050,
+                      "sha256":  "0375db0b5821c6d416f90cccf5629fd57ddbc38cbe79264b17abd1d99c6e7e6d"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-1-east-repeat.png",
+                      "bytes":  134081,
+                      "sha256":  "d187f78425068deb7fa1555122d9f241cc939f5e62aef7753e2605f6a25695cf"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-1-east.png",
+                      "bytes":  134081,
+                      "sha256":  "d187f78425068deb7fa1555122d9f241cc939f5e62aef7753e2605f6a25695cf"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-1-west-repeat.png",
+                      "bytes":  127997,
+                      "sha256":  "3e96b2829d75e61d6565416198c8dec3b70cba267b2115294a1fce25d9939a86"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-1-west.png",
+                      "bytes":  127997,
+                      "sha256":  "3e96b2829d75e61d6565416198c8dec3b70cba267b2115294a1fce25d9939a86"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-2-east-repeat.png",
+                      "bytes":  128827,
+                      "sha256":  "abb0659b63884a615a16e50b6e1747e908489d3ca7e6cf04481ee0fbb82c14fb"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-2-east.png",
+                      "bytes":  128827,
+                      "sha256":  "abb0659b63884a615a16e50b6e1747e908489d3ca7e6cf04481ee0fbb82c14fb"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-2-west-repeat.png",
+                      "bytes":  116637,
+                      "sha256":  "58ef4f06722062d3276831869f630820d5b10edde31196dd4e7a7b57e8eb2fb3"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-2-west.png",
+                      "bytes":  116637,
+                      "sha256":  "58ef4f06722062d3276831869f630820d5b10edde31196dd4e7a7b57e8eb2fb3"
+                  },
+                  {
+                      "file":  "build/task12c/signed-apk/map-city-detail.png",
+                      "bytes":  198296,
+                      "sha256":  "84566d9566efaf18248edc578128080431141e7e6b5c9c32f9b36a4d20052a50"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/00_app_entry.png",
+                      "bytes":  182618,
+                      "sha256":  "6c80d451d9bfddd5b90720ef8d773fb8120dd7034117cf5c723bd4b205b2c651"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/00_demo_perspectives.png",
+                      "bytes":  168609,
+                      "sha256":  "84bff2d07a215012a8fde9b73842669b750490fd723797548a7ee94400f4f6e1"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/01_alumni_discovery.png",
+                      "bytes":  157656,
+                      "sha256":  "759ba6f5c1b9241516e1f2ab4547a34c1549fd9cb62b1188048fface4f68afea"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/01_alumni_filters.png",
+                      "bytes":  126221,
+                      "sha256":  "303d660a1ec080d2d9a53d921834624e179a60b55d274cb215602fcfa9d3fc57"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/01_msec_student_programme.png",
+                      "bytes":  219346,
+                      "sha256":  "228edb7db23facce07c227d535d3a1f089fd94a7c3fc7915830d49c96360e722"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/01_student_home.png",
+                      "bytes":  229161,
+                      "sha256":  "c4f43d1184d94a8c0604dd2327f38bc350b5b40ad429dae4090c4d591055dc84"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/02_sample_alumni_profile.png",
+                      "bytes":  224937,
+                      "sha256":  "acfc1c2efe6714254a9d842acb5135bbea2011c8bc6e8e99cb5571401a17e994"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/03_career_opportunities.png",
+                      "bytes":  178271,
+                      "sha256":  "586c6e0496e6384c5d524abd424d564de3396651880fe1c21298cec441c10ca3"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/03_mentor_recommendations.png",
+                      "bytes":  195335,
+                      "sha256":  "0dcdda372ebe98022919da7308c1eebdcbda9e9fc538d0181c4f6aca2daab027"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/04_offline_map.png",
+                      "bytes":  194750,
+                      "sha256":  "701694eb7ca83d9ca2b0012c95505ad8f2832454d4fdbebac86eb16afb4b2028"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/05_alumni_connections.png",
+                      "bytes":  179432,
+                      "sha256":  "15e788bba662f7613ab31654a5ab7ff66f07ad14563ebe0b5ab5534b8e87657b"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/05_alumni_profile.png",
+                      "bytes":  213222,
+                      "sha256":  "e82fc0a402da1c4581e9583aed1e51d33eb99323c2883d47483bcb73482a5958"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/05_opportunity_editor.png",
+                      "bytes":  138774,
+                      "sha256":  "e3a03311feafaaff02e2f7e65f6c1086e96bc8cf494c414aae4e75249908c430"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/06_simulated_opportunity.png",
+                      "bytes":  156587,
+                      "sha256":  "ac7aa2ff9b603029e5f7321e544e96e6bc5f568b5f42e9e8feefc14583fb2f89"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/07_staff_community.png",
+                      "bytes":  194303,
+                      "sha256":  "8ad125e731aef7581fa36bec4e5d392c14971f86daef295ec7b309148d74fcf7"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/08_reset_student_home.png",
+                      "bytes":  229161,
+                      "sha256":  "c4f43d1184d94a8c0604dd2327f38bc350b5b40ad429dae4090c4d591055dc84"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/09_large_text_home.png",
+                      "bytes":  259542,
+                      "sha256":  "2e99be1be4c288c8596ff0770e09ebc434c2744e91efae31633e79c6b26daf06"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/task12b_city_interaction.png",
+                      "bytes":  184445,
+                      "sha256":  "9745a50de08e2ea986aeab94fd80792bd5f8247284e289465fde80991434ccfd"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/task12b_east_edge.png",
+                      "bytes":  138199,
+                      "sha256":  "16672ed19d810819955d3eec528da6b85d8c560bf6a0d759315bf99b5eb503d8"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/task12b_welcome.png",
+                      "bytes":  182618,
+                      "sha256":  "6c80d451d9bfddd5b90720ef8d773fb8120dd7034117cf5c723bd4b205b2c651"
+                  },
+                  {
+                      "file":  "build/task12c/integration-screenshots/task12b_west_edge.png",
+                      "bytes":  147527,
+                      "sha256":  "aaa51498ae106969ab7d80382c5795f66b77fb46a58159cc6522ebb222a94403"
+                  }
+              ]
+}

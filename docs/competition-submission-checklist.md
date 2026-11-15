@@ -73,6 +73,17 @@ formal submission. Do not guess a portal from an unrelated competition.
 
 ## Final owner release checklist
 
+Task 12C additionally prepares a separate signed `1.0.1+2` candidate at
+`build/competition-release-candidate/MSGI-One-1.0.1-rc1.apk`. Its SHA-256 is
+`3b8d41351b554e3603c9e0d747357a359b3ec1651d4431e7e9643534ab9bc2e7`.
+It uses the same approved certificate, a bounded world map, text-only MSEC
+context and an explicitly offline-only entry. No official photographs/crest or
+live registration is included. The v1.0.0 fallback remains untouched.
+See [candidate acceptance evidence](task12c-release-candidate-validation.md)
+before choosing between artifacts; this inventory entry is not distribution
+approval. New candidate physical-device/projection acceptance is pending and
+Samsung was deliberately not modified.
+
 - [ ] Confirm official rules and permitted offline-demo scope.
 - [ ] Approve team/mentor details, institutional wording and AI/IP disclosures.
 - [ ] Confirm independent recoverable signing-key/password custody privately.
