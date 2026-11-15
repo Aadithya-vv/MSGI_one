@@ -1,0 +1,12 @@
+Confirm your email
+
+MSGI One — One Community. Infinite Connections.
+
+Confirm your email address to continue setting up your MSGI One account.
+
+Confirm email: {{ .ConfirmationURL }}
+
+This link expires according to the service security policy. Request a fresh email if expired or already used.
+
+If you did not create an account, ignore this message.
+Email confirmation does not verify institutional affiliation. Never share your password or this link.

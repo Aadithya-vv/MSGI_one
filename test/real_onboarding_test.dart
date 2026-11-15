@@ -321,9 +321,31 @@ void main() {
       expect(seed, contains(p.name));
       expect(seed, contains(p.id));
     }
-    expect(RegExp("'undergraduate'\\)").allMatches(seed).length, 9);
-    expect(RegExp("'postgraduate'\\)").allMatches(seed).length, 4);
-    expect(seed, contains("current_setting('msgi.catalog_approved'"));
+    final programmeJson = RegExp(r"jsonb_to_recordset\('([^']+)'::jsonb\)")
+        .allMatches(seed)
+        .map((m) => jsonDecode(m.group(1)!) as List)
+        .firstWhere(
+          (rows) => (rows.first as Map).containsKey('application_key'),
+        );
+    expect(programmeJson, hasLength(13));
+    expect(
+      programmeJson.where((p) => p['level'] == 'undergraduate'),
+      hasLength(9),
+    );
+    expect(
+      programmeJson.where((p) => p['level'] == 'postgraduate'),
+      hasLength(4),
+    );
+    for (final p in MsecCatalog.catalog.programmes) {
+      expect(
+        programmeJson.singleWhere(
+          (row) => row['application_key'] == p.id,
+        )['name'],
+        p.name,
+      );
+    }
+    expect(seed, contains("current_setting('msgi.reference_bundle'"));
+    expect(seed, contains('Atomic reference bundle required'));
   });
   testWidgets(
     'Student selects a canonical programme without a department claim',

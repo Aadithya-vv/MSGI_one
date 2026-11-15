@@ -1,0 +1,12 @@
+Confirm email address change
+
+MSGI One — One Community. Infinite Connections.
+
+An email address change was requested for your MSGI One account. You may need to confirm this change from both your current and new inboxes.
+
+Confirm email change: {{ .ConfirmationURL }}
+
+This link expires according to the service security policy. Request a fresh email if expired or already used.
+
+If you did not request this change, do not approve it. Contact your approved support channel.
+Email confirmation does not verify institutional affiliation. Never share your password or this link.
