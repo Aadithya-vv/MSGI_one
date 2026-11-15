@@ -1,5 +1,11 @@
 # Task 11B.5D: secure database connection review
 
+**Task 11B.5E follow-up: direct authenticated read-only acceptance PASSED.**
+The owner entered the password once in a private masked window; verified TLS 1.3,
+read-only SQL, database identity, eleven migrations and four empty catalogs passed.
+The earlier Task 11B.5D pending-authentication statements below are historical.
+No catalog deployment was performed. See the final Task 11B.5E section.
+
 Date: 2026-11-15 (Asia/Calcutta). Starting commit:
 `ca2caf97a166d4d3ad5a32b03a52bc772159dd3f`.
 **Local implementation and secure TLS transport validated. Hosted authenticated
@@ -184,3 +190,115 @@ action, APK rebuild, credential rotation, global trust-store change or push occu
 Signed APK SHA-256 remains
 `aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
 Unrelated untracked reports and backups are preserved.
+
+## Task 11B.5E: direct authentication and read-only acceptance — PASS
+
+Review date: 2026-11-15 (Asia/Calcutta). Starting HEAD:
+`73259b3908cc7969fe0d81781dccb5cf56fd4006`.
+The approved payload and connection implementation were unchanged.
+
+### Temporary private credential handoff
+
+The original agent process had no password variable. A single owner-authorized
+interactive window ran new `tool/request_msec_readonly_credential.ps1` with
+PowerShell `Read-Host -AsSecureString`. The fixed prompt identified the exact
+project, role and read-only scope; input was masked and never entered as a shell
+command, chat response, SQL string or command-line argument.
+
+Before prompting, the launcher verified the hashes of the existing read-only
+entrypoint, all its production modules, payload and public CA. It cannot accept
+an arbitrary command, script, host, SQL or --execute option. The owner provided
+private input once; the assistant received only “Entered privately”.
+
+The SecureString was marshalled temporarily through a BSTR into only the child
+ProcessStartInfo environment, using the existing SUPABASE_DB_PASSWORD interface.
+The BSTR was zero-freed, the secure input disposed, and the environment entry
+removed from ProcessStartInfo immediately after the OS started the child. The
+parent agent/wrapper environment was not set; User/Machine environment settings
+and credential stores were not changed. The child invoked only the already
+reviewed `check_msec_secure_connection.cjs` read-only tool.
+
+The child environment and libpq necessarily hold plaintext credential bytes in
+process memory while authenticating; no claim of eliminating every managed/OS
+memory copy is made. The process/window ended after validation, and the parent
+process still had no SUPABASE_DB_PASSWORD. As previously documented, the local
+Docker daemon and its administrators remain within the trusted host boundary.
+
+Only a whitelisted safe JSON receipt under ignored build/ was persisted. It
+contains project, database/role, TLS version, read-only flag, migration versions,
+catalog counts and approved hashes. Neither raw stderr/stdout nor password,
+token, private connection string or key was stored. No credential file, global
+environment variable, persistent secret or password rotation was introduced.
+
+### Actual hosted SQL evidence
+
+The success receipt was written at **2026-11-14T21:05:24.9608495Z**, corresponding
+to **2026-11-15 02:35:24 IST**. This is the receipt completion time, not an invented
+query-duration measurement. The fixed query already documented above ran in the
+authenticated direct psql connection with `BEGIN READ ONLY` and no catalog or
+approval-control statements.
+
+| Actual direct connection result | Observed value |
+| --- | --- |
+| Project | `sbgshejyvkptmrffiwvd`, independently checked through pinned CLI metadata |
+| Destination | `db.sbgshejyvkptmrffiwvd.supabase.co:5432`, Docker host-network IPv6 route |
+| Authentication | **Succeeded** |
+| TLS | **TLSv1.3**, pinned official CA, verify-full chain and exact hostname |
+| Database / role | `postgres` / `postgres` |
+| `transaction_read_only` | **on** |
+| `pg_stat_ssl.ssl` for the actual backend | **true** |
+| Migration versions | All eleven exact reviewed versions through `20261114000500` |
+| Institutions | **0** |
+| Departments | **0** |
+| Programmes | **0** |
+| Skills | **0** |
+
+Unlike Task 11B.5D's TLS-only challenge, these history/count/SSL values are from
+SQL executed after successful direct authentication, not merely the Management
+API or an inferred password prompt. The read-only client also checked the exact
+version list and empty counts before declaring success. No password retry or
+catalog execution occurred. The original write authorization remains spent.
+
+### Validation and preservation
+
+- Private launcher self-test passed: fixed read-only child path, password absent
+  from argv, parent environment unchanged and child-environment handoff removed.
+  PowerShell syntax parsing passed. Synthetic self-test input is not a real secret.
+- 28 parser/diagnostic unit tests and 11 local TLS tests passed in this task.
+- All 76 preserved local catalog/session checks passed after the backend restart.
+  Together with the 28 unit and 11 TLS checks, **115 automated checks plus the
+  credential-launcher self-test passed**. No hosted deployment or authentication
+  replay was used for these local tests.
+- The usage-limit approval-review interruption did not execute its queued test
+  command. After resumption Docker was stopped, so the first local suite attempt
+  passed 47 non-database checks but could not start its fixture. The existing
+  per-user Docker Desktop was started without installation/configuration changes
+  to complete local validation. These local infrastructure events do not negate
+  or replay the already successful hosted read-only acceptance.
+- The signed competition APK, signing configuration, database backup, catalog SQL,
+  records, CA and session-control implementation were not modified. No existing
+  database was reset. Earlier unrelated untracked reports were preserved.
+
+Launcher source SHA-256:
+`0c68054b6f4e26a1446fc0e25be311a9a413e75ad8095120e8ec89442b738fdf`.
+It is a read-only private-input wrapper, not a new deployment entrypoint.
+
+Exact deployment-plan SHA-256, unchanged:
+**`1dc1532047b90c92e8eab593bd57715d8a736178b35e61c912a72e7d72f52a5a`**.
+Exact approved atomic catalog payload, unchanged:
+`153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428`.
+
+### Next authorization
+
+The direct read-only authentication blocker is resolved. There is no retained
+password to reuse automatically. A future authorized operation needs another
+ephemeral private handoff scoped to that operation; this launcher deliberately
+cannot deploy or persist the credential for later use.
+
+Next decision: obtain **fresh explicit owner authorization for exactly one
+51-record deployment** to the same project using the unchanged payload above,
+this exact host-network/CA-pinned plan and the reviewed CLI response contract.
+Fresh project, TLS, backup integrity/currency, migration, concurrency and empty
+catalog checks remain required immediately before any write. No other hosted
+data, Auth/SMTP/RLS, administrator/user or public-onboarding change is authorized.
+This task stops after read-only acceptance, documentation and a safe checkpoint.

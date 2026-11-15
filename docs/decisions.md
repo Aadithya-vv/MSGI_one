@@ -366,3 +366,11 @@ network mode and CA bytes explicitly. A separate fixed read-only entrypoint can
 validate connectivity without importing the deployment function. Missing private
 credentials leave hosted authenticated acceptance pending; no previous approval
 is reused for this changed plan.
+
+Task 11B.5E uses a temporary masked PowerShell SecureString prompt for a fixed,
+hash-checked read-only child. The password is passed only in that child's private
+process environment, removed from the launch configuration after start, and never
+persisted to a file or global environment. Only whitelisted acceptance metadata
+is returned to the agent. The helper cannot deploy, accepts no arbitrary command
+and retains no credential for a future operation. The existing deployment plan
+and its requirement for a fresh owner authorization remain unchanged.
