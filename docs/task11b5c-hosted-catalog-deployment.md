@@ -1,3 +1,188 @@
+## Task 11B.5F — SUCCESS: verified hosted catalog deployment
+
+Date: 2026-11-15 (Asia/Calcutta). Completed 14:08:15 IST
+(08:38:15 UTC). This is the current outcome; failure/preflight notes below are
+historical. The owner explicitly renewed authorization before this attempt.
+
+Target: `sbgshejyvkptmrffiwvd`. Starting Git HEAD:
+`ae0e4a7ef5c34bc1bcda310163141cc7b80417f1`.
+
+### Approved identities and execution
+
+- Execution-plan SHA-256:
+  `1dc1532047b90c92e8eab593bd57715d8a736178b35e61c912a72e7d72f52a5a`.
+- Exact raw atomic payload SHA-256:
+  `153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428`.
+- CLI response-contract SHA-256:
+  `9530698dc297c73f07caff55a3b63fc36d76444124de03ca20b5005f6acd40be`.
+- Unchanged production runner SHA-256:
+  `fbe21267ac43a7d3e7562c18712df3fa5eb41f5a6a1aa19030a0f20a1a272cfe`.
+- Task-scoped orchestration SHA-256:
+  `6e33ee1d53154eb59e4c0cb4fb3ca38a16336fc99561296493cd6887ca582f67`.
+- Task-scoped masked launcher SHA-256:
+  `469463aa87cffef88bc80c914f87cbe0994bf3402111ee1c407949e3fdcb7b3a`.
+
+The task-scoped wrapper used the reviewed SecureString/BSTR private handoff to a
+fixed Node child environment. No password in argv, SQL, source, receipt or logs;
+launcher handoff state and child credential environment were cleared at exit.
+Only the known report modification was permitted by an exact hash; all production
+modules, helper queries and parser files were pinned before private input.
+The wrapper called the existing production runner once, with no transport/SQL
+substitution or IO overrides. Five original session controls and exact stdin
+payload were preserved. No automatic retry or second execution occurred.
+
+### Fresh gates
+
+Authenticated CLI metadata matched the exact project, ap-northeast-2 region and
+direct hostname `db.sbgshejyvkptmrffiwvd.supabase.co`. Direct PostgreSQL
+read-only authentication succeeded as postgres in database postgres, over verified
+TLS 1.3 using host networking, pinned official Supabase CA and verify-full
+hostname validation. No insecure fallback was used.
+
+Eleven local/remote migrations matched, with zero pending. Institutions,
+departments, programmes and skills were each empty immediately before execution.
+A 55-table aggregate baseline and security/ACL snapshot were captured. No active
+DDL, waiting/advisory locks, catalog writer locks, competing catalog client or
+competing local deployment process was detected.
+
+Backup `20261114T134947Z-3d9e4376`: manifest SHA-256
+`6ce4fa5779fbff0ec6bafc821ca25bddc5b2fcf52834bd7b49daaebc7d38dbfa`
+and all 15 encrypted-file hashes verified before and after execution. Existing
+successful isolated logical recovery evidence: 52 tables, 50 fingerprints and
+394 schema-object checks. No backup was modified or restored. Accepted DPAPI
+independent recovery and full Supabase service recovery limitations remain.
+
+### Persisted result and safety verification
+
+**SUCCESS**: one dedicated session, one approved atomic transaction; client exit
+0, BEGIN observed, **COMMIT acknowledged**. Independent read-only queries and the
+runner's separate postcheck confirmed:
+
+| Catalog | Verified records |
+| --- | ---: |
+| Institutions | 1 |
+| Departments | 1 |
+| Programmes | 13 (9 undergraduate, 4 postgraduate) |
+| Skills | 36 |
+| Total | 51 |
+
+Exact institution/department/programme tuples matched the approved manifest,
+including identifiers, keys, names, levels, active flags and parent institution
+relationships. All 36 skill names matched exactly with 36 distinct identifiers.
+No extra catalog records or tuple conflicts were found.
+
+All 51 unrelated public/private/Auth/Storage table counts, column selections and
+aggregate row fingerprints matched the immediate prewrite baseline, including
+users, profiles, memberships and administrator records. Eleven migration versions
+were unchanged. Function definitions/configuration, RLS flags/policies, columns,
+constraints, indexes, enum and table/schema/function ACL snapshots were unchanged.
+No new users/profiles/memberships or administrator changes occurred. No Auth/SMTP
+configuration operation was issued; those external dashboard settings were not
+independently fetched as a complete service-configuration snapshot.
+
+Signed competition APK remained unchanged, SHA-256:
+`aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+No Android operation, migration deployment, SMTP/Auth adjustment, verification
+approval, signup invitation or additional record insertion was performed.
+
+### Validation and next boundary
+
+Prior validation: 115 local safety checks and five focused BOM-parser tests
+passed. This execution additionally passed fresh authenticated preflight,
+COMMIT tracking and persisted-data/security comparisons. No unexpected execution
+warning/error was reported in sanitized diagnostics. No Flutter build was needed.
+
+Only this safe report is committed; ignored orchestration/receipts contain no
+passwords or private rows and are not committed. Two pre-existing untracked
+reports are preserved. No push.
+
+Stop here. Real-user readiness still requires separately authorized SMTP/email
+work, administrator/bootstrap and verification ownership, and hosted onboarding
+acceptance/privacy checks. Catalog success does not establish real-user launch
+approval. Do not rerun this first-deployment operation against nonempty catalogs.
+
+---
+## Task 11B.5F follow-up — BOM correction and read-only preflight passed
+
+The owner approved correcting the local BOM reader and repeating preflight.
+No new hosted write was authorized or performed in this follow-up.
+
+The ignored task-scoped JSON reader now decodes UTF-8 and removes a single
+leading U+FEFF only for JSON parsing. Original backup bytes and SHA-256 checks
+remain unchanged. Both manifest and restore-validation metadata use this reader.
+Five tests passed: plain JSON and BOM JSON accepted; malformed JSON, trailing
+content and trailing BOM rejected. The existing reviewed production runner,
+session controls, approved payload and execution plan were not modified.
+
+Fresh read-only results on 2026-11-15:
+
+- Authenticated project metadata: `sbgshejyvkptmrffiwvd`, expected direct host
+  and region; eleven local/remote migrations match, zero pending.
+- Backup: pinned manifest and all 15 encrypted files verified; isolated recovery
+  evidence confirms 52 tables, 50 fingerprints and 394 object checks.
+- Existing reviewed read-only private launcher: successful direct PostgreSQL
+  authentication, TLS 1.3 with pinned CA and hostname verification, database and
+  role postgres, transaction_read_only=on. No credential persisted or logged.
+- Catalog counts: institutions 0, departments 0, programmes 0, skills 0.
+- Payload SHA-256: `153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428`.
+- Execution-plan SHA-256: `1dc1532047b90c92e8eab593bd57715d8a736178b35e61c912a72e7d72f52a5a`.
+- Production runner SHA-256 unchanged:
+  `fbe21267ac43a7d3e7562c18712df3fa5eb41f5a6a1aa19030a0f20a1a272cfe`.
+- Competition APK unchanged:
+  `aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+
+Current status: **READ-ONLY PREFLIGHT PASSED; NOT DEPLOYED**. No attempt marker,
+write session or COMMIT was produced. Unrelated-data/security baselines and
+concurrency gates must still be collected immediately before a future authorized
+write. The ignored deployment wrapper has not been rerun; its pinned child hash
+must be reviewed/refreshed for the parser correction before any future use.
+Separate explicit authorization is required for the one 51-record deployment.
+No success commit or push was made. Unrelated untracked documentation preserved.
+
+---
+## Task 11B.5F — 2026-11-15: FAILED BEFORE WRITE
+
+Current outcome: **FAILED — local preflight only**. This supersedes historical
+status statements below. No Task 11B.5F deployment attempt, hosted connection or
+hosted write occurred. No automatic retry was performed.
+
+- Project authorized: `sbgshejyvkptmrffiwvd`.
+- Starting HEAD: `ae0e4a7ef5c34bc1bcda310163141cc7b80417f1`.
+- Approved execution plan: `1dc1532047b90c92e8eab593bd57715d8a736178b35e61c912a72e7d72f52a5a`.
+- Approved raw SQL payload: `153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428`.
+- Local tests: 28 parser/diagnostic, 11 TLS and 76 catalog safety checks passed
+  (115 total). The original private credential handoff self-test also passed.
+- Backup: all 15 encrypted-file hashes and manifest identity verified separately;
+  isolated restore evidence reports 52 tables, 50 data fingerprints and 394
+  schema-object checks. No backup was decrypted or modified.
+- A task-scoped ignored launcher reused the masked SecureString/BSTR-to-child-
+  environment mechanism; no password was placed in argv, repository or logs.
+  The existing read-only launcher and production deployment modules were unchanged.
+- The new orchestration failed while parsing the backup manifest: its JSON reader
+  did not strip the existing UTF-8 BOM. The manifest SHA-256 check passed before
+  this parsing failure. This is a local reader defect, not evidence of backup
+  corruption. Raw exception output was restricted to a local JSON-parser error;
+  no credential or private record was included.
+- Execution stopped before the CLI `--check`, direct authenticated acceptance,
+  database baseline collection or `--execute`. Consequently fresh hosted migration,
+  TLS and empty-catalog gates were NOT completed in this run. Historical Task
+  11B.5E results must not be represented as fresh Task 11B.5F evidence.
+- One-attempt marker was not created; no dedicated-session diagnostic or COMMIT
+  acknowledgement exists for Task 11B.5F. Credential material was cleared from
+  launcher handoff state and the child environment at exit.
+- Signed APK SHA-256 remains
+  `aff9c799950863ddd7130bfe4c2b60926a0b199d95e1d41f66106564a0f63809`.
+
+Next step requires approval to correct/test only the task-scoped JSON reader
+(BOM removal for parsing, without changing hashed bytes) and repeat fresh preflight.
+No change to the approved payload, connection plan or session controls is needed.
+Do not deploy until every gate passes under renewed authorization. SMTP,
+administrator bootstrap and real-user acceptance remain separate tasks.
+
+No success checkpoint commit was created. Preserve the two pre-existing untracked
+reports and all backup/APK data. No push, Auth/SMTP/RLS change or Android operation.
+
+---
 # Task 11B.5C: hosted reference catalog deployment gate
 
 Review date: 2026-11-15 (Asia/Calcutta).
@@ -254,7 +439,7 @@ signup or public onboarding is authorized by this local correction.
 Review date: 2026-11-15 (Asia/Calcutta).
 HEAD: `752d8096755d78ebf219516108a53e51dc090ba3`.
 Intended target: `sbgshejyvkptmrffiwvd`.
-**Result: FAILED — preflight blocked; zero deployment attempts.**
+**Result: FAILED â€” preflight blocked; zero deployment attempts.**
 
 The new user instructions explicitly approve one corrected-plan deployment, with
 fresh destination, credential, TLS, backup, migration and empty-catalog gates.
