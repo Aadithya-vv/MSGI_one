@@ -1,3 +1,5 @@
+import 'administration_dashboard.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
@@ -14,91 +16,39 @@ class AdministrationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: AppBar(
-      title: const Text('Membership review'),
+      title: const Text('Institutional administration'),
       leading: BackButton(onPressed: () => context.go(AppRoutes.profile)),
     ),
     body: SafeArea(
-      child: PageBody(
-        children: [
-          const FeatureHeader(
-            eyebrow: 'Trusted institutional review',
-            title: 'Review pending memberships',
-            description: 'Check identity and institutional evidence through approved channels. An account claim or email confirmation is not institutional verification.',
-          ),
-          ref
-              .watch(pendingReviewsProvider)
-              .when(
-                loading: () => const LoadingState(),
-                error: (_, _) => ErrorState(
-                  message: 'Administrator access is required, or reviews could not be loaded. No privileges have been changed.',
-                  onRetry: () => ref.invalidate(pendingReviewsProvider),
-                ),
-                data: (people) => Column(
-                  children: [
-                    if (people.isEmpty)
-                      const EmptyState(
-                        title: 'No pending reviews',
-                        message: 'Submitted profiles awaiting verification appear here.',
-                      ),
-                    for (final p in people)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                p.name,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              Text(
-                                'Claimed ${p.claimedKind}${p.graduationYear == null ? '' : ' · ${p.joiningYear == null ? '' : '${p.joiningYear}–'}${p.graduationYear}'}',
-                              ),
-                              SelectableText(
-                                [
-                                  p.institution,
-                                  p.programme,
-                                  p.department,
-                                  p.affiliation,
-                                  'Account: ${p.id}',
-                                ].where((value) => value.isNotEmpty).join('\n'),
-                              ),
-                              OutlinedButton(
-                                onPressed:
-                                    p.id ==
-                                        ref.read(authControllerProvider).userId
-                                    ? null
-                                    : () async {
-                                        final saved = await showDialog<bool>(
-                                          context: context,
-                                          builder: (_) =>
-                                              _ReviewDialog(candidate: p),
-                                        );
-                                        if (saved == true && context.mounted) {
-                                          ref.invalidate(
-                                            pendingReviewsProvider,
-                                          );
-                                        }
-                                      },
-                                child: const Text('Review evidence and decide'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (people.length == 100)
-                      const Text(
-                        'Showing the first 100 pending profiles. Process reviews and refresh for further accounts.',
-                      ),
-                    TextButton(
-                      onPressed: () => ref.invalidate(pendingReviewsProvider),
-                      child: const Text('Refresh pending reviews'),
+      child: ref
+          .watch(administrationContextProvider)
+          .when(
+            loading: () => const LoadingState(),
+            error: (_, _) => ErrorState(
+              message: 'Administrator access is required, or reviews could not be loaded. No privileges have been changed.',
+              onRetry: () => ref.invalidate(administrationContextProvider),
+            ),
+            data: (summary) => AdministrationDashboard(
+              summary: summary,
+              onReview: (candidate) async {
+                final saved = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => _ReviewDialog(candidate: candidate),
+                );
+                if (!context.mounted) {
+                  return;
+                }
+                ref.invalidate(administrationContextProvider);
+                if (saved == true && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Membership decision recorded.'),
                     ),
-                  ],
-                ),
-              ),
-        ],
-      ),
+                  );
+                }
+              },
+            ),
+          ),
     ),
   );
 }
@@ -114,7 +64,25 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
   final _reason = TextEditingController();
   ReviewDecision _decision = ReviewDecision.verified;
   String? _kind, _error;
+  String _category = 'record_checked';
+  final _requestId = administrationRequestId();
   bool _busy = false, _evidenceChecked = false;
+  List<ReviewDecision> get allowed => switch (widget.candidate.status) {
+    'verified' => [ReviewDecision.suspended, ReviewDecision.correction],
+    'rejected' => [ReviewDecision.correction],
+    'suspended' => [ReviewDecision.reinstate],
+    _ => [
+      ReviewDecision.verified,
+      ReviewDecision.rejected,
+      ReviewDecision.suspended,
+    ],
+  };
+  @override
+  void initState() {
+    super.initState();
+    _decision = allowed.first;
+  }
+
   @override
   void dispose() {
     _reason.dispose();
@@ -126,7 +94,14 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
       userId: widget.candidate.id,
       decision: _decision,
       reason: _reason.text,
-      verifiedKind: _decision == ReviewDecision.verified ? _kind : null,
+      verifiedKind:
+          (_decision == ReviewDecision.verified ||
+              _decision == ReviewDecision.reinstate)
+          ? _kind
+          : null,
+      revision: widget.candidate.revision,
+      requestId: _requestId,
+      category: _category,
     );
     final problem = input.validate(ref.read(authControllerProvider).userId);
     if (problem != null || !_evidenceChecked) {
@@ -145,7 +120,7 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error = 'Review failed. Confirm email, current permissions and account state, then retry.',
+          () => _error = 'Review unavailable or changed. Close, refresh the queue and inspect history before deciding again.',
         );
       }
     } finally {
@@ -167,12 +142,13 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
               initialValue: _decision,
               isExpanded: true,
               decoration: const InputDecoration(labelText: 'Decision'),
-              items: ReviewDecision.values
+              items: allowed
                   .map((d) => DropdownMenuItem(value: d, child: Text(d.name)))
                   .toList(),
               onChanged: _busy ? null : (v) => setState(() => _decision = v!),
             ),
-            if (_decision == ReviewDecision.verified)
+            if (_decision == ReviewDecision.verified ||
+                _decision == ReviewDecision.reinstate)
               DropdownButtonFormField<String>(
                 isExpanded: true,
                 initialValue: _kind,
@@ -189,6 +165,30 @@ class _ReviewDialogState extends ConsumerState<_ReviewDialog> {
                 ],
                 onChanged: _busy ? null : (v) => setState(() => _kind = v),
               ),
+            DropdownButtonFormField<String>(
+              initialValue: _category,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Safe reason category',
+              ),
+              items:
+                  const [
+                        'record_checked',
+                        'details_mismatch',
+                        'evidence_unavailable',
+                        'policy_violation',
+                        'appeal_review',
+                        'duplicate_account',
+                      ]
+                      .map(
+                        (c) => DropdownMenuItem(
+                          value: c,
+                          child: Text(c.replaceAll('_', ' ')),
+                        ),
+                      )
+                      .toList(),
+              onChanged: _busy ? null : (v) => setState(() => _category = v!),
+            ),
             TextField(
               controller: _reason,
               enabled: !_busy,

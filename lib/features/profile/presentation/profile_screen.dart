@@ -10,6 +10,7 @@ import '../../../core/widgets/one_widgets.dart';
 import '../../../core/errors/error_state.dart';
 import '../data/profile_providers.dart';
 import '../../administration/data/administration_providers.dart';
+import '../../administration/presentation/membership_request_panel.dart';
 import '../../connections/presentation/connection_controls.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -22,6 +23,9 @@ class ProfileScreen extends ConsumerWidget {
         title: 'Your profile',
         description: 'Manage your professional story and visibility. Institutional verification is managed separately.',
       ),
+      if (ref.watch(authControllerProvider).isVerified &&
+          ref.watch(supabaseClientProvider) != null)
+        const MembershipRequestPanel(correction: true),
       ref
           .watch(ownProfileProvider)
           .when(

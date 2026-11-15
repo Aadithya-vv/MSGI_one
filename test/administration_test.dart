@@ -11,7 +11,13 @@ import 'package:msgi_one/features/administration/data/administration_providers.d
 
 import 'helpers/fake_auth_repository.dart';
 
-class _Reviews implements AdministrationRepository {
+class _Reviews extends AdministrationRepository {
+  @override
+  Future<Map<String, dynamic>> context() async => {
+    'pending': people.length,
+    'reports': 0,
+    'requests': 0,
+  };
   bool fail = false;
   int calls = 0;
   MembershipReview? saved;
@@ -123,6 +129,7 @@ void main() {
       );
       expect(find.text('Denied or offline'), findsNothing);
       repo.fail = false;
+      await tester.ensureVisible(find.text('Try again'));
       await tester.tap(find.text('Try again'));
       await tester.pumpAndSettle();
       expect(find.text('Synthetic pending member'), findsOneWidget);
@@ -143,7 +150,12 @@ void main() {
         find.widgetWithText(TextField, 'Private audit reason'),
         'Synthetic independent review',
       );
-      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await tester.tap(
+        find.widgetWithText(
+          DropdownButtonFormField<String>,
+          'Verified account type',
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Alumni').last);
       await tester.pumpAndSettle();

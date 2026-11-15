@@ -84,7 +84,19 @@ external links/self-disclosed professional text also need review before exposing
 real data. Bounded SQL fields prevent whitespace padding from bypassing length
 limits, but field limits are not a complete abuse-prevention system.
 
-Administrators can inspect a bounded pending-membership queue containing only
-professional/institutional claims needed for review. It is not an ordinary member
-or anonymous directory. MVP administrator authority is community-wide; scoped
-institution-specific reviewer roles need a separate explicit policy decision.
+Administrators can inspect bounded review queues containing only the
+professional/institutional claims needed for review. They are not member or
+anonymous directories. Task 11D's **local-only, not-yet-hosted** operations
+migration binds each protected administrator role to an approved institution and
+scopes new and legacy review/history/moderation projections accordingly. A later
+profile institution change does not transfer role authority. Hosted adoption of
+this intentional restriction needs separate owner review and deployment approval.
+
+Task 11D also adds revision-checked/idempotent decisions, protected before/after
+audits, bounded appeals and an authorized correction path that removes verified
+access before owned academic edits. Requests never grant access automatically.
+Ordinary users see only their safe reason category/request state; reporter
+identities and private notes remain restricted. Owner-only bootstrap/role
+lifecycle scripts are not public RPCs. Auth ban/deletion and live role/membership
+checks reject privileged requests even with older JWTs. See the institutional
+operations/deployment-readiness guides for exact scope and limitations.

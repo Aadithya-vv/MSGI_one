@@ -8,6 +8,7 @@ import '../../../core/config/experience_actions.dart';
 import '../../../core/widgets/one_widgets.dart';
 import '../application/auth_providers.dart';
 import '../domain/auth_repository.dart';
+import '../../administration/presentation/membership_request_panel.dart';
 
 class AccessScreen extends ConsumerWidget {
   const AccessScreen({super.key});
@@ -63,6 +64,9 @@ class AccessScreen extends ConsumerWidget {
                 message: message,
                 icon: Icons.verified_user_outlined,
               ),
+              if (access.phase == AccessPhase.rejected ||
+                  access.phase == AccessPhase.suspended)
+                const MembershipRequestPanel(),
               if (access.phase == AccessPhase.configurationRequired)
                 const Padding(
                   padding: EdgeInsets.only(top: 24),

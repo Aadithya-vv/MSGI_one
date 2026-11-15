@@ -1,5 +1,11 @@
 // Tests the actual owner operation in a rollback-only isolated transaction.
 const fs=require('fs'),cp=require('child_process');
+const container=process.env.MSGI_BOOTSTRAP_TEST_CONTAINER||'supabase_db_msgi_one_clean_9a7b7923';
+if(process.env.MSGI_BOOTSTRAP_TEST_CONTAINER){
+ if(!/^msgi-admin-clean-[a-f0-9-]{36}$/.test(container))throw Error('Unexpected disposable bootstrap target');
+ const target=JSON.parse(cp.execFileSync('docker',['inspect',container],{encoding:'utf8',stdio:['pipe','pipe','pipe']}))[0];
+ if(target.HostConfig.NetworkMode!=='none'||target.Mounts.some(m=>m.Type!=='tmpfs'))throw Error('Bootstrap target is not isolated');
+}
 const operation=fs.readFileSync('supabase/operations/bootstrap_initial_admin.sql','utf8').replace(/^\uFEFF/,'');
 const test=(expression)=>'select '+expression+';\n';
 // Restore the harness path before pgTAP's own unqualified helper calls execute.
@@ -38,7 +44,11 @@ sql+=`set local search_path=public,extensions;`;
 sql+=test(`is((select count(*) from private.verification_audit where subject_id='66000000-0000-4000-8000-000000000001'),1::bigint,'No duplicate bootstrap audit')`);
 sql+=`select * from finish();rollback;`;
 try{
- const result=cp.execFileSync('docker',['exec','-i','supabase_db_msgi_one_clean_9a7b7923','psql','-X','-qAt','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1'],{input:sql,encoding:'utf8',stdio:['pipe','pipe','pipe']});
+ const result=cp.execFileSync('docker',['exec','-i',container,'psql',...(process.env.MSGI_BOOTSTRAP_TEST_CONTAINER?['-h','/tmp']:[]),'-X','-qAt','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1'],{input:sql,encoding:'utf8',stdio:['pipe','pipe','pipe']});
  const lines=result.split(/\r?\n/).filter(x=>/^(?:not )?ok\b|^1\.\.|^#/.test(x));console.log(lines.join('\n'));
  if(lines.some(x=>/^not ok/.test(x))||!lines.some(x=>/^1\.\./.test(x)))process.exitCode=1;
-}catch{console.error('Isolated bootstrap test failed; no credentials or raw responses displayed');process.exitCode=1;}
+}catch(error){
+ const message=String(error.stderr||'').split(/\r?\n/).find(l=>l.startsWith('ERROR:'));
+ if(message)console.error(message.slice(0,240));
+ console.error('Isolated bootstrap test failed; no credentials or raw responses displayed');process.exitCode=1;
+}

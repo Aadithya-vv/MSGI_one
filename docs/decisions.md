@@ -367,6 +367,18 @@ validate connectivity without importing the deployment function. Missing private
 credentials leave hosted authenticated acceptance pending; no previous approval
 is reused for this changed plan.
 
+Task 11D reuses the protected membership/role/report model and adds a single
+forward-only, local-only operations migration. Administrative authority is bound
+to a protected institution ID, rather than following mutable affiliation claims.
+Reviewer queues/history have bounded server pages; decisions require expected
+revisions and idempotent request keys. Corrections revoke verified access before
+owned academic edits, with separate before/after auditing and explicit reapproval.
+Appeals are bounded requests, never authorization. Administrator lifecycle remains
+owner-only, audited and independently approved; no client promotion endpoint or
+unrestricted demo reviewer is introduced. Evidence stays offline until an approved
+institutional/privacy policy authorizes otherwise. Native UI fixtures live only
+under test/; API and database security are tested separately against local Auth.
+
 Task 11B.5E uses a temporary masked PowerShell SecureString prompt for a fixed,
 hash-checked read-only child. The password is passed only in that child's private
 process environment, removed from the launch configuration after start, and never

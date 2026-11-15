@@ -54,5 +54,8 @@ begin
  -- authorizer is explicitly recorded in the private audit reason, not fabricated.
  insert into private.verification_audit(subject_id,actor_id,previous_status,new_status,verified_kind,reason)
  values(actor,actor,'pending','verified',approved_kind,audit_reason);
+ insert into private.administration_audit(actor_id,subject_id,action,category,note,before_state,after_state,request_id,request_hash)
+ values(actor,actor,'initial_administrator','independent_owner_approval',audit_reason,
+ jsonb_build_object('administrator',false,'status','pending'),jsonb_build_object('administrator',true,'status','verified'),gen_random_uuid(),'owner-bootstrap');
 end;
 $$;
