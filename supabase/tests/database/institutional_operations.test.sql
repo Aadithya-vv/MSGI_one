@@ -74,6 +74,10 @@ select throws_ok($$select public.administration_context()$$,'42501',null,'Old JW
 reset role;
 select ok((select bool_and(c.relrowsecurity) from pg_class c where c.oid in ('private.administration_audit'::regclass,'private.membership_requests'::regclass)),'New private tables retain RLS');
 select ok(not has_table_privilege('authenticated','private.administration_audit','INSERT'),'Audit insertion has no direct client grant');
+select ok(not has_function_privilege('service_role','public.administration_context()','EXECUTE'),'New administrator RPC rejects inherited service-role execution');
+select ok(not has_function_privilege('anon','public.administration_context()','EXECUTE'),'New administrator RPC denies anonymous execution');
+select ok(has_function_privilege('authenticated','public.administration_context()','EXECUTE'),'Authenticated may invoke guarded administrator RPC');
+select ok(not exists(select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace cross join lateral aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a where n.nspname='public' and p.proname in ('administration_context','administration_members','decide_institutional_membership','request_membership_review','own_review_status','administration_history','administration_reports','decide_institutional_report') and a.grantee=0 and a.privilege_type='EXECUTE'),'No new operation retains implicit PUBLIC execution');
 insert into public.opportunities(id,author_id,title,description,kind) values('d1400000-0000-4000-8000-000000000001','d1000000-0000-4000-8000-000000000004','Synthetic reported opportunity','Synthetic opportunity description for moderation tests','job');
 insert into public.reports(reporter_id,target_opportunity_id,reason,details) values('d1000000-0000-4000-8000-000000000005','d1400000-0000-4000-8000-000000000001','fraud','Synthetic fraud report for controlled tests');
 set local role authenticated;

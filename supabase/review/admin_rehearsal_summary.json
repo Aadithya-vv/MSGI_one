@@ -1,0 +1,123 @@
+{
+  "passed": [
+    "Generated batch matches its independent SHA-256",
+    "New rehearsal target has no network, shared volumes or published ports",
+    "Rehearsal uses the exact reviewed immutable runtime image",
+    "Approved reference fixture bytes unchanged",
+    "Reconstructed eleven-migration application metadata matches hosted baseline",
+    "orphan failure has no COMMIT acknowledgement",
+    "orphan failure rolls back schema, data, grants and history completely",
+    "midflight failure has no COMMIT acknowledgement",
+    "midflight failure rolls back schema, data, grants and history completely",
+    "Migration and history insert commit together with explicit COMMIT acknowledgement",
+    "All pre-existing non-history table columns/counts/fingerprints preserved",
+    "Exactly one reviewed history record added",
+    "Role identities preserved with exact reviewed institution backfill",
+    "New internal tables empty; migration creates no administrator or request",
+    "Only eight reviewed existing function bodies change",
+    "Only reviewed report SELECT policy changes",
+    "All pre-existing function grants preserved",
+    "All twenty application tables retain RLS",
+    "Every new RPC explicitly denies inherited service-role and anonymous execution",
+    "Repeated application fails closed with no partial changes or duplicate history",
+    "pgTAP authorization.test.sql",
+    "pgTAP career_bridge.test.sql",
+    "pgTAP institutional_operations.test.sql",
+    "pgTAP map_connections.test.sql",
+    "pgTAP mentor_matching.test.sql",
+    "pgTAP profiles_discovery.test.sql",
+    "pgTAP real_onboarding.test.sql",
+    "Representative local 5,000-row queue measured without hosted stress"
+  ],
+  "performance": {
+    "queue_rows": 5000,
+    "first_page": {
+      "execution_ms": 2579.654,
+      "planning_ms": 0.011,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 157329
+    },
+    "deep_page": {
+      "execution_ms": 2485.117,
+      "planning_ms": 0.011,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 161376
+    },
+    "overview": {
+      "execution_ms": 1744.759,
+      "planning_ms": 0.007,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 121717
+    },
+    "filtered_scan": {
+      "execution_ms": 2106.048,
+      "planning_ms": 0.901,
+      "node_types": [
+        "Limit",
+        "Sort",
+        "Hash Join",
+        "Seq Scan",
+        "Hash",
+        "Seq Scan"
+      ],
+      "shared_hit_blocks": 120834
+    }
+  },
+  "failures": [],
+  "baseline": {
+    "tables": 46,
+    "functions": 37,
+    "role_count": 1,
+    "local_server_version": "17.11",
+    "hosted_server_version": "17.11"
+  },
+  "baseline_schema_differences": {
+    "functions": true,
+    "tables_security": true,
+    "policies": true,
+    "indexes": true,
+    "constraints": true,
+    "triggers": true
+  },
+  "baseline_metadata_mismatches": {},
+  "failure_cases": {
+    "orphan": {
+      "exit": 3,
+      "sqlstate": "23502",
+      "commit_acknowledged": false
+    },
+    "midflight": {
+      "exit": 3,
+      "sqlstate": "22012",
+      "commit_acknowledged": false
+    }
+  },
+  "changed_functions": [
+    "private.is_admin",
+    "private.member_verified",
+    "public.moderate_report",
+    "public.pending_memberships",
+    "public.pending_memberships_v2",
+    "public.report_career_opportunity",
+    "public.review_membership",
+    "public.verification_history"
+  ],
+  "post_schema": {
+    "tables": 20,
+    "functions": 48,
+    "indexes": 54,
+    "policies": 23,
+    "triggers": 6,
+    "constraints": 114
+  },
+  "pgtap_passed": 326,
+  "batch_sha256": "51f1a2e45de199d709bfdee415a319d1989c4b264b845b45e79dd70a2b589a3c",
+  "execution_plan_sha256": "3f4fc4b6f8ca52f5e15fde2b1163cf74e28b40be6b691ffa6f41a7dcae4638bb",
+  "finished_utc": "2026-11-15T11:57:10.784Z"
+}

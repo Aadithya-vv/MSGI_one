@@ -1,0 +1,390 @@
+{
+  "canonicalization": "recursive lexicographic object keys; arrays in order; compact JSON UTF-8 without BOM/newline; digest excludes this envelope",
+  "execution_plan_sha256": "3f4fc4b6f8ca52f5e15fde2b1163cf74e28b40be6b691ffa6f41a7dcae4638bb",
+  "plan": {
+    "format": 1,
+    "project_ref": "sbgshejyvkptmrffiwvd",
+    "migration": "20261115000100_institutional_operations.sql",
+    "migration_raw_sha256": "a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120",
+    "migration_lf_sha256": "a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120",
+    "batch_file": "supabase/review/admin_execution_batch.sql",
+    "batch_sha256": "51f1a2e45de199d709bfdee415a319d1989c4b264b845b45e79dd70a2b589a3c",
+    "generator_lf_sha256": "a5ea751cd4152b9798de91632c89b7d2800c1453df13988967cf5253aadb1fcb",
+    "dependencies": [
+      {
+        "file": "20261112000100_membership_foundation.sql",
+        "lf_sha256": "e28c8a201eceb17be61869d425d886c43b508b6c405aa649004364afdcf40ee3"
+      },
+      {
+        "file": "20261112000200_secure_workflows.sql",
+        "lf_sha256": "b831eb7fa9a1d9dd18c5ef2ac9b51bb9ced08e9a56e8641259635020495c9d00"
+      },
+      {
+        "file": "20261112000300_fix_my_membership_ambiguity.sql",
+        "lf_sha256": "ec4c47dec6298947e17014c7ddbe72f5750129724e792755a5c5a9a3f361b17e"
+      },
+      {
+        "file": "20261113000100_profiles_and_discovery.sql",
+        "lf_sha256": "5dbcd019ee39c124c1a5484fadac02b0960bf0a233432451e4c5c116097458db"
+      },
+      {
+        "file": "20261113000200_map_and_connections.sql",
+        "lf_sha256": "e1bcd15b97c29af3f8e64920186d5e0f87e7443d64c5ec010f52823a5d5dd89f"
+      },
+      {
+        "file": "20261113000300_mentor_matching.sql",
+        "lf_sha256": "fa53b797c56aa516d549b524db31a51be4dc05a6651d8a9497a62b17d5110319"
+      },
+      {
+        "file": "20261114000100_career_bridge.sql",
+        "lf_sha256": "9ff462c6a5cb2b0c610ad08db0d4fc5389c0e62de1a8577f4c3f06433710a4cc"
+      },
+      {
+        "file": "20261114000200_fix_career_filter_ambiguity.sql",
+        "lf_sha256": "7db3afb751625657654dcd98c32d92ae7c1a4484485364f8ebcd5f0e64ed121a"
+      },
+      {
+        "file": "20261114000300_staff_account_kind.sql",
+        "lf_sha256": "18f64096a5498cd882553df83cb7ffa73eada93a4f44c6dc927b959f1b872f5d"
+      },
+      {
+        "file": "20261114000400_real_academic_onboarding.sql",
+        "lf_sha256": "abbd1a1202827f42103ef9eff1c4f0aa14965a9a59a007ab31a4f0f94b32628f"
+      },
+      {
+        "file": "20261114000500_review_academic_claims.sql",
+        "lf_sha256": "04218ca6a74254ad5b03e04636d9ccb7099880e3b40bd8c633e0215772351868"
+      }
+    ],
+    "preflight_sql_file": "tool/sql/admin_hosted_inventory.sql",
+    "preflight_sql_lf_sha256": "6be28d76b6a9b63e6215fe8241bab2736e43a2e36d80e0d75dddbd52641c06e2",
+    "expected_schema": {
+      "tables": 20,
+      "functions": 48,
+      "indexes": 54,
+      "policies": 23,
+      "triggers": 6,
+      "constraints": 114,
+      "new_private_tables_empty": true,
+      "new_rpc_service_role_execute": false
+    },
+    "transport": {
+      "host": "db.sbgshejyvkptmrffiwvd.supabase.co",
+      "port": 5432,
+      "database": "postgres",
+      "role": "postgres",
+      "network": "host",
+      "image": "public.ecr.aws/supabase/postgres@sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+      "image_id": "sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+      "pull": "never",
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "user": "postgres",
+      "log_driver": "none",
+      "client_identity": "new unique UUID, removed on exit; no retry",
+      "stdin": "exact verified batch Buffer; no shell newline rewriting",
+      "ca_mount": {
+        "target": "/run/msgi-ca.crt",
+        "read_only": true
+      },
+      "environment": {
+        "PGSSLMODE": "verify-full",
+        "PGSSLROOTCERT": "/run/msgi-ca.crt",
+        "PGCONNECT_TIMEOUT": "8",
+        "PGPASSWORD": "private child handoff only; no value in manifest"
+      },
+      "reject_routing_overrides": [
+        "PGHOST",
+        "PGHOSTADDR",
+        "PGPORT",
+        "PGDATABASE",
+        "PGUSER",
+        "PGOPTIONS",
+        "PGSERVICE",
+        "PGSERVICEFILE",
+        "PGPASSFILE",
+        "DATABASE_URL"
+      ],
+      "sslmode": "verify-full",
+      "ca_file": "tool/certs/supabase-prod-ca-2021.crt",
+      "ca_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+      "hostname_verification": true,
+      "tls_fallback": false,
+      "connect_timeout_seconds": 8,
+      "client_timeout_seconds": 120,
+      "psql_flags": [
+        "-X",
+        "--no-password",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-f",
+        "-"
+      ],
+      "credential": "temporary masked owner handoff; child PGPASSWORD environment only; never argv/files"
+    },
+    "atomicity": {
+      "transactions": 1,
+      "history_insert": "before the single COMMIT, with original LF source stored as data",
+      "lock_timeout": "5s",
+      "statement_timeout": "60s per statement",
+      "source_byte_identity": "batch is a disclosed LF derivative with added transaction-local controls/history insert; not the migration file unchanged"
+    },
+    "preflight": [
+      "fresh exact authenticated project/host/region and verified TLS",
+      "eleven exact applied dependencies; only this migration pending",
+      "exact 51 catalog tuples and safe data/security baseline",
+      "zero orphan/invalid role bindings; owner-approved scope interpretation",
+      "current verified backup and reviewed recovery; independent DPAPI/full-service limits accepted",
+      "no concurrent DDL/deployment; production window and lock review",
+      "migration/batch/plan/dependency/CA hashes match; fresh execution-code review",
+      "explicit owner authorization for this batch and one history row; no roles/seeds/Auth changes"
+    ],
+    "postflight": [
+      "explicit PostgreSQL COMMIT command tag and successful client exit; neither alone is sufficient",
+      "independent read-only verification of version twelve, expected schema/RLS/ACLs and 51 catalog tuples",
+      "all original table columns/fingerprints preserved; role institution backfill only from reviewed profiles",
+      "private new tables empty; no new users or administrator roles"
+    ],
+    "incident": {
+      "automatic_retry": false,
+      "on_failure": "stop; inspect connection/COMMIT/history/schema/fingerprints read-only; no repair/retry/restore without new approval",
+      "down_migration": "none approved",
+      "forward_fix": "separate reviewed payload/backup/approval; never erase audit or reset database"
+    },
+    "limitations": [
+      "local generator has no hosted execution capability",
+      "future dedicated migration executor and private handoff must be independently reviewed; do not reuse catalog runner approval",
+      "current backup predates hosted schema/catalog updates; fresh backup required before execution"
+    ],
+    "inventory": [
+      {
+        "ordinal": 1,
+        "head": "begin;",
+        "lf_statement_sha256": "5f332e7906de0d0f675b2dfb717e9af9418e64bf63e8c604f9a49790b2f8d8b6"
+      },
+      {
+        "ordinal": 2,
+        "head": "create table private.administration_audit (",
+        "lf_statement_sha256": "ec63f3dab8b9f9b7d4bba87fb07738658a279843c66b9dd4520af05216b13202"
+      },
+      {
+        "ordinal": 3,
+        "head": "create index administration_audit_subject_idx on private.administration_audit(subject_id,created_at desc,id);",
+        "lf_statement_sha256": "8613062e8db8ed1ad59711aefb9500537a2b55c749a0996b2ac8b3a038c806b8"
+      },
+      {
+        "ordinal": 4,
+        "head": "create table private.membership_requests (",
+        "lf_statement_sha256": "c112315374601c781bce0c3ec84722b8cd41c6e86070d9d8d60aa3b72a977491"
+      },
+      {
+        "ordinal": 5,
+        "head": "create unique index membership_request_open_idx on private.membership_requests(user_id) where status='open';",
+        "lf_statement_sha256": "3da8914ceb7d9a506fbc99dde336a529a3284ad53b90574fb49cd97d0716f760"
+      },
+      {
+        "ordinal": 6,
+        "head": "alter table private.administration_audit enable row level security;",
+        "lf_statement_sha256": "c52f1e02d8275f9066f425fb197a342a9021bf853299d52ea0b1be3f227bfbb8"
+      },
+      {
+        "ordinal": 7,
+        "head": "alter table private.membership_requests enable row level security;",
+        "lf_statement_sha256": "4c993688fb386f69215c2cc891f6ea39e08b1201a810c3c78b95bfe45430be18"
+      },
+      {
+        "ordinal": 8,
+        "head": "revoke all on private.administration_audit,private.membership_requests from public,anon,authenticated,service_role;",
+        "lf_statement_sha256": "61b9a63b87d8160b9e001ed8e7ed652e93dd403ccd2da71f5caff9c0e493e1ed"
+      },
+      {
+        "ordinal": 9,
+        "head": "create or replace function private.member_verified(subject uuid) returns boolean",
+        "lf_statement_sha256": "5b3987beab769736b0c19019b800c1dbc9d2a973a2d5c21a5203ba58443f45b1"
+      },
+      {
+        "ordinal": 10,
+        "head": "alter table private.account_roles add column institution_id uuid references public.institutions(id);",
+        "lf_statement_sha256": "cfa4794b5edc1095096988149779ab6d298a7316e9faae770ce0b67d0a8ad0bf"
+      },
+      {
+        "ordinal": 11,
+        "head": "update private.account_roles r set institution_id=p.institution_id from public.profiles p where p.user_id=r.user_id;",
+        "lf_statement_sha256": "e5099b6ea6027edf2be202f7d715e2d3fcc172a4e869c1ebae23f1f84bc3062c"
+      },
+      {
+        "ordinal": 12,
+        "head": "alter table private.account_roles alter column institution_id set not null;",
+        "lf_statement_sha256": "be5a0e5ef88cb6e18c58aa7d7ff2836c37d207ab393457cc4cb36f6c0a6d542c"
+      },
+      {
+        "ordinal": 13,
+        "head": "create function private.bind_administrator_institution() returns trigger",
+        "lf_statement_sha256": "7a2920e11a1b2f9275bc1674820be25c1959ff11fe164a556591ea2d5287aff1"
+      },
+      {
+        "ordinal": 14,
+        "head": "revoke all on function private.bind_administrator_institution() from public,anon,authenticated;",
+        "lf_statement_sha256": "c58df8589b885ebb442438c2c91bc1ae0dc36e9d72576b8b8831aac652bfd83a"
+      },
+      {
+        "ordinal": 15,
+        "head": "create trigger bind_administrator_scope before insert on private.account_roles for each row execute function private.bind_administrator_institution();",
+        "lf_statement_sha256": "13b074841cfddffd2409a05bbe6153a2d4adfc62b1190471c489b84326eede4f"
+      },
+      {
+        "ordinal": 16,
+        "head": "create or replace function private.is_admin() returns boolean",
+        "lf_statement_sha256": "d64b6963a495e2f2967007c17fa25f67c1bcb5b2e2ec786d561a166433c845bf"
+      },
+      {
+        "ordinal": 17,
+        "head": "create function private.admin_scope(subject uuid) returns boolean",
+        "lf_statement_sha256": "a0de5f0e2e5808dba85136f09069b05d375ea46311e86167e9e9b053c14cea33"
+      },
+      {
+        "ordinal": 18,
+        "head": "revoke all on function private.admin_scope(uuid) from public,anon,authenticated;",
+        "lf_statement_sha256": "9568454d550407c64d426e2e2ed7af911391719037e7a627ba64d0212ec3ea83"
+      },
+      {
+        "ordinal": 19,
+        "head": "grant execute on function private.admin_scope(uuid) to authenticated;",
+        "lf_statement_sha256": "5f80929128b55072d268d039fa58b462f6bf5c507090a61c48806ab08c23ccdd"
+      },
+      {
+        "ordinal": 20,
+        "head": "create function public.administration_context() returns jsonb",
+        "lf_statement_sha256": "50a98e1bf136a0e61bb9bad15ac528205b3b14301908454ad4cdfb0b44611310"
+      },
+      {
+        "ordinal": 21,
+        "head": "create function public.administration_members(p_status text default 'pending',p_kind text default null,p_offset integer default 0,p_limit integer default 30)",
+        "lf_statement_sha256": "c13a6969a7a5ba6a3fdbe8ad33d9cfa8811f8134e1b5f0646b0dd5d5d2840d7d"
+      },
+      {
+        "ordinal": 22,
+        "head": "create function public.decide_institutional_membership(p_user uuid,p_action text,p_kind public.account_kind,p_category text,p_note text,p_revision timestamptz,p_request uuid)",
+        "lf_statement_sha256": "e6febd818eec6c2ca3d20508994c7d898d9d9ecf4e80030b99f56a770dd2671f"
+      },
+      {
+        "ordinal": 23,
+        "head": "create or replace function public.review_membership(p_user_id uuid,p_status public.membership_status,p_verified_kind public.account_kind,p_reason text)",
+        "lf_statement_sha256": "9f7a7921465b8cdf3185bf4262ea54d1f6012c59116aea03a4d02ad819571762"
+      },
+      {
+        "ordinal": 24,
+        "head": "create function public.request_membership_review(p_kind text) returns void",
+        "lf_statement_sha256": "9d7b80a102ca0c3ed16136806007a26497dc6b44e5baab0e2a4a7e3890ac3283"
+      },
+      {
+        "ordinal": 25,
+        "head": "create function public.own_review_status() returns jsonb",
+        "lf_statement_sha256": "f582ec9706eea0d1dff534e04069931560f81426b3ad6192346f5d84f52a713c"
+      },
+      {
+        "ordinal": 26,
+        "head": "create function public.administration_history(p_user uuid,p_offset integer default 0) returns jsonb",
+        "lf_statement_sha256": "6ef9cdd017565dad996a292195a807bacb85cf8e016cd7047deac80826d532f4"
+      },
+      {
+        "ordinal": 27,
+        "head": "create function public.administration_reports(p_status text default 'open',p_offset integer default 0) returns jsonb",
+        "lf_statement_sha256": "9445747bac6b1bebc2cfaf910e21de97f403cadea82f6015167e518406d1cbec"
+      },
+      {
+        "ordinal": 28,
+        "head": "create function public.decide_institutional_report(p_report uuid,p_status text,p_note text,p_revision timestamptz,p_request uuid) returns void",
+        "lf_statement_sha256": "66837de42e90c6885e3069d282670a0b198ce4fbf5e1e286dd0d36059f393fa2"
+      },
+      {
+        "ordinal": 29,
+        "head": "create or replace function public.moderate_report(p_id uuid,p_status text) returns void",
+        "lf_statement_sha256": "e69db2d6bdc2d25354541fc0a75eb693f59337e2432978d120d9b3063552ba6b"
+      },
+      {
+        "ordinal": 30,
+        "head": "create or replace function public.pending_memberships(p_limit integer default 30)",
+        "lf_statement_sha256": "51ae3fcaf210223ef34f46398b17688f6c016f37e3ab454bdc088afb0f02b2c2"
+      },
+      {
+        "ordinal": 31,
+        "head": "create or replace function public.pending_memberships_v2(p_limit integer default 30)",
+        "lf_statement_sha256": "32610d0ea0de295a9029c6aef3224278d9fab22565dd3e5884e4b4fb7f451bdb"
+      },
+      {
+        "ordinal": 32,
+        "head": "create or replace function public.verification_history(p_user_id uuid)",
+        "lf_statement_sha256": "9e30dad93eb1267cce4188c723e7b9a0bee7ff92234aa04f4bf440b667fe4d6e"
+      },
+      {
+        "ordinal": 33,
+        "head": "drop policy reporter_read on public.reports;",
+        "lf_statement_sha256": "709c52685013fbfaac97f0ddd7d993cd91c4f19da5996d318de92a6a4d741601"
+      },
+      {
+        "ordinal": 34,
+        "head": "create policy reporter_read on public.reports for select to authenticated using",
+        "lf_statement_sha256": "6d5ae6542e9513418a68097520e565e91c4d9688a0eac521cf9ee32f5be52757"
+      },
+      {
+        "ordinal": 35,
+        "head": "revoke all on function public.administration_context(),public.administration_members(text,text,integer,integer),public.decide_institutional_membership(uuid,text,public.account_kind,text,text,timestamptz,uuid),public.request_membership_review(text),public.own_review_status(),public.administration_history(uuid,integer),public.administration_reports(text,integer),public.decide_institutional_report(uuid,text,text,timestamptz,uuid) from public,anon,authenticated,service_role;",
+        "lf_statement_sha256": "548da7f1540fb0e0f9df1fd49884d1f82983696e1885d488b517c66a43848035"
+      },
+      {
+        "ordinal": 36,
+        "head": "grant execute on function public.administration_context(),public.administration_members(text,text,integer,integer),public.decide_institutional_membership(uuid,text,public.account_kind,text,text,timestamptz,uuid),public.request_membership_review(text),public.own_review_status(),public.administration_history(uuid,integer),public.administration_reports(text,integer),public.decide_institutional_report(uuid,text,text,timestamptz,uuid) to authenticated;",
+        "lf_statement_sha256": "073f2b59a9a23a81758b79827584c803e20794b2bdf8517bb03bf6fc1bb07341"
+      },
+      {
+        "ordinal": 37,
+        "head": "alter table public.reports drop constraint reports_reason_check;",
+        "lf_statement_sha256": "5d21ae601ed7b421f8989c87eafb50cb4f1fa39ad925042e81751be2a18020bb"
+      },
+      {
+        "ordinal": 38,
+        "head": "alter table public.reports add constraint reports_reason_check check(reason in ('harassment','impersonation','inappropriate','other','fraud','spam','privacy'));",
+        "lf_statement_sha256": "edbca810f54e684c08d15572b93e659317be56cd63246a36fbefa29fba07e698"
+      },
+      {
+        "ordinal": 39,
+        "head": "create index memberships_status_review_idx on private.memberships(status,user_id);",
+        "lf_statement_sha256": "30c8f2a3c9723f0df3702bffc81efca0a5a20fb85ef29fe54f369d2768caa3a1"
+      },
+      {
+        "ordinal": 40,
+        "head": "create or replace function public.report_career_opportunity(p_id uuid,p_reason text,p_details text) returns uuid",
+        "lf_statement_sha256": "d8bcf7c1698ce34e5a6534aaa26eecb094fe5c636ec5f2b805dff20ff5237311"
+      },
+      {
+        "ordinal": 41,
+        "head": "create function private.audit_academic_correction() returns trigger",
+        "lf_statement_sha256": "15eafad892a4bc180d43c053a1f041374042e86ade9219535b661c50dc50e120"
+      },
+      {
+        "ordinal": 42,
+        "head": "revoke all on function private.audit_academic_correction() from public,anon,authenticated;",
+        "lf_statement_sha256": "24c2f977000e9751355c1aebab19eeadf73916479276fc0689cae28de641123d"
+      },
+      {
+        "ordinal": 43,
+        "head": "create trigger academic_correction_audit after update on public.profiles for each row execute function private.audit_academic_correction();",
+        "lf_statement_sha256": "3a29aa43dc6807cea94c7962f26ee10b147f799f1c3098d103991bdcee71489f"
+      },
+      {
+        "ordinal": 44,
+        "head": "notify pgrst,'reload schema';",
+        "lf_statement_sha256": "b079578cbf6f7b90189d1aaea3bf03d79e9a5c1a1a8167748d51517c1e31a8a5"
+      },
+      {
+        "ordinal": 45,
+        "head": "commit;",
+        "lf_statement_sha256": "dcf65a4aff5900d6a93f2ecbd4d5dc5a5bcee2b4f68b358ad111e1820abb3cbe"
+      }
+    ]
+  }
+}

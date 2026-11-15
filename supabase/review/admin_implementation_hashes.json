@@ -1,0 +1,121 @@
+{
+  "format": 1,
+  "notes": "raw SHA identifies exact bytes; LF SHA normalizes CRLF only. This is review metadata, not execution authorization.",
+  "files": [
+    {
+      "file": "supabase/migrations/20261115000100_institutional_operations.sql",
+      "raw_sha256": "a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120",
+      "lf_sha256": "a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120"
+    },
+    {
+      "file": "supabase/review/admin_execution_batch.sql",
+      "raw_sha256": "51f1a2e45de199d709bfdee415a319d1989c4b264b845b45e79dd70a2b589a3c",
+      "lf_sha256": "51f1a2e45de199d709bfdee415a319d1989c4b264b845b45e79dd70a2b589a3c"
+    },
+    {
+      "file": "supabase/review/admin_execution_plan.json",
+      "raw_sha256": "b4c278817038120af5683ff8eecd2a157a1fbf21d52eaa266a5e34c73f5e18d6",
+      "lf_sha256": "b4c278817038120af5683ff8eecd2a157a1fbf21d52eaa266a5e34c73f5e18d6"
+    },
+    {
+      "file": "supabase/review/admin_runtime_identity.json",
+      "raw_sha256": "2192cd5657e19d1ddf1c6237869b5fae8a60df5af510cd9b6fe3fb0b67899286",
+      "lf_sha256": "2192cd5657e19d1ddf1c6237869b5fae8a60df5af510cd9b6fe3fb0b67899286"
+    },
+    {
+      "file": "supabase/operations/bootstrap_initial_admin.sql",
+      "raw_sha256": "80277cdae0f072eb9d7287b77f3fbde22a167193cada48a5b868816359dd79c6",
+      "lf_sha256": "80277cdae0f072eb9d7287b77f3fbde22a167193cada48a5b868816359dd79c6"
+    },
+    {
+      "file": "supabase/operations/manage_administrator.sql",
+      "raw_sha256": "fac1ffb24e480118adf0ae8318eefcef75ad8ce3cdd3212c9ad4b652bc083cba",
+      "lf_sha256": "fac1ffb24e480118adf0ae8318eefcef75ad8ce3cdd3212c9ad4b652bc083cba"
+    },
+    {
+      "file": "tool/admin_deployment_plan.cjs",
+      "raw_sha256": "a5ea751cd4152b9798de91632c89b7d2800c1453df13988967cf5253aadb1fcb",
+      "lf_sha256": "a5ea751cd4152b9798de91632c89b7d2800c1453df13988967cf5253aadb1fcb"
+    },
+    {
+      "file": "tool/admin_deployment_plan.test.cjs",
+      "raw_sha256": "b61dbad2e9753244aa857a5067ab4f8341a1d5b8319a367378c40f1f782a0332",
+      "lf_sha256": "b61dbad2e9753244aa857a5067ab4f8341a1d5b8319a367378c40f1f782a0332"
+    },
+    {
+      "file": "tool/rehearse_admin_deployment.cjs",
+      "raw_sha256": "58addeb9e451ebeaaf6cd67056847b9b8e951c4a63077102f50cf8f85096615b",
+      "lf_sha256": "58addeb9e451ebeaaf6cd67056847b9b8e951c4a63077102f50cf8f85096615b"
+    },
+    {
+      "file": "tool/sql/admin_hosted_inventory.sql",
+      "raw_sha256": "6be28d76b6a9b63e6215fe8241bab2736e43a2e36d80e0d75dddbd52641c06e2",
+      "lf_sha256": "6be28d76b6a9b63e6215fe8241bab2736e43a2e36d80e0d75dddbd52641c06e2"
+    },
+    {
+      "file": "tool/msec_tls_policy.cjs",
+      "raw_sha256": "2d633c3cff12b787412a25279899b7373e4ba523cdc60b8d5d79d1aa049cdcbd",
+      "lf_sha256": "2d633c3cff12b787412a25279899b7373e4ba523cdc60b8d5d79d1aa049cdcbd"
+    },
+    {
+      "file": "tool/certs/supabase-prod-ca-2021.crt",
+      "raw_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+      "lf_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7"
+    },
+    {
+      "file": "tool/supabase_cli_json.cjs",
+      "raw_sha256": "26b139dca22f6ab4cbca9517d163879ecb89ac07c7c85e6720432f556ca3b74a",
+      "lf_sha256": "26b139dca22f6ab4cbca9517d163879ecb89ac07c7c85e6720432f556ca3b74a"
+    },
+    {
+      "file": "tool/test_clean_admin_migrations.cjs",
+      "raw_sha256": "215ec11bbad4a83397361e4ec8a9b11c6179f5dfb48828a4301d819c6844dff4",
+      "lf_sha256": "215ec11bbad4a83397361e4ec8a9b11c6179f5dfb48828a4301d819c6844dff4"
+    },
+    {
+      "file": "tool/test_local_administration.cjs",
+      "raw_sha256": "a0ea13392eeb608f7d2369d47d71439715715c7c8a47b5bab926957cc1988d2a",
+      "lf_sha256": "a0ea13392eeb608f7d2369d47d71439715715c7c8a47b5bab926957cc1988d2a"
+    },
+    {
+      "file": "tool/test_local_role_operations.cjs",
+      "raw_sha256": "67ad49f64afc0161e75a4baf1c92b9decc39377233fe32ce1757455d1e4838e9",
+      "lf_sha256": "67ad49f64afc0161e75a4baf1c92b9decc39377233fe32ce1757455d1e4838e9"
+    },
+    {
+      "file": "tool/test_local_bootstrap.cjs",
+      "raw_sha256": "3e038ad156edc60cd9b624d310bba7cc17cde44238c30754760974c702b21eb4",
+      "lf_sha256": "3e038ad156edc60cd9b624d310bba7cc17cde44238c30754760974c702b21eb4"
+    },
+    {
+      "file": "supabase/tests/database/institutional_operations.test.sql",
+      "raw_sha256": "006d71894a163ef25f54bd0e27819c1adfa47780c2112c9427ba03b9f8a66c28",
+      "lf_sha256": "006d71894a163ef25f54bd0e27819c1adfa47780c2112c9427ba03b9f8a66c28"
+    },
+    {
+      "file": "lib/features/administration/domain/administration_repository.dart",
+      "raw_sha256": "166135aef17a6f9f924ca689d329c731e39a8f8079cfc7e9d377783533eb5bab",
+      "lf_sha256": "166135aef17a6f9f924ca689d329c731e39a8f8079cfc7e9d377783533eb5bab"
+    },
+    {
+      "file": "lib/features/administration/data/administration_providers.dart",
+      "raw_sha256": "8dcb3b9c3972c64cf58a6bcacb9952e2070b979e97e8a765529590a25ec684cc",
+      "lf_sha256": "8dcb3b9c3972c64cf58a6bcacb9952e2070b979e97e8a765529590a25ec684cc"
+    },
+    {
+      "file": "lib/features/administration/presentation/administration_screen.dart",
+      "raw_sha256": "c8d0fbed6b4428879ee22e0ba10e21793b24aaf37427d55c723d5993137be36c",
+      "lf_sha256": "c8d0fbed6b4428879ee22e0ba10e21793b24aaf37427d55c723d5993137be36c"
+    },
+    {
+      "file": "lib/features/administration/presentation/administration_dashboard.dart",
+      "raw_sha256": "7142c80a9d960cdb340fdaef39642aae9bf50ccca3679295b54dbf086cbf08ec",
+      "lf_sha256": "7142c80a9d960cdb340fdaef39642aae9bf50ccca3679295b54dbf086cbf08ec"
+    },
+    {
+      "file": "lib/features/administration/presentation/membership_request_panel.dart",
+      "raw_sha256": "a10f8a27d5470121bea436ab6e8d3ad05b6faebb5ab2ca1c7754e5546e1470c6",
+      "lf_sha256": "a10f8a27d5470121bea436ab6e8d3ad05b6faebb5ab2ca1c7754e5546e1470c6"
+    }
+  ]
+}

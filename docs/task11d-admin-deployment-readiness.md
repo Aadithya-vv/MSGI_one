@@ -183,3 +183,18 @@ The automatic approval reviewer initially rejected a test variant that would hav
 saved a generated emulator password. That file-writing option was removed before
 execution; final API credentials stayed in memory, and native UI acceptance used
 separate clearly synthetic test-only repositories. No password fixture was saved.
+
+## Task 11E follow-up (2026-11-15)
+
+See [the hosted deployment review](task11e-admin-hosted-deployment-review.md).
+Read-only hosted inventory confirms eleven migrations and the exact 51 reference
+records; this administration migration is still pending. Hosted default public
+function privileges exposed an omitted explicit `service_role` revocation for
+the eight new RPCs. The pending migration was corrected locally in that single
+grouped REVOKE; four additional assertions bring the database suite to **326**.
+The Task 11D hash is superseded by
+`a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120`.
+The isolated eleven-to-twelve transition, atomic history recording, failure
+rollback and preservation checks pass. No hosted deployment or provisioning
+occurred. Fresh backup, reviewed executor, private authentication and separate
+owner approval remain required; large-queue performance needs attention.

@@ -1,0 +1,7 @@
+{
+  "image_reference": "public.ecr.aws/supabase/postgres@sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+  "image_id": "sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+  "observed_tag": "public.ecr.aws/supabase/postgres:17.11.0.019",
+  "observed_cli_version": "3.1.0",
+  "software_installed_or_pulled": false
+}
