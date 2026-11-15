@@ -30,6 +30,8 @@ try{
  const target=JSON.parse(docker(['inspect',name]).stdout)[0];check(target.HostConfig.NetworkMode==='none'&&target.Mounts.every(m=>m.Type==='tmpfs'),'New rehearsal target has no network, shared volumes or published ports');
  check(target.Image===runtime.image_id,'Rehearsal uses the exact reviewed immutable runtime image');
  sql('create role anon;create role authenticated;create role service_role;create role supabase_admin;create role supabase_auth_admin;create role supabase_storage_admin;create role authenticator;create role dashboard_user;create schema extensions;'+auth+'\ngrant usage on schema auth,extensions to anon,authenticated,service_role;alter default privileges for role postgres in schema public grant execute on functions to anon,authenticated,service_role;alter default privileges for role postgres in schema public grant all on tables to anon,authenticated,service_role;alter default privileges for role postgres in schema public grant all on sequences to anon,authenticated,service_role;create schema supabase_migrations;create table supabase_migrations.schema_migrations(version text primary key,name text,statements text[]);');
+ if(process.argv.includes('--task11f'))sql('alter default privileges for role supabase_admin in schema public grant execute on functions to anon,authenticated,service_role;alter default privileges for role supabase_admin in schema public grant all on tables to anon,authenticated,service_role;alter default privileges for role supabase_admin in schema public grant all on sequences to anon,authenticated,service_role;');
+ if(process.argv.includes('--task11f'))sql('alter default privileges for role postgres in schema public grant execute on functions to postgres;alter default privileges for role postgres in schema public grant all on tables to postgres;alter default privileges for role postgres in schema public grant all on sequences to postgres;alter default privileges for role supabase_admin in schema public grant execute on functions to postgres;alter default privileges for role supabase_admin in schema public grant all on tables to postgres;alter default privileges for role supabase_admin in schema public grant all on sequences to postgres;');
  for(const d of record.plan.dependencies){const source=fs.readFileSync('supabase/migrations/'+d.file,'utf8');sql(source);sql('insert into supabase_migrations.schema_migrations(version,name) values('+quote(d.file.slice(0,14))+','+quote(d.file.slice(15,-4))+');');}
  const refs=fs.readFileSync('supabase/catalogs/msec_reference_atomic.sql');check(sha(refs)==='153f97a2eaff6fa02a723a65bcf4c135ab91bc63b2acb8dc151c93966833e428','Approved reference fixture bytes unchanged');sql("set msgi.catalog_payload_approved='msec-reference-v1';\n"+refs.toString());
  sql(`insert into auth.users(id,email,email_confirmed_at) select ('e1000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,'rehearsal-'||n||'@example.test',now() from generate_series(1,8)n;
@@ -54,6 +56,7 @@ try{
   const snap=state(type),input=type==='midflight'?Buffer.from(batch.toString().replace('\ninsert into supabase_migrations.schema_migrations','\nselect 1/0;\ninsert into supabase_migrations.schema_migrations')):batch;
   const r=sql(input,type,true,true);const code=r.stderr.match(/ERROR:\s*([A-Z0-9]{5})/)?.[1];result.failure_cases={...result.failure_cases,[type]:{exit:r.status,sqlstate:code,commit_acknowledged:/^COMMIT$/m.test(r.stdout)}};check(r.status!==0&&!/^COMMIT$/m.test(r.stdout)&&code===(type==='orphan'?'23502':'22012'),type+' failure has no COMMIT acknowledgement');check(same(snap,state(type)),type+' failure rolls back schema, data, grants and history completely');
  }
+ if(process.argv.includes('--task11f'))docker(['exec',name,'createdb','-h','/tmp','-U','postgres','-T','postgres','executor_fixture']);
  const execution=sql(batch,'postgres',false,true);check(/^COMMIT$/m.test(execution.stdout)&&execution.status===0,'Migration and history insert commit together with explicit COMMIT acknowledgement');
  const after=metadata(),original=before.tables.filter(t=>t.schema!=='supabase_migrations');check(same(original,tables('postgres',original)),'All pre-existing non-history table columns/counts/fingerprints preserved');
  check(history().length===12,'Exactly one reviewed history record added');
@@ -67,6 +70,11 @@ try{
  check(json("select count(*)=8 and bool_and(not has_function_privilege('service_role',p.oid,'EXECUTE') and not has_function_privilege('anon',p.oid,'EXECUTE') and has_function_privilege('authenticated',p.oid,'EXECUTE')) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('administration_context','administration_members','decide_institutional_membership','request_membership_review','own_review_status','administration_history','administration_reports','decide_institutional_report');"),'Every new RPC explicitly denies inherited service-role and anonymous execution');
  const repeatBefore=state(),repeat=sql(batch,'postgres',true,true);check(repeat.status!==0&&!/^COMMIT$/m.test(repeat.stdout)&&same(repeatBefore,state()),'Repeated application fails closed with no partial changes or duplicate history');
  result.post_schema={tables:after.tables.length,functions:after.functions.length,indexes:after.indexes.length,policies:after.policies.length,triggers:after.triggers.length,constraints:after.constraints.length};
+ if(process.argv.includes('--task11f')){
+  fs.writeFileSync('build/task11f-post-schema.json',JSON.stringify(require('./admin_executor_state.cjs').schema(after)));
+  require('./generate_admin_executor_plan.cjs').generate();
+  require('./test_admin_executor_postgres.cjs').run({sql,docker,name});
+ }
  for(const file of fs.readdirSync('supabase/tests/database').filter(f=>f.endsWith('.sql')).sort()){const out=sql(fs.readFileSync('supabase/tests/database/'+file)).stdout;check(!/^not ok/m.test(out),'pgTAP '+file);result.pgtap_passed=(result.pgtap_passed||0)+out.split(/\r?\n/).filter(l=>/^ok \d+/.test(l)).length;}
  // Workload is explicitly synthetic, after preservation comparisons.
  stage='representative queue fixture';
@@ -76,6 +84,12 @@ try{
  stage='performance query plans';
  result.performance={queue_rows:5000,first_page:planTime("select public.administration_members('pending',null,0,30)"),deep_page:planTime("select public.administration_members('pending',null,4500,30)"),overview:planTime('select public.administration_context()'),filtered_scan:planTime("select p.user_id from public.profiles p join private.memberships m on m.user_id=p.user_id where m.status='pending' and p.claimed_kind='alumni' and private.admin_scope(p.user_id) order by p.created_at,p.user_id limit 30",true)};
  check(true,'Representative local 5,000-row queue measured without hosted stress');
+ if(process.argv.includes('--task11f')){
+  const page=(offset,kind='null')=>JSON.parse(sql("begin;set local role authenticated;set local request.jwt.claim.sub='"+actor+"';select public.administration_members('pending',"+kind+","+offset+",30);rollback;").stdout.trim());
+  const first=page(0),again=page(0),second=page(30),filtered=page(0,"'student'");
+  check(same(first,again)&&first.length===30&&second.length===30&&!first.some(a=>second.some(b=>a.user_id===b.user_id)),'Large-queue pages repeat stably and do not overlap without concurrent changes');
+  check(filtered.length===0,'Large-queue type filter excludes nonmatching synthetic alumni');
+ }
  result.batch_sha256=record.plan.batch_sha256;result.execution_plan_sha256=record.execution_plan_sha256;result.finished_utc=new Date().toISOString();
  fs.writeFileSync('build/task11e-rehearsal.json',JSON.stringify(result,null,2));console.log(JSON.stringify({checks:result.passed.length,pgtap:result.pgtap_passed,performance:result.performance,post_schema:result.post_schema}));
 }catch(error){result.failures.push(stage);fs.writeFileSync('build/task11e-rehearsal.json',JSON.stringify(result,null,2));console.error('ADMIN_REHEARSAL_FAILED at '+stage+'; no hosted connection; raw rows suppressed');process.exitCode=1;}

@@ -386,3 +386,13 @@ persisted to a file or global environment. Only whitelisted acceptance metadata
 is returned to the agent. The helper cannot deploy, accepts no arbitrary command
 and retains no credential for a future operation. The existing deployment plan
 and its requirement for a fresh owner authorization remain unchanged.
+
+Task 11F separates migration execution from catalog deployment and private
+read-only credential input. The executor binds reviewed source/plan/batch hashes,
+requires a current encrypted backup with reviewed isolated restore evidence,
+reserves a persistent one-attempt journal and checks the baseline again under
+transaction-local advisory/table locks. Migration and history commit together;
+missing COMMIT acknowledgement or failed independent postflight never permits
+automatic retry, history repair or hosted restore. Synthetic recovery is distinct
+from current hosted/full-service recovery. See
+[the executor review](task11f-admin-executor-readiness.md).

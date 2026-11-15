@@ -46,3 +46,24 @@ uncertain outcome, never permission to retry or repair history. Investigate
 read-only. Successful acknowledgement also requires independent post-state,
 grant and preservation checks. There is no demonstrated down migration; any
 forward fix or restoration requires separate approval.
+
+## Task 11F follow-up
+
+The Task 11E files above remain historical review evidence. The new
+`admin_executor_plan.json` and `admin_executor_batch.sql` add the implemented
+executor identity, fresh backup gate, one-attempt journal, advisory/table locks
+and in-transaction baseline check. They require a **new** review/authorization.
+`tool/admin_migration_executor.cjs` defaults to authenticated read-only checking;
+its execution mode requires a separately approved plan/baseline/backup manifest.
+No approval file or real hosted backup is supplied by this task. Do not execute.
+
+Local validation:
+
+```powershell
+node --test tool/admin_migration_executor.test.cjs tool/admin_backup.test.cjs
+node tool/rehearse_admin_deployment.cjs --task11f
+```
+
+The latter adds a synthetic full logical dump/DPAPI/restore rehearsal in the new
+network-disabled cluster, then runs existing pgTAP and 5,000-row queue checks.
+See `docs/admin-predeployment-backup-procedure.md` for recovery scope and limits.

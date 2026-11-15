@@ -1,0 +1,205 @@
+{
+  "canonicalization": "Task11E recursive-key-sorted compact JSON plan only; UTF-8 no BOM/newline",
+  "execution_plan_sha256": "9a42477afdb7f2596d6cfd61d539ebab4b3aec99ae62723f88eb5a8e93a618b7",
+  "plan": {
+    "format": 1,
+    "project_ref": "sbgshejyvkptmrffiwvd",
+    "prior_review_plan_sha256": "3f4fc4b6f8ca52f5e15fde2b1163cf74e28b40be6b691ffa6f41a7dcae4638bb",
+    "migration": "20261115000100_institutional_operations.sql",
+    "migration_sha256": "a93d179f6bea04eb4f4c8b6556ddf1aee46cc2949cbeda28eff64cbfa7d7f120",
+    "batch_file": "supabase/review/admin_executor_batch.sql",
+    "batch_sha256": "9532752174520c568429291a141ff7b829b09156da6516f620bb2afd8848f838",
+    "dependencies": [
+      {
+        "file": "20261112000100_membership_foundation.sql",
+        "lf_sha256": "e28c8a201eceb17be61869d425d886c43b508b6c405aa649004364afdcf40ee3"
+      },
+      {
+        "file": "20261112000200_secure_workflows.sql",
+        "lf_sha256": "b831eb7fa9a1d9dd18c5ef2ac9b51bb9ced08e9a56e8641259635020495c9d00"
+      },
+      {
+        "file": "20261112000300_fix_my_membership_ambiguity.sql",
+        "lf_sha256": "ec4c47dec6298947e17014c7ddbe72f5750129724e792755a5c5a9a3f361b17e"
+      },
+      {
+        "file": "20261113000100_profiles_and_discovery.sql",
+        "lf_sha256": "5dbcd019ee39c124c1a5484fadac02b0960bf0a233432451e4c5c116097458db"
+      },
+      {
+        "file": "20261113000200_map_and_connections.sql",
+        "lf_sha256": "e1bcd15b97c29af3f8e64920186d5e0f87e7443d64c5ec010f52823a5d5dd89f"
+      },
+      {
+        "file": "20261113000300_mentor_matching.sql",
+        "lf_sha256": "fa53b797c56aa516d549b524db31a51be4dc05a6651d8a9497a62b17d5110319"
+      },
+      {
+        "file": "20261114000100_career_bridge.sql",
+        "lf_sha256": "9ff462c6a5cb2b0c610ad08db0d4fc5389c0e62de1a8577f4c3f06433710a4cc"
+      },
+      {
+        "file": "20261114000200_fix_career_filter_ambiguity.sql",
+        "lf_sha256": "7db3afb751625657654dcd98c32d92ae7c1a4484485364f8ebcd5f0e64ed121a"
+      },
+      {
+        "file": "20261114000300_staff_account_kind.sql",
+        "lf_sha256": "18f64096a5498cd882553df83cb7ffa73eada93a4f44c6dc927b959f1b872f5d"
+      },
+      {
+        "file": "20261114000400_real_academic_onboarding.sql",
+        "lf_sha256": "abbd1a1202827f42103ef9eff1c4f0aa14965a9a59a007ab31a4f0f94b32628f"
+      },
+      {
+        "file": "20261114000500_review_academic_claims.sql",
+        "lf_sha256": "04218ca6a74254ad5b03e04636d9ccb7099880e3b40bd8c633e0215772351868"
+      }
+    ],
+    "transport": {
+      "host": "db.sbgshejyvkptmrffiwvd.supabase.co",
+      "port": 5432,
+      "database": "postgres",
+      "role": "postgres",
+      "network": "host",
+      "image": "public.ecr.aws/supabase/postgres@sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+      "image_id": "sha256:eca9f664ced0c453ae499e75bb503283831c94f2eef69fc2e69bf86f70278ddc",
+      "pull": "never",
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "no_new_privileges": true,
+      "user": "postgres",
+      "log_driver": "none",
+      "client_identity": "new unique UUID, removed on exit; no retry",
+      "stdin": "exact verified batch Buffer; no shell newline rewriting",
+      "ca_mount": {
+        "target": "/run/msgi-ca.crt",
+        "read_only": true
+      },
+      "environment": {
+        "PGSSLMODE": "verify-full",
+        "PGSSLROOTCERT": "/run/msgi-ca.crt",
+        "PGCONNECT_TIMEOUT": "8",
+        "PGPASSWORD": "private child handoff only; no value in manifest"
+      },
+      "reject_routing_overrides": [
+        "PGHOST",
+        "PGHOSTADDR",
+        "PGPORT",
+        "PGDATABASE",
+        "PGUSER",
+        "PGOPTIONS",
+        "PGSERVICE",
+        "PGSERVICEFILE",
+        "PGPASSFILE",
+        "DATABASE_URL"
+      ],
+      "sslmode": "verify-full",
+      "ca_file": "tool/certs/supabase-prod-ca-2021.crt",
+      "ca_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+      "hostname_verification": true,
+      "tls_fallback": false,
+      "connect_timeout_seconds": 8,
+      "client_timeout_seconds": 120,
+      "psql_flags": [
+        "-X",
+        "--no-password",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-f",
+        "-"
+      ],
+      "credential": "temporary masked owner handoff; child PGPASSWORD environment only; never argv/files"
+    },
+    "pre_schema_sha256": "2859ebe7c6c2ff2358d86b757bf7e18020133f85cbc14bbacfe90c9968d8ce76",
+    "post_schema_sha256": "798101eb9ad16d0edbb329aa614cbd220c0a09e832aa861bbe7818a4addbc3fb",
+    "files": [
+      {
+        "file": "tool/admin_executor_state.cjs",
+        "sha256": "b4b47d54de5e8eece2ebe40a79730cf97730590e5fe41646b217cd911aa2d160"
+      },
+      {
+        "file": "tool/admin_executor_transport.cjs",
+        "sha256": "eb9003c036b69d07a93764762e715250baa6665c3bad4d94226785d72d36f5fc"
+      },
+      {
+        "file": "tool/admin_backup.cjs",
+        "sha256": "2aa3a4a240e655bf8ec16e87db27dd69f80aec17a557e053b4af037fb1328632"
+      },
+      {
+        "file": "tool/admin_migration_executor.cjs",
+        "sha256": "85864d38269b3fe4e45980d83198c42ad0da7f061d614a7ad921103d8566d92c"
+      },
+      {
+        "file": "tool/generate_admin_executor_plan.cjs",
+        "sha256": "bc9e99c3d4cfab99332fc9949245c23dcd228d2e086ed94bb67a38725e3d0d01"
+      },
+      {
+        "file": "tool/msec_tls_policy.cjs",
+        "sha256": "2d633c3cff12b787412a25279899b7373e4ba523cdc60b8d5d79d1aa049cdcbd"
+      },
+      {
+        "file": "tool/msec_session_diagnostics.cjs",
+        "sha256": "845770134969b4369808e00d23b81d8d14640e07ba93e0dd6dc5c1abe6b39a20"
+      },
+      {
+        "file": "tool/admin_deployment_plan.cjs",
+        "sha256": "a5ea751cd4152b9798de91632c89b7d2800c1453df13988967cf5253aadb1fcb"
+      },
+      {
+        "file": "tool/supabase_cli_json.cjs",
+        "sha256": "26b139dca22f6ab4cbca9517d163879ecb89ac07c7c85e6720432f556ca3b74a"
+      },
+      {
+        "file": "tool/render_msec_reference.cjs",
+        "sha256": "787d8d4b6e7d41fa81f36cf3df04f99230e83b712254c264e5ab35bc2e853574"
+      },
+      {
+        "file": "tool/request_admin_readonly_credential.ps1",
+        "sha256": "dedee98675d0c72a5a8185f0b230121098b5c697008f349f56a0941e2879b835"
+      },
+      {
+        "file": "tool/certs/supabase-prod-ca-2021.crt",
+        "sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7"
+      },
+      {
+        "file": "tool/sql/admin_hosted_inventory.sql",
+        "sha256": "6be28d76b6a9b63e6215fe8241bab2736e43a2e36d80e0d75dddbd52641c06e2"
+      },
+      {
+        "file": "supabase/catalogs/msec_reference_manifest.json",
+        "sha256": "17ebf65812b8a38c658a4c5426c9f9853a441b249e61f69d21c701f7c986d2e5"
+      },
+      {
+        "file": "tool/admin_migration_executor.test.cjs",
+        "sha256": "d8303063c8fe1afd3a6693268c20c3b97b71934db918069850dad7d74727f9d4"
+      },
+      {
+        "file": "tool/admin_backup.test.cjs",
+        "sha256": "03eb478558c5f671a53e42f41cf2be709c656eb62cf7799dc543c0b9bc04d2c8"
+      },
+      {
+        "file": "tool/test_admin_executor_postgres.cjs",
+        "sha256": "fc7cefca3b7d6fd43d18d4dac560f4e2dcdeff04e2c1237f20c19640f843c98b"
+      },
+      {
+        "file": "tool/rehearse_admin_deployment.cjs",
+        "sha256": "bd0d591e374184c33dbd094b8f7961c516152dbffaa6f96ab5d553aebc04c587"
+      }
+    ],
+    "concurrency": "exclusive persistent one-attempt journal + pg_try_advisory_xact_lock + fixed table locks + in-transaction aggregate-baseline guard",
+    "credential": "private child SUPABASE_DB_PASSWORD; no argv/file/log credential; read-only masked launcher cannot execute",
+    "backup": "DPAPI CurrentUser encrypted custom pg_dump; approved manifest hash; maximum age four hours; matching baseline and verified isolated restore required",
+    "approval": "explicit one-attempt owner manifest pins this plan and a fresh encrypted backup; no authorization supplied by this task",
+    "outcome": "one write connection; no automatic retry; every failure retains attempt marker; independent read-only postflight; unknown/committed-but-unverified stops",
+    "journal": "fixed LOCALAPPDATA/MSGIOne/admin-deployments/project/version.attempt.json, exclusive create before write; never automatically removed",
+    "sql": "Task11E derivative plus set_config baseline, advisory guard, fixed table locks and baseline check; no administrator/Auth/SMTP/catalog mutation",
+    "remaining_gates": [
+      "fresh verified hosted backup",
+      "review exact executor implementation and new plan",
+      "private direct authentication",
+      "separate explicit one-attempt owner authorization"
+    ]
+  }
+}

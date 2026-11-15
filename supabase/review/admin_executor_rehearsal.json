@@ -1,0 +1,113 @@
+{
+  "scope": "synthetic isolated local only",
+  "passed": [
+    "Exact hosted baseline schema/ACL identity reproduced",
+    "Changed baseline fails before DDL and rolls back",
+    "Executor SQL failure rolls back schema/data/history",
+    "Independent PostgreSQL session acquired deployment advisory lock",
+    "Actual concurrent execution rejected without COMMIT",
+    "Read-only custom dump readable in memory",
+    "DPAPI encrypt/decrypt round-trip preserves exact custom dump",
+    "Tampered encrypted dump rejected",
+    "Fresh isolated database restores complete synthetic logical archive",
+    "Every role/table effective privilege matches after restore",
+    "Only reviewed PostgreSQL AND-parenthesis normalization is accepted",
+    "Restored city bounds retain reviewed boundary and NULL truth table",
+    "Restored logical schema/functions/RLS/grants/data/auth/history match with disclosed representation normalization",
+    "Recovery covers every application table",
+    "Synthetic backup cannot authorize hosted execution",
+    "Guarded executor batch commits with explicit acknowledgement",
+    "Executor preserves existing records and creates no administrator",
+    "Exact postdeployment schema/privilege identity matches",
+    "Repeated execution stops without changes",
+    "Committed transaction with lost acknowledgement requires read-only investigation"
+  ],
+  "failures": [],
+  "backup": {
+    "scope": "synthetic-local",
+    "encryption": "DPAPI-CurrentUser",
+    "cipher_integrity": true,
+    "restore_verified": true,
+    "application_tables": 18,
+    "functions": 37,
+    "auth_fingerprint_match": true,
+    "plaintext_files_created": 0,
+    "hosted_backup_created": false
+  },
+  "batch_sha256": "9532752174520c568429291a141ff7b829b09156da6516f620bb2afd8848f838",
+  "execution_plan_sha256": "9a42477afdb7f2596d6cfd61d539ebab4b3aec99ae62723f88eb5a8e93a618b7",
+  "transition_checks": [
+    "Generated batch matches its independent SHA-256",
+    "New rehearsal target has no network, shared volumes or published ports",
+    "Rehearsal uses the exact reviewed immutable runtime image",
+    "Approved reference fixture bytes unchanged",
+    "Reconstructed eleven-migration application metadata matches hosted baseline",
+    "orphan failure has no COMMIT acknowledgement",
+    "orphan failure rolls back schema, data, grants and history completely",
+    "midflight failure has no COMMIT acknowledgement",
+    "midflight failure rolls back schema, data, grants and history completely",
+    "Migration and history insert commit together with explicit COMMIT acknowledgement",
+    "All pre-existing non-history table columns/counts/fingerprints preserved",
+    "Exactly one reviewed history record added",
+    "Role identities preserved with exact reviewed institution backfill",
+    "New internal tables empty; migration creates no administrator or request",
+    "Only eight reviewed existing function bodies change",
+    "Only reviewed report SELECT policy changes",
+    "All pre-existing function grants preserved",
+    "All twenty application tables retain RLS",
+    "Every new RPC explicitly denies inherited service-role and anonymous execution",
+    "Repeated application fails closed with no partial changes or duplicate history",
+    "pgTAP authorization.test.sql",
+    "pgTAP career_bridge.test.sql",
+    "pgTAP institutional_operations.test.sql",
+    "pgTAP map_connections.test.sql",
+    "pgTAP mentor_matching.test.sql",
+    "pgTAP profiles_discovery.test.sql",
+    "pgTAP real_onboarding.test.sql",
+    "Representative local 5,000-row queue measured without hosted stress",
+    "Large-queue pages repeat stably and do not overlap without concurrent changes",
+    "Large-queue type filter excludes nonmatching synthetic alumni"
+  ],
+  "pgtap_passed": 326,
+  "performance": {
+    "queue_rows": 5000,
+    "first_page": {
+      "execution_ms": 2348.064,
+      "planning_ms": 0.01,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 156936
+    },
+    "deep_page": {
+      "execution_ms": 2391.389,
+      "planning_ms": 0.011,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 161427
+    },
+    "overview": {
+      "execution_ms": 1692.381,
+      "planning_ms": 0.007,
+      "node_types": [
+        "Result"
+      ],
+      "shared_hit_blocks": 121780
+    },
+    "filtered_scan": {
+      "execution_ms": 2111.188,
+      "planning_ms": 0.662,
+      "node_types": [
+        "Limit",
+        "Sort",
+        "Hash Join",
+        "Seq Scan",
+        "Hash",
+        "Seq Scan"
+      ],
+      "shared_hit_blocks": 120896
+    }
+  },
+  "finished_utc": "2026-11-15T12:39:29.372Z"
+}
