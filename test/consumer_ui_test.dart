@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:msgi_one/core/widgets/one_widgets.dart';
+import 'package:msgi_one/core/widgets/app_logo.dart';
 import 'package:msgi_one/core/widgets/consumer_widgets.dart';
 import 'package:msgi_one/features/demo/domain/demo_store.dart';
 import 'package:msgi_one/features/demo/presentation/demo_experience.dart';
@@ -105,7 +106,7 @@ void main() {
     await tester.pumpAndSettle();
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     await tester.pumpAndSettle();
-    expect(find.byIcon(Icons.hub_outlined), findsOneWidget);
+    expect(find.byType(AppLogo), findsOneWidget);
     expect(find.text('Demo'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

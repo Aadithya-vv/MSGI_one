@@ -2,36 +2,33 @@ import 'package:material_ui/material_ui.dart';
 
 import '../theme/app_theme.dart';
 import '../config/app_config.dart';
+import 'app_logo.dart';
 
 class BrandMark extends StatelessWidget {
-  const BrandMark({super.key, this.light = false});
+  const BrandMark({super.key, this.light = false, this.prominent = false});
   final bool light;
+  final bool prominent;
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: OneColors.gold,
-          borderRadius: BorderRadius.circular(13),
-        ),
-        child: const Icon(Icons.hub_outlined, color: OneColors.navy, size: 26),
-      ),
-      const SizedBox(width: 12),
-      Flexible(
-        child: Text(
-          AppConfig.name,
-          style: TextStyle(
-            fontSize: 21,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -.6,
-            color: light ? Colors.white : OneColors.navy,
-          ),
-        ),
-      ),
-    ],
-  );
+  Widget build(BuildContext context) => prominent
+      ? const Center(child: AppLogo())
+      : Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const AppLogo(size: 44, emblemOnly: true, decorative: true),
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                AppConfig.name,
+                style: TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -.6,
+                  color: light ? Colors.white : OneColors.navy,
+                ),
+              ),
+            ),
+          ],
+        );
 }
 
 class PreviewBadge extends StatelessWidget {

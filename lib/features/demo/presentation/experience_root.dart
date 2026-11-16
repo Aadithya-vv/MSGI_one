@@ -261,7 +261,7 @@ class _ExperienceRootState extends State<ExperienceRoot> {
           child: PageBody(
             children: [
               const SizedBox(height: 24),
-              const BrandMark(),
+              const BrandMark(prominent: true),
               const SizedBox(height: 24),
               if (_experience == _Experience.loading) ...[
                 const Center(child: CircularProgressIndicator()),

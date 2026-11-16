@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/app_logo.dart';
+
 import '../../../core/community_identity.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/application/auth_providers.dart';
@@ -297,16 +299,23 @@ class _DemoExperienceState extends State<DemoExperience> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Row(
               children: [
-                if (MediaQuery.textScalerOf(context).scale(1) > 1.2)
-                  const Icon(
-                    Icons.hub_outlined,
-                    semanticLabel: 'MSGI One',
-                    color: OneColors.blue,
-                  )
+                if (MediaQuery.textScalerOf(context).scale(1) > 1.2 ||
+                    MediaQuery.sizeOf(context).width < 380)
+                  const AppLogo(size: 32, emblemOnly: true)
                 else
-                  const Text(
-                    'MSGI One',
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                  const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppLogo(size: 28, emblemOnly: true, decorative: true),
+                      SizedBox(width: 6),
+                      Text(
+                        'MSGI One',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 const SizedBox(width: 8),
                 ActionChip(

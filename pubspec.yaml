@@ -68,6 +68,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/maps/ne_110m_land.geojson
+    - assets/branding/msgi-one-logo-original.png
+    - assets/branding/msgi-one-emblem.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

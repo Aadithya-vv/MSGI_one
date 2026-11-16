@@ -421,3 +421,12 @@ clean text-only MSEC card instead of pending-photo/crest placeholders; no media
 permission is inferred. Its fixed signing wrapper refuses replacement paths,
 uses the existing process-only DPAPI handoff and requires the original signer
 fingerprint before copying. The v1.0.0 fallback remains frozen.
+
+The approved MSGI One logo integration preserves the owner's original PNG bytes
+and separates full-logo presentation from emblem-only launcher/header crops.
+Native Android resources use reproducible proportional packaging with safe mask
+padding; Flutter uses contain sizing and no tint. No launcher/splash dependency
+was added. This app-logo approval does not extend to the withheld MSEC crest or
+campus photography. Existing signed artifacts stay frozen; the new visuals are
+validated in a separately named offline debug candidate. See
+[logo verification](logo-integration-verification.md).

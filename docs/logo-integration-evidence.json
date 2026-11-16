@@ -1,0 +1,63 @@
+﻿{
+    "date":  "2026-11-16",
+    "original_logo_sha256":  "6b2ba085ddf111e60508f8507b73d7034f5bebf981da3b9b9469f862aa1b7f54",
+    "debug_candidate":  "build/logo-integration/MSGI-One-logo-debug.apk",
+    "debug_sha256":  "768da38a4e3d82f7d75a1cdba54b9051f2ecc048144d122ed9e32c08379750c8",
+    "flutter_tests_passed":  214,
+    "analyzer":  "No issues",
+    "emulator":  "MSGI_Task12A_Disposable / emulator-5556 / API 34",
+    "emulator_checks_passed":  true,
+    "protected_signed_apks_unchanged":  true,
+    "samsung_operations":  0,
+    "hosted_operations":  0,
+    "screenshots":  [
+                        {
+                            "file":  "build/logo-integration/alumni-header-logo.png",
+                            "sha256":  "6277bf43cf50a206e0cd097683ecd5869afc19796f72b3e5f3d6504cf55a854c"
+                        },
+                        {
+                            "file":  "build/logo-integration/large-text-emblem-header.png",
+                            "sha256":  "299923cf30e61764ed79512e862ac32a93c6bc567eabe602bb91703daac7846d"
+                        },
+                        {
+                            "file":  "build/logo-integration/launcher-icon.png",
+                            "sha256":  "4d7e4b4d3718606c5f76a5837ce0abd7a04b850703181265cc02cf661b10dcc4"
+                        },
+                        {
+                            "file":  "build/logo-integration/mentor-header-logo.png",
+                            "sha256":  "90e217965e2aeb9a6585176862d267fe3d88a212e516db8940e3aff5ae103a11"
+                        },
+                        {
+                            "file":  "build/logo-integration/native-startup-1.png",
+                            "sha256":  "cae02283c0704a41d9e4daea150a45ccaf6ba4de5535195d23cffa213269efbc"
+                        },
+                        {
+                            "file":  "build/logo-integration/native-startup-2.png",
+                            "sha256":  "9d462b0017391b0540d17b8122001e89c21b52d7abbd8352b35a1829e7c80df7"
+                        },
+                        {
+                            "file":  "build/logo-integration/native-startup-3.png",
+                            "sha256":  "9d462b0017391b0540d17b8122001e89c21b52d7abbd8352b35a1829e7c80df7"
+                        },
+                        {
+                            "file":  "build/logo-integration/profile-header-logo.png",
+                            "sha256":  "5258641f0fe16faf82b3d69b3afb09d18f0b546bbd463d2fd2d306afb3bc4bda"
+                        },
+                        {
+                            "file":  "build/logo-integration/role-selection-logo.png",
+                            "sha256":  "c2d0a29aabe780cee9dfe711fdf042ea510bd575dc7033b8a5b465000822f13f"
+                        },
+                        {
+                            "file":  "build/logo-integration/staff-header-logo.png",
+                            "sha256":  "1bb016b43f05670c72fa58b6f48eba538cb618f2f61f6265552d7d6e5e0ef078"
+                        },
+                        {
+                            "file":  "build/logo-integration/student-header-logo.png",
+                            "sha256":  "28ec1039e0bd561c995f76e003a2e87096ffa7b3c7c65a92d2320ff6fc0017f7"
+                        },
+                        {
+                            "file":  "build/logo-integration/welcome-logo.png",
+                            "sha256":  "2c14cf243501360fefe3d97bb2fd7cbd5be4cb61969eb1422a6f93730a3f0ad7"
+                        }
+                    ]
+}
